@@ -1,6 +1,7 @@
 #Created by Evgeniy Vargin for learning
 
 from tkinter import *
+from connections import *
 
 class DmlBtn(Button):
     def __init__(self,Owner,Text,Rn):
@@ -70,7 +71,7 @@ class Grid(Frame):
             self.cont.getItemByNum(rownum).append(Label(self,text=self.fields[key],font = "Calibri 11 bold").grid(row = 0,column=num))
         for (idx,key) in enumerate(self.dataset):
             rownum = self.cont.addItem([])
-            self.cont.getItemByNum(rownum).append(self.dataset[key])
+            self.cont.getItemByNum(rownum).append(key)
             e = []
             for (num,field) in enumerate(self.fields):
                 #r.append(self.dataset[key].asDict()[field])
@@ -78,40 +79,5 @@ class Grid(Frame):
                 ent.grid(row = idx+1,column=num)
                 ent.insert(0,self.dataset[key][field])
                 ent.config(state='readonly')
-                e.append(ent)
+                e.append(self.dataset[key][field])
             self.cont.getItemByNum(rownum).append(e)
-
-def main():
-    try:
-        #cn = pgSetConnect(inDB='administrator', inUser='administrator',inPwd='Kartonka13')
-        cn = psycopg2.connect(dbname='administrator', user='administrator',password='Kartonka13', host='localhost')
-        cur = cn.cursor()
-        
-        root = Tk()
-        root.geometry("1200x600")
-        #tbl = EmpShelve
-        #ds = tbl.open()
-        ds = pd.read_sql_query("""SELECT key,name,position,age||' years' AS age,salary,bonus FROM tb_employees """,cn,index_col='key').to_dict()
-    
-        #bob = tbl.setRow(Developer('bob','Bob Smith',42))
-        #sue = tbl.setRow(Hardware('sue','Sue Johns',45))
-        #tom = tbl.setRow(Manager('tom','Tom Kite',50,Salary=100000.0,Bonus=0.05))
-        #john = tbl.setRow(Engineer('john','John Doe',42))
-        #kate = tbl.setRow(DataScientist('kate','Kate Patrow',22))
-    
-        app = Grid(root,ds)
-    
-        root.mainloop()
-
-
-        #key = 'sue'
-        #cur.execute("""UPDATE tb_employees SET name = 'Sue Jones' WHERE key = '%s'"""%key)
-        #cn.commit()
-    
-    finally:        
-        del cur
-        cn.close
-        del ds
-        
-if __name__ == '__main__':
-    main()

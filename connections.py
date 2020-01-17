@@ -7,7 +7,6 @@ Created on Fri Jan 10 23:06:35 2020
 """
 
 import psycopg2
-import pandas as pd
 
 connections = []
 

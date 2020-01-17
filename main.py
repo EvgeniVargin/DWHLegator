@@ -1,7 +1,9 @@
 #Created by Evgeniy Vargin for learning
 
 from tkinter import *
-from frBaseList import *
+from frBaseEdtList import *
+import pandas as pd
+
    
 def main():
     try:
@@ -10,7 +12,7 @@ def main():
         root = Tk()
         root.geometry("1200x600")
         ds = pd.read_sql_query("""SELECT key,name,position,age||' years' AS age,salary,bonus FROM tb_employees """,cn,index_col='key').to_dict()
-        app = MainGrid(root,ds)
+        app = EdtGrid(root,ds,cn,cur,'tb_employees',('string','key'))
         root.mainloop()
     finally:        
         del cur
