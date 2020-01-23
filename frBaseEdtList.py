@@ -11,8 +11,8 @@ for x in range(3):
     tst[x] = rw
 '''
 class DmlBtn(Button):
-    def __init__(self,Owner,Text,Rn):
-        Button.__init__(self,Owner,text=Text)
+    def __init__(self,Owner,Text,Rn,Width=5):
+        Button.__init__(self,Owner,text=Text,width=Width)
         self.owner = Owner
         self.text = Text
         self.rn = Rn
@@ -62,6 +62,8 @@ class EdtGrid(Frame):
         self.keyfield = KeyField
         self.connection = Connection
         self.cursor = Cursor
+        self.addFields = []
+        self.addFields.append(KeyField[1])
         self.rebuild()
 
     def getStatus(self):
@@ -93,12 +95,23 @@ class EdtGrid(Frame):
         tk.title("Список сотрудников:")
         self.pack(fill=BOTH,expand=1)
         self.columnconfigure(len(self.fields) + 3,weight=1)
-        self.rowconfigure(len(self.dataset) + 2,weight=1)
+        self.rowconfigure(len(self.dataset) + 4,weight=1)
         self.getStatusLabel().grid(row=0,column=0,padx=1,pady=1,columnspan=len(self.fields) + 2,sticky=W)
         
+        #Заголовки колонок
         rownum = self.cont.addItem([])
         for (num,key) in enumerate(self.fields):
             self.cont.getItemByNum(rownum).append(Label(self,text=self.fields[key],font="Arial 11 bold").grid(row = 1,column=num,padx=1,pady=1))
+        #Пустые поля для добавления записи
+        rownum = self.cont.addItem({})
+        for (num,key) in enumerate(self.fields):
+            self.cont.getItemByNum(rownum)[key] = Entry(self).grid(row = 2,column=num,padx=1,pady=1)
+        
+        addBtn = DmlBtn(self,Text='Add',Rn=rownum,Width=5)
+        addBtn.bind('<Button-1>',addRecord)
+        addBtn.grid(row=2,column=len(self.fields) + 1,padx=1,pady=1,sticky=W)
+        
+        #Текущий набор данных
         for (idx,key) in enumerate(self.dataset):
             rownum = self.cont.addItem([])
             self.cont.getItemByNum(rownum).append(key)
@@ -106,18 +119,18 @@ class EdtGrid(Frame):
             for (num,field) in enumerate(self.fields):
                 #r.append(self.dataset[key].asDict()[field])
                 ent = Entry(self)
-                ent.grid(row = rownum + 1,column=num,padx=1,pady=1)
+                ent.grid(row = rownum + 2,column=num,padx=1,pady=1)
                 ent.insert(0,self.dataset[key][field])
                 e.append(self.dataset[key][field])
             self.cont.getItemByNum(rownum).append(e)
-            b = DmlBtn(self,Text='Save (%s)'%key,Rn=rownum)
+            b = DmlBtn(self,Text='Save',Rn=rownum,Width=5)
             b.bind('<Button-1>',saveRecord)
-            b.grid(row=rownum + 1,column=len(self.fields) + 1,padx=1,pady=1)
+            b.grid(row=rownum + 2,column=len(self.fields) + 1,padx=1,pady=1,sticky=W)
             self.cont.getItemByNum(rownum).append(b)
             
-            d = DmlBtn(self,Text='Delete (%s)'%key,Rn=rownum)
+            d = DmlBtn(self,Text='Delete',Rn=rownum,Width=5)
             d.bind('<Button-1>',delRecord)
-            d.grid(row=rownum + 1,column=len(self.fields) + 2,padx=1,pady=1)
+            d.grid(row=rownum + 2,column=len(self.fields) + 2,padx=1,pady=1,sticky=W)
             self.cont.getItemByNum(rownum).append(d)
     
     def refresh(self):
@@ -130,6 +143,15 @@ def saveRecord(event):
     #for (num,field) in enumerate(flds):
     #    setattr(event.widget.owner.getContainer().getItemByNum(event.widget.getRn())[0],field,event.widget.owner.getContainer().getItemByNum(event.widget.getRn())[1][num].get())
     #event.widget.owner.setStatus(str(EmpShelve.setRow(event.widget.owner.getContainer().getItemByNum(event.widget.getRn())[0])))
+
+def addRecord(event):
+    try:
+        dml = """INSERT INTO %(tbl)s (key,name,age,position,salary,bonus) VALUES(%(key)s,%(name)s,%(age)s,%(position)s,%(salary)s,%(bonus)s)"""%{"tbl": event.widget.owner.getTable(),"key": "'john'","name": "'John Doe'","age": 42,"position": "'Data Engineer'","salary": 60000.0,"bonus": 0.0}
+        event.widget.owner.getCursor().execute(dml)
+        event.widget.owner.getConnection().commit()
+        event.widget.owner.refresh()
+    except:
+        print('ERROR')    
 
 def delRecord(event):
     try:

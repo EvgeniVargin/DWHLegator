@@ -2,22 +2,25 @@
 
 from tkinter import *
 from frBaseEdtList import *
-import pandas as pd
+from connections import *
 
    
 def main():
     try:
         cn = psycopg2.connect(dbname='administrator', user='administrator',password='Kartonka13', host='localhost')
-        cur = cn.cursor()
+        qry = PGQuery(cn,('key','name','position','age','salary','bonus'),"""SELECT key,name,position,age,salary,bonus FROM tb_employees """,Keyfield='key')
+        #qry.execute()
+        #ds = pd.read_sql_query("""SELECT key,name,position,age,salary,bonus FROM tb_employees """,cn,index_col='key').to_dict()
+        #cur.execute("""SELECT key,name,position,age,salary,bonus FROM tb_employees """)
+        #cur.fetchall()
         root = Tk()
-        root.geometry("1200x600")
-        ds = pd.read_sql_query("""SELECT key,name,position,age||' years' AS age,salary,bonus FROM tb_employees """,cn,index_col='key').to_dict()
-        app = EdtGrid(root,ds,cn,cur,'tb_employees',('string','key'))
+        root.geometry("900x600")
+        app = EdtGrid(root,qry.execute().to_dict(),cn,qry.getCursor(),'tb_employees',('string','key'))
         root.mainloop()
-    finally:        
-        del cur
+    finally:
+        del qry
         cn.close
-        del ds
+        #del ds
         
 if __name__ == '__main__':
     main()
