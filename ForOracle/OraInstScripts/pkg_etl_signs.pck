@@ -39,212 +39,212 @@ CREATE OR REPLACE PACKAGE DM_SKB.pkg_etl_signs
     TYPE TRecStarFldList IS RECORD (table_alias VARCHAR2(256),table_name VARCHAR2(256),table_comment VARCHAR2(4000),col_name VARCHAR2(256),col_type VARCHAR2(30),preaggr_flg NUMBER, col_comment VARCHAR2(4000),entity_id NUMBER,entity_name VARCHAR2(4000));
     TYPE TTabStarFldList IS TABLE OF TRecStarFldList;
 
-  FUNCTION GetLabels(inOSUser VARCHAR2) RETURN TTabLabels PIPELINED; -- Используется только в GUI. Возвращает коллекцию. Пункты меню, доступные пользователю, согласно его ролей
-  FUNCTION GetReports(inOSUser VARCHAR2,inFormID NUMBER) RETURN TTabReports PIPELINED; -- Используется только в GUI. Возвращает коллекцию. Наименования пользовательских отчетов
-  PROCEDURE pr_log_write(inUnit IN VARCHAR2,inMessage IN VARCHAR2); -- Для логирования
-  PROCEDURE send_message_about_project(inProjID NUMBER,inTheme VARCHAR2,inMessage CLOB); -- (ВРЕМЕННО ДОБАВЛЕНА ДЛЯ ОТЛАДКИ, ПОСЛЕ ОТЛАДКИ УБРАТЬ ИЗ СПЕЦИФИКАЦИИ)Отправка сообщений
-  FUNCTION DescribeColumns(inSQL IN CLOB) RETURN tabCols PIPELINED; -- Возвращает набор колонок произвольного SQL-запроса
-  PROCEDURE SendMainLogs(inOPID NUMBER); -- Отправка центральных логов
-  PROCEDURE pr_stat_write(inSignName IN VARCHAR2,inAnltCode IN VARCHAR2,inSec NUMBER,inAction VARCHAR2); --Для логирования статистики времени расчетов. Позволяет легко выявлять "тяжелые" расчеты для последующей оптимизации
-  FUNCTION get_ti_as_hms (inInterval IN NUMBER /*интервал в днях*/) RETURN VARCHAR2; -- Для записи в логах временных интервалов в удобной для чтения форме. Возвращает временной интервал в виде строки в формате: 0h 12m 52
-  FUNCTION parse_str(inStr VARCHAR2,inSeparator IN VARCHAR2) RETURN tabStr PIPELINED; -- Для парсинга единой строки в набор из множества строк. Возвращает коллекцию строк.
-  FUNCTION split_clob(inCLOB IN CLOB,inStrLen IN INTEGER) RETURN tabStr PIPELINED; -- Для разбивки CLOB на строки указанной длины. Возвращает коллекцию строк.
-  FUNCTION gather_clob(inTable IN SYS_REFCURSOR) RETURN CLOB; -- Собирает единый CLOB из коллекции строк
-  FUNCTION isEqual(n1 IN NUMBER,n2 IN NUMBER) RETURN NUMBER; -- Для сравнения числовых значений. Возвращает 0 или 1 которые следует интерпретировать как ложь или истина
-  FUNCTION isEqual(v1 IN VARCHAR2,v2 IN VARCHAR2) RETURN NUMBER; -- Для сравнения строковых значений. Возвращает 0 или 1 которые следует интерпретировать как ложь или истина
-  FUNCTION isEqual(d1 IN DATE,d2 IN DATE) RETURN NUMBER; -- Для сравнения значений в виде даты. Возвращает 0 или 1 которые следует интерпретировать как ложь или истина
-  FUNCTION isEqual(c1 IN CLOB,c2 IN CLOB) RETURN NUMBER; -- Для сравнения значений в виде текста. Возвращает 0 или 1 которые следует интерпретировать как ложь или истина
-  FUNCTION DBLinkReady(inDBLinkName VARCHAR2) RETURN BOOLEAN; -- Проверяет доступность Data Base Link'а. Возвращает истину или ложь
-  FUNCTION TableNotEmpty(inTbl VARCHAR2) RETURN BOOLEAN; -- Проверяет что таблица не пуста. Возвращает истину или ложь
-  FUNCTION GetConditionResult(inCondition IN CLOB,inParams VARCHAR2 DEFAULT NULL,inComment VARCHAR2 DEFAULT NULL) RETURN NUMBER; -- Осуществляет проверку произвольного логического выражения. Возвращает 0 или 1. Может принимать входящие параметры с поисанием их типов данных. 
-  FUNCTION GetGroupIdByName(inGroupName IN VARCHAR2) RETURN NUMBER; -- Возвращает ИД группы по её наименованию
+  FUNCTION GetLabels(inOSUser VARCHAR2) RETURN TTabLabels PIPELINED; -- РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ GUI. Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»Р»РµРєС†РёСЋ. РџСѓРЅРєС‚С‹ РјРµРЅСЋ, РґРѕСЃС‚СѓРїРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ, СЃРѕРіР»Р°СЃРЅРѕ РµРіРѕ СЂРѕР»РµР№
+  FUNCTION GetReports(inOSUser VARCHAR2,inFormID NUMBER) RETURN TTabReports PIPELINED; -- РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ GUI. Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»Р»РµРєС†РёСЋ. РќР°РёРјРµРЅРѕРІР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… РѕС‚С‡РµС‚РѕРІ
+  PROCEDURE pr_log_write(inUnit IN VARCHAR2,inMessage IN VARCHAR2); -- Р”Р»СЏ Р»РѕРіРёСЂРѕРІР°РЅРёСЏ
+  PROCEDURE send_message_about_project(inProjID NUMBER,inTheme VARCHAR2,inMessage CLOB); -- (Р’Р Р•РњР•РќРќРћ Р”РћР‘РђР’Р›Р•РќРђ Р”Р›РЇ РћРўР›РђР”РљР, РџРћРЎР›Р• РћРўР›РђР”РљР РЈР‘Р РђРўР¬ РР— РЎРџР•Р¦РР¤РРљРђР¦РР)РћС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёР№
+  FUNCTION DescribeColumns(inSQL IN CLOB) RETURN tabCols PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РєРѕР»РѕРЅРѕРє РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ SQL-Р·Р°РїСЂРѕСЃР°
+  PROCEDURE SendMainLogs(inOPID NUMBER); -- РћС‚РїСЂР°РІРєР° С†РµРЅС‚СЂР°Р»СЊРЅС‹С… Р»РѕРіРѕРІ
+  PROCEDURE pr_stat_write(inSignName IN VARCHAR2,inAnltCode IN VARCHAR2,inSec NUMBER,inAction VARCHAR2); --Р”Р»СЏ Р»РѕРіРёСЂРѕРІР°РЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё РІСЂРµРјРµРЅРё СЂР°СЃС‡РµС‚РѕРІ. РџРѕР·РІРѕР»СЏРµС‚ Р»РµРіРєРѕ РІС‹СЏРІР»СЏС‚СЊ "С‚СЏР¶РµР»С‹Рµ" СЂР°СЃС‡РµС‚С‹ РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµР№ РѕРїС‚РёРјРёР·Р°С†РёРё
+  FUNCTION get_ti_as_hms (inInterval IN NUMBER /*РёРЅС‚РµСЂРІР°Р» РІ РґРЅСЏС…*/) RETURN VARCHAR2; -- Р”Р»СЏ Р·Р°РїРёСЃРё РІ Р»РѕРіР°С… РІСЂРµРјРµРЅРЅС‹С… РёРЅС‚РµСЂРІР°Р»РѕРІ РІ СѓРґРѕР±РЅРѕР№ РґР»СЏ С‡С‚РµРЅРёСЏ С„РѕСЂРјРµ. Р’РѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјРµРЅРЅРѕР№ РёРЅС‚РµСЂРІР°Р» РІ РІРёРґРµ СЃС‚СЂРѕРєРё РІ С„РѕСЂРјР°С‚Рµ: 0h 12m 52
+  FUNCTION parse_str(inStr VARCHAR2,inSeparator IN VARCHAR2) RETURN tabStr PIPELINED; -- Р”Р»СЏ РїР°СЂСЃРёРЅРіР° РµРґРёРЅРѕР№ СЃС‚СЂРѕРєРё РІ РЅР°Р±РѕСЂ РёР· РјРЅРѕР¶РµСЃС‚РІР° СЃС‚СЂРѕРє. Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»Р»РµРєС†РёСЋ СЃС‚СЂРѕРє.
+  FUNCTION split_clob(inCLOB IN CLOB,inStrLen IN INTEGER) RETURN tabStr PIPELINED; -- Р”Р»СЏ СЂР°Р·Р±РёРІРєРё CLOB РЅР° СЃС‚СЂРѕРєРё СѓРєР°Р·Р°РЅРЅРѕР№ РґР»РёРЅС‹. Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»Р»РµРєС†РёСЋ СЃС‚СЂРѕРє.
+  FUNCTION gather_clob(inTable IN SYS_REFCURSOR) RETURN CLOB; -- РЎРѕР±РёСЂР°РµС‚ РµРґРёРЅС‹Р№ CLOB РёР· РєРѕР»Р»РµРєС†РёРё СЃС‚СЂРѕРє
+  FUNCTION isEqual(n1 IN NUMBER,n2 IN NUMBER) RETURN NUMBER; -- Р”Р»СЏ СЃСЂР°РІРЅРµРЅРёСЏ С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№. Р’РѕР·РІСЂР°С‰Р°РµС‚ 0 РёР»Рё 1 РєРѕС‚РѕСЂС‹Рµ СЃР»РµРґСѓРµС‚ РёРЅС‚РµСЂРїСЂРµС‚РёСЂРѕРІР°С‚СЊ РєР°Рє Р»РѕР¶СЊ РёР»Рё РёСЃС‚РёРЅР°
+  FUNCTION isEqual(v1 IN VARCHAR2,v2 IN VARCHAR2) RETURN NUMBER; -- Р”Р»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРєРѕРІС‹С… Р·РЅР°С‡РµРЅРёР№. Р’РѕР·РІСЂР°С‰Р°РµС‚ 0 РёР»Рё 1 РєРѕС‚РѕСЂС‹Рµ СЃР»РµРґСѓРµС‚ РёРЅС‚РµСЂРїСЂРµС‚РёСЂРѕРІР°С‚СЊ РєР°Рє Р»РѕР¶СЊ РёР»Рё РёСЃС‚РёРЅР°
+  FUNCTION isEqual(d1 IN DATE,d2 IN DATE) RETURN NUMBER; -- Р”Р»СЏ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РІ РІРёРґРµ РґР°С‚С‹. Р’РѕР·РІСЂР°С‰Р°РµС‚ 0 РёР»Рё 1 РєРѕС‚РѕСЂС‹Рµ СЃР»РµРґСѓРµС‚ РёРЅС‚РµСЂРїСЂРµС‚РёСЂРѕРІР°С‚СЊ РєР°Рє Р»РѕР¶СЊ РёР»Рё РёСЃС‚РёРЅР°
+  FUNCTION isEqual(c1 IN CLOB,c2 IN CLOB) RETURN NUMBER; -- Р”Р»СЏ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РІ РІРёРґРµ С‚РµРєСЃС‚Р°. Р’РѕР·РІСЂР°С‰Р°РµС‚ 0 РёР»Рё 1 РєРѕС‚РѕСЂС‹Рµ СЃР»РµРґСѓРµС‚ РёРЅС‚РµСЂРїСЂРµС‚РёСЂРѕРІР°С‚СЊ РєР°Рє Р»РѕР¶СЊ РёР»Рё РёСЃС‚РёРЅР°
+  FUNCTION DBLinkReady(inDBLinkName VARCHAR2) RETURN BOOLEAN; -- РџСЂРѕРІРµСЂСЏРµС‚ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ Data Base Link'Р°. Р’РѕР·РІСЂР°С‰Р°РµС‚ РёСЃС‚РёРЅСѓ РёР»Рё Р»РѕР¶СЊ
+  FUNCTION TableNotEmpty(inTbl VARCHAR2) RETURN BOOLEAN; -- РџСЂРѕРІРµСЂСЏРµС‚ С‡С‚Рѕ С‚Р°Р±Р»РёС†Р° РЅРµ РїСѓСЃС‚Р°. Р’РѕР·РІСЂР°С‰Р°РµС‚ РёСЃС‚РёРЅСѓ РёР»Рё Р»РѕР¶СЊ
+  FUNCTION GetConditionResult(inCondition IN CLOB,inParams VARCHAR2 DEFAULT NULL,inComment VARCHAR2 DEFAULT NULL) RETURN NUMBER; -- РћСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїСЂРѕРІРµСЂРєСѓ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ. Р’РѕР·РІСЂР°С‰Р°РµС‚ 0 РёР»Рё 1. РњРѕР¶РµС‚ РїСЂРёРЅРёРјР°С‚СЊ РІС…РѕРґСЏС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ СЃ РїРѕРёСЃР°РЅРёРµРј РёС… С‚РёРїРѕРІ РґР°РЅРЅС‹С…. 
+  FUNCTION GetGroupIdByName(inGroupName IN VARCHAR2) RETURN NUMBER; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РР” РіСЂСѓРїРїС‹ РїРѕ РµС‘ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ
   PROCEDURE mass_load_parallel_by_date_pe(inBeg IN DATE, inEnd IN DATE, inUnit IN VARCHAR2 DEFAULT NULL
-    ,inParams IN VARCHAR2 DEFAULT NULL); -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ mass_load_parallel_by_month!!! Позволяет запускать процедуры в многопоточном за периоды при условии что сама процедура имеет входящие параметры начала и окончания периода. Период может вырождаться в один день (тогда начало и конец периода совпадают). Использует функционал  DBMS_PARALLEL_EXECUTE порождает столько потоков сколько дней в указанном периоде
+    ,inParams IN VARCHAR2 DEFAULT NULL); -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ mass_load_parallel_by_month!!! РџРѕР·РІРѕР»СЏРµС‚ Р·Р°РїСѓСЃРєР°С‚СЊ РїСЂРѕС†РµРґСѓСЂС‹ РІ РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРј Р·Р° РїРµСЂРёРѕРґС‹ РїСЂРё СѓСЃР»РѕРІРёРё С‡С‚Рѕ СЃР°РјР° РїСЂРѕС†РµРґСѓСЂР° РёРјРµРµС‚ РІС…РѕРґСЏС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ РЅР°С‡Р°Р»Р° Рё РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°. РџРµСЂРёРѕРґ РјРѕР¶РµС‚ РІС‹СЂРѕР¶РґР°С‚СЊСЃСЏ РІ РѕРґРёРЅ РґРµРЅСЊ (С‚РѕРіРґР° РЅР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† РїРµСЂРёРѕРґР° СЃРѕРІРїР°РґР°СЋС‚). РСЃРїРѕР»СЊР·СѓРµС‚ С„СѓРЅРєС†РёРѕРЅР°Р»  DBMS_PARALLEL_EXECUTE РїРѕСЂРѕР¶РґР°РµС‚ СЃС‚РѕР»СЊРєРѕ РїРѕС‚РѕРєРѕРІ СЃРєРѕР»СЊРєРѕ РґРЅРµР№ РІ СѓРєР°Р·Р°РЅРЅРѕРј РїРµСЂРёРѕРґРµ
   PROCEDURE mass_load_parallel_by_month (inBegDate IN DATE, inEndDate IN DATE, inProcedure IN VARCHAR2
-    ,inParams VARCHAR2 DEFAULT NULL); -- Позволяет запускать процедуры в многопоточном за периоды при условии что сама процедура имеет входящие параметры начала и окончания периода. Период может вырождаться в один день (тогда начало и конец периода совпадают). Использует функционал  DBMS_PARALLEL_EXECUTE порождает столько потоков сколько дней в периоде, но не более чем дней в месяце. Если в периоде несколько месяцев, то месяцы пересчитываются последовательно
+    ,inParams VARCHAR2 DEFAULT NULL); -- РџРѕР·РІРѕР»СЏРµС‚ Р·Р°РїСѓСЃРєР°С‚СЊ РїСЂРѕС†РµРґСѓСЂС‹ РІ РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРј Р·Р° РїРµСЂРёРѕРґС‹ РїСЂРё СѓСЃР»РѕРІРёРё С‡С‚Рѕ СЃР°РјР° РїСЂРѕС†РµРґСѓСЂР° РёРјРµРµС‚ РІС…РѕРґСЏС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ РЅР°С‡Р°Р»Р° Рё РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°. РџРµСЂРёРѕРґ РјРѕР¶РµС‚ РІС‹СЂРѕР¶РґР°С‚СЊСЃСЏ РІ РѕРґРёРЅ РґРµРЅСЊ (С‚РѕРіРґР° РЅР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† РїРµСЂРёРѕРґР° СЃРѕРІРїР°РґР°СЋС‚). РСЃРїРѕР»СЊР·СѓРµС‚ С„СѓРЅРєС†РёРѕРЅР°Р»  DBMS_PARALLEL_EXECUTE РїРѕСЂРѕР¶РґР°РµС‚ СЃС‚РѕР»СЊРєРѕ РїРѕС‚РѕРєРѕРІ СЃРєРѕР»СЊРєРѕ РґРЅРµР№ РІ РїРµСЂРёРѕРґРµ, РЅРѕ РЅРµ Р±РѕР»РµРµ С‡РµРј РґРЅРµР№ РІ РјРµСЃСЏС†Рµ. Р•СЃР»Рё РІ РїРµСЂРёРѕРґРµ РЅРµСЃРєРѕР»СЊРєРѕ РјРµСЃСЏС†РµРІ, С‚Рѕ РјРµСЃСЏС†С‹ РїРµСЂРµСЃС‡РёС‚С‹РІР°СЋС‚СЃСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ
   PROCEDURE mass_load_parallel_by_ydate_pe
     (inBegDate IN DATE, inEndDate IN DATE, inUnit IN VARCHAR2
     ,inParams IN VARCHAR2 DEFAULT NULL
     ,inLastDay BOOLEAN DEFAULT TRUE
-    ,inMonthlyDay VARCHAR2 DEFAULT NULL); -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ mass_load_parallel_by_year!!! Позволяет запускать процедуры в многопоточном за периоды при условии что сама процедура имеет входящие параметры начала и окончания периода. При этом последовательно перебираются числа месяца. Например сначала все 1-е числа всех месяцов, входящих в период, затем 2-е и т.д. Использует функционал  DBMS_PARALLEL_EXECUTE порождает столько потоков сколько месяцев в указанном периоде
+    ,inMonthlyDay VARCHAR2 DEFAULT NULL); -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ mass_load_parallel_by_year!!! РџРѕР·РІРѕР»СЏРµС‚ Р·Р°РїСѓСЃРєР°С‚СЊ РїСЂРѕС†РµРґСѓСЂС‹ РІ РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРј Р·Р° РїРµСЂРёРѕРґС‹ РїСЂРё СѓСЃР»РѕРІРёРё С‡С‚Рѕ СЃР°РјР° РїСЂРѕС†РµРґСѓСЂР° РёРјРµРµС‚ РІС…РѕРґСЏС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ РЅР°С‡Р°Р»Р° Рё РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°. РџСЂРё СЌС‚РѕРј РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РїРµСЂРµР±РёСЂР°СЋС‚СЃСЏ С‡РёСЃР»Р° РјРµСЃСЏС†Р°. РќР°РїСЂРёРјРµСЂ СЃРЅР°С‡Р°Р»Р° РІСЃРµ 1-Рµ С‡РёСЃР»Р° РІСЃРµС… РјРµСЃСЏС†РѕРІ, РІС…РѕРґСЏС‰РёС… РІ РїРµСЂРёРѕРґ, Р·Р°С‚РµРј 2-Рµ Рё С‚.Рґ. РСЃРїРѕР»СЊР·СѓРµС‚ С„СѓРЅРєС†РёРѕРЅР°Р»  DBMS_PARALLEL_EXECUTE РїРѕСЂРѕР¶РґР°РµС‚ СЃС‚РѕР»СЊРєРѕ РїРѕС‚РѕРєРѕРІ СЃРєРѕР»СЊРєРѕ РјРµСЃСЏС†РµРІ РІ СѓРєР°Р·Р°РЅРЅРѕРј РїРµСЂРёРѕРґРµ
   PROCEDURE mass_load_parallel_by_year
     (inBegDate IN DATE, inEndDate IN DATE, inProcedure IN VARCHAR2
     ,inParams VARCHAR2 DEFAULT NULL
     ,inLastDay BOOLEAN DEFAULT TRUE
     ,inMonthlyDay VARCHAR2 DEFAULT NULL
     ,inYearParallel BOOLEAN DEFAULT FALSE
-    ,inHeadJobName IN VARCHAR2 DEFAULT NULL); -- Позволяет запускать процедуры в многопоточном за периоды при условии что сама процедура имеет входящие параметры начала и окончания периода. При этом последовательно перебираются числа месяца. Например сначала все 1-е числа всех месяцов, входящих в период, затем 2-е и т.д. Использует функционал  DBMS_PARALLEL_EXECUTE порождает 12 потоков (по количеству месяцев в году), при этом последовательно перебираются годы, если в периоде их несколько
-  PROCEDURE MyExecute(inScript IN VARCHAR2); -- Выполнение произвольного PLSQL-блока без входящих параметров
-  FUNCTION AnyExecute(inScript IN CLOB,inParams IN VARCHAR2 DEFAULT NULL) RETURN VARCHAR2; -- Выполнение произвольного PLSQL-блока, имеющего входящие параметры 
-  PROCEDURE prepare_entity(inID IN NUMBER,outRes OUT CLOB); -- Подготовка таблиц хранения для сущности (динамический DDL)
-  FUNCTION get_sign(inSign IN VARCHAR2,inDate IN DATE, inSQL IN VARCHAR2 DEFAULT NULL) RETURN TTab PIPELINED; -- Возвращает набор данных для показателя (на основе SQL, написанного разработчиком для указанного показателя)
-  FUNCTION get_sign_anlt(inSign IN VARCHAR2,inDate IN DATE, inAnltCode IN VARCHAR2, inReverse NUMBER DEFAULT 0) RETURN TTab PIPELINED; -- Возвращает набор данных для "раскраски" показателя произвольным ключевым значением
-  FUNCTION get_anlt_spec_imp(inDate IN DATE, inAnltCode IN VARCHAR2) RETURN TTabAnltSpecImp PIPELINED; -- Для импорта спецификации аналитики. Возвращает набор который необходимо импортировать. (часто требуется импортировать уже готовую иерархическую структуру в качестве спецификации, а не набивать руками)
-  FUNCTION get_sign_mass(inSign IN VARCHAR2,inDate IN DATE) RETURN TTabMass PIPELINED; -- Возвращает набор данныхсодержащий всю историю изменения показателя сразу. (в случае если для показателя написан такой SQL)
-  -- Подготовка субпартиций в таблицах
-  FUNCTION CheckSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2) RETURN VARCHAR2; -- Полдготовка партиции/субпартиции для хранимого набора. Возвращает наименование подготовленной партиции/субпартиции
-  PROCEDURE CheckSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2); -- аналог в виде процедуры (без возвращаемого значения)
-  FUNCTION CompressSubpartition(inDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2) RETURN VARCHAR2; -- Сжатие партиции/субпартиции. Возвращает наименование сжатой партиции/субпартиции
-  PROCEDURE CompressSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2); -- аналог в виде процедуры (без возвращаемого значения)
+    ,inHeadJobName IN VARCHAR2 DEFAULT NULL); -- РџРѕР·РІРѕР»СЏРµС‚ Р·Р°РїСѓСЃРєР°С‚СЊ РїСЂРѕС†РµРґСѓСЂС‹ РІ РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРј Р·Р° РїРµСЂРёРѕРґС‹ РїСЂРё СѓСЃР»РѕРІРёРё С‡С‚Рѕ СЃР°РјР° РїСЂРѕС†РµРґСѓСЂР° РёРјРµРµС‚ РІС…РѕРґСЏС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ РЅР°С‡Р°Р»Р° Рё РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°. РџСЂРё СЌС‚РѕРј РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РїРµСЂРµР±РёСЂР°СЋС‚СЃСЏ С‡РёСЃР»Р° РјРµСЃСЏС†Р°. РќР°РїСЂРёРјРµСЂ СЃРЅР°С‡Р°Р»Р° РІСЃРµ 1-Рµ С‡РёСЃР»Р° РІСЃРµС… РјРµСЃСЏС†РѕРІ, РІС…РѕРґСЏС‰РёС… РІ РїРµСЂРёРѕРґ, Р·Р°С‚РµРј 2-Рµ Рё С‚.Рґ. РСЃРїРѕР»СЊР·СѓРµС‚ С„СѓРЅРєС†РёРѕРЅР°Р»  DBMS_PARALLEL_EXECUTE РїРѕСЂРѕР¶РґР°РµС‚ 12 РїРѕС‚РѕРєРѕРІ (РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ РјРµСЃСЏС†РµРІ РІ РіРѕРґСѓ), РїСЂРё СЌС‚РѕРј РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РїРµСЂРµР±РёСЂР°СЋС‚СЃСЏ РіРѕРґС‹, РµСЃР»Рё РІ РїРµСЂРёРѕРґРµ РёС… РЅРµСЃРєРѕР»СЊРєРѕ
+  PROCEDURE MyExecute(inScript IN VARCHAR2); -- Р’С‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ PLSQL-Р±Р»РѕРєР° Р±РµР· РІС…РѕРґСЏС‰РёС… РїР°СЂР°РјРµС‚СЂРѕРІ
+  FUNCTION AnyExecute(inScript IN CLOB,inParams IN VARCHAR2 DEFAULT NULL) RETURN VARCHAR2; -- Р’С‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ PLSQL-Р±Р»РѕРєР°, РёРјРµСЋС‰РµРіРѕ РІС…РѕРґСЏС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ 
+  PROCEDURE prepare_entity(inID IN NUMBER,outRes OUT CLOB); -- РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС† С…СЂР°РЅРµРЅРёСЏ РґР»СЏ СЃСѓС‰РЅРѕСЃС‚Рё (РґРёРЅР°РјРёС‡РµСЃРєРёР№ DDL)
+  FUNCTION get_sign(inSign IN VARCHAR2,inDate IN DATE, inSQL IN VARCHAR2 DEFAULT NULL) RETURN TTab PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РґР»СЏ РїРѕРєР°Р·Р°С‚РµР»СЏ (РЅР° РѕСЃРЅРѕРІРµ SQL, РЅР°РїРёСЃР°РЅРЅРѕРіРѕ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РїРѕРєР°Р·Р°С‚РµР»СЏ)
+  FUNCTION get_sign_anlt(inSign IN VARCHAR2,inDate IN DATE, inAnltCode IN VARCHAR2, inReverse NUMBER DEFAULT 0) RETURN TTab PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РґР»СЏ "СЂР°СЃРєСЂР°СЃРєРё" РїРѕРєР°Р·Р°С‚РµР»СЏ РїСЂРѕРёР·РІРѕР»СЊРЅС‹Рј РєР»СЋС‡РµРІС‹Рј Р·РЅР°С‡РµРЅРёРµРј
+  FUNCTION get_anlt_spec_imp(inDate IN DATE, inAnltCode IN VARCHAR2) RETURN TTabAnltSpecImp PIPELINED; -- Р”Р»СЏ РёРјРїРѕСЂС‚Р° СЃРїРµС†РёС„РёРєР°С†РёРё Р°РЅР°Р»РёС‚РёРєРё. Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РєРѕС‚РѕСЂС‹Р№ РЅРµРѕР±С…РѕРґРёРјРѕ РёРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ. (С‡Р°СЃС‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ РёРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ СѓР¶Рµ РіРѕС‚РѕРІСѓСЋ РёРµСЂР°СЂС…РёС‡РµСЃРєСѓСЋ СЃС‚СЂСѓРєС‚СѓСЂСѓ РІ РєР°С‡РµСЃС‚РІРµ СЃРїРµС†РёС„РёРєР°С†РёРё, Р° РЅРµ РЅР°Р±РёРІР°С‚СЊ СЂСѓРєР°РјРё)
+  FUNCTION get_sign_mass(inSign IN VARCHAR2,inDate IN DATE) RETURN TTabMass PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С…СЃРѕРґРµСЂР¶Р°С‰РёР№ РІСЃСЋ РёСЃС‚РѕСЂРёСЋ РёР·РјРµРЅРµРЅРёСЏ РїРѕРєР°Р·Р°С‚РµР»СЏ СЃСЂР°Р·Сѓ. (РІ СЃР»СѓС‡Р°Рµ РµСЃР»Рё РґР»СЏ РїРѕРєР°Р·Р°С‚РµР»СЏ РЅР°РїРёСЃР°РЅ С‚Р°РєРѕР№ SQL)
+  -- РџРѕРґРіРѕС‚РѕРІРєР° СЃСѓР±РїР°СЂС‚РёС†РёР№ РІ С‚Р°Р±Р»РёС†Р°С…
+  FUNCTION CheckSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2) RETURN VARCHAR2; -- РџРѕР»РґРіРѕС‚РѕРІРєР° РїР°СЂС‚РёС†РёРё/СЃСѓР±РїР°СЂС‚РёС†РёРё РґР»СЏ С…СЂР°РЅРёРјРѕРіРѕ РЅР°Р±РѕСЂР°. Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РїРѕРґРіРѕС‚РѕРІР»РµРЅРЅРѕР№ РїР°СЂС‚РёС†РёРё/СЃСѓР±РїР°СЂС‚РёС†РёРё
+  PROCEDURE CheckSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2); -- Р°РЅР°Р»РѕРі РІ РІРёРґРµ РїСЂРѕС†РµРґСѓСЂС‹ (Р±РµР· РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ)
+  FUNCTION CompressSubpartition(inDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2) RETURN VARCHAR2; -- РЎР¶Р°С‚РёРµ РїР°СЂС‚РёС†РёРё/СЃСѓР±РїР°СЂС‚РёС†РёРё. Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ СЃР¶Р°С‚РѕР№ РїР°СЂС‚РёС†РёРё/СЃСѓР±РїР°СЂС‚РёС†РёРё
+  PROCEDURE CompressSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2); -- Р°РЅР°Р»РѕРі РІ РІРёРґРµ РїСЂРѕС†РµРґСѓСЂС‹ (Р±РµР· РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ)
   --
-  PROCEDURE tb_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAnltCode IN VARCHAR2); -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ load_sign!!! расчет показателя, хранимого периодами за указанную дату
-  PROCEDURE ptb_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAnltCode IN VARCHAR2); -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ load_sign!!! расчет показателя, хранимого по датам за указанную дату
-  PROCEDURE load_sign(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inPrepareSegments NUMBER); -- обертка !!!ДЛЯ РАСЧЕТА ПОКАЗАТЕЛЕЙ СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ИМЕННО ЕЕ!!!
-  --  ******************  КОНЕЧНЫЕ ПРОЦЕДУРЫ ДЛЯ ЗАПУСКА РАСЧЕТОВ *****************
-  --  ******************  ДЛЯ ИСПОЛЬЗОВАНИЯ В РАБОЧЕМ ПОРЯДКЕ *********************
-  -- параллельная заливка указанных показателей за одну дату
-  -- если параметр inSign не указан, то параллельная заливка ВСЕХ показателей за одну дату
-  -- пример параметра inSign:  'ACCOUNT_CUM_COLATERAL,ACCOUNT_SUM_61312,ACOUNT_SUM_91414'
-  PROCEDURE load_new(inSQL IN CLOB,inJobName IN VARCHAR2 DEFAULT NULL); -- Основной инструмент динамически выстраиваемого Чейна на основе SQL
-  PROCEDURE load (inBegDate IN DATE,inEndDate IN DATE); -- Обертка запуск расчета всех показателей за определенную дату/период. В одной дате показатели расчитываются параллельно, но с учетом зависимостей если таковые имеются (классический Oracle Chain), при этом, даты в периоде пересчитываются последовательно
-  PROCEDURE load_rel_asc(inBegDate IN DATE,inEndDate IN DATE,inSigns IN VARCHAR2,inUnit IN VARCHAR2,inAdvFilter VARCHAR2 DEFAULT NULL); -- Обертка запуск указанных и всех зависимых показателей за определенную дату/период. Цепь расчета выстраивается с учетом всех зависимостей. При построении цепи расчетов учитываются флаг архива показателя и доп. условия расчета
-  PROCEDURE load_rel_desc(inBegDate IN DATE,inEndDate IN DATE,inSigns IN VARCHAR2,inUnit IN VARCHAR2,inAdvFilter VARCHAR2 DEFAULT NULL); -- Обертка запуск всех, от которых зависят указанные и самих указанных показателей за определенную дату/период. Цепь расчета выстраивается с учетом всех зависимостей. При построении цепи расчетов учитываются флаг архива показателя и доп. условия расчета
-  PROCEDURE load_all_anlts(inBegDate IN DATE,inEndDate IN DATE); -- Обертка запуск расчета всех аналитик за определенную дату/период. В одной дате аналитики расчитываются параллельно, при этом, даты в периоде пересчитываются последовательно 
+  PROCEDURE tb_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAnltCode IN VARCHAR2); -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ load_sign!!! СЂР°СЃС‡РµС‚ РїРѕРєР°Р·Р°С‚РµР»СЏ, С…СЂР°РЅРёРјРѕРіРѕ РїРµСЂРёРѕРґР°РјРё Р·Р° СѓРєР°Р·Р°РЅРЅСѓСЋ РґР°С‚Сѓ
+  PROCEDURE ptb_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAnltCode IN VARCHAR2); -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ load_sign!!! СЂР°СЃС‡РµС‚ РїРѕРєР°Р·Р°С‚РµР»СЏ, С…СЂР°РЅРёРјРѕРіРѕ РїРѕ РґР°С‚Р°Рј Р·Р° СѓРєР°Р·Р°РЅРЅСѓСЋ РґР°С‚Сѓ
+  PROCEDURE load_sign(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inPrepareSegments NUMBER); -- РѕР±РµСЂС‚РєР° !!!Р”Р›РЇ Р РђРЎР§Р•РўРђ РџРћРљРђР—РђРўР•Р›Р•Р™ РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ РРњР•РќРќРћ Р•Р•!!!
+  --  ******************  РљРћРќР•Р§РќР«Р• РџР РћР¦Р•Р”РЈР Р« Р”Р›РЇ Р—РђРџРЈРЎРљРђ Р РђРЎР§Р•РўРћР’ *****************
+  --  ******************  Р”Р›РЇ РРЎРџРћР›Р¬Р—РћР’РђРќРРЇ Р’ Р РђР‘РћР§Р•Рњ РџРћР РЇР”РљР• *********************
+  -- РїР°СЂР°Р»Р»РµР»СЊРЅР°СЏ Р·Р°Р»РёРІРєР° СѓРєР°Р·Р°РЅРЅС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№ Р·Р° РѕРґРЅСѓ РґР°С‚Сѓ
+  -- РµСЃР»Рё РїР°СЂР°РјРµС‚СЂ inSign РЅРµ СѓРєР°Р·Р°РЅ, С‚Рѕ РїР°СЂР°Р»Р»РµР»СЊРЅР°СЏ Р·Р°Р»РёРІРєР° Р’РЎР•РҐ РїРѕРєР°Р·Р°С‚РµР»РµР№ Р·Р° РѕРґРЅСѓ РґР°С‚Сѓ
+  -- РїСЂРёРјРµСЂ РїР°СЂР°РјРµС‚СЂР° inSign:  'ACCOUNT_CUM_COLATERAL,ACCOUNT_SUM_61312,ACOUNT_SUM_91414'
+  PROCEDURE load_new(inSQL IN CLOB,inJobName IN VARCHAR2 DEFAULT NULL); -- РћСЃРЅРѕРІРЅРѕР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚ РґРёРЅР°РјРёС‡РµСЃРєРё РІС‹СЃС‚СЂР°РёРІР°РµРјРѕРіРѕ Р§РµР№РЅР° РЅР° РѕСЃРЅРѕРІРµ SQL
+  PROCEDURE load (inBegDate IN DATE,inEndDate IN DATE); -- РћР±РµСЂС‚РєР° Р·Р°РїСѓСЃРє СЂР°СЃС‡РµС‚Р° РІСЃРµС… РїРѕРєР°Р·Р°С‚РµР»РµР№ Р·Р° РѕРїСЂРµРґРµР»РµРЅРЅСѓСЋ РґР°С‚Сѓ/РїРµСЂРёРѕРґ. Р’ РѕРґРЅРѕР№ РґР°С‚Рµ РїРѕРєР°Р·Р°С‚РµР»Рё СЂР°СЃС‡РёС‚С‹РІР°СЋС‚СЃСЏ РїР°СЂР°Р»Р»РµР»СЊРЅРѕ, РЅРѕ СЃ СѓС‡РµС‚РѕРј Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№ РµСЃР»Рё С‚Р°РєРѕРІС‹Рµ РёРјРµСЋС‚СЃСЏ (РєР»Р°СЃСЃРёС‡РµСЃРєРёР№ Oracle Chain), РїСЂРё СЌС‚РѕРј, РґР°С‚С‹ РІ РїРµСЂРёРѕРґРµ РїРµСЂРµСЃС‡РёС‚С‹РІР°СЋС‚СЃСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ
+  PROCEDURE load_rel_asc(inBegDate IN DATE,inEndDate IN DATE,inSigns IN VARCHAR2,inUnit IN VARCHAR2,inAdvFilter VARCHAR2 DEFAULT NULL); -- РћР±РµСЂС‚РєР° Р·Р°РїСѓСЃРє СѓРєР°Р·Р°РЅРЅС‹С… Рё РІСЃРµС… Р·Р°РІРёСЃРёРјС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№ Р·Р° РѕРїСЂРµРґРµР»РµРЅРЅСѓСЋ РґР°С‚Сѓ/РїРµСЂРёРѕРґ. Р¦РµРїСЊ СЂР°СЃС‡РµС‚Р° РІС‹СЃС‚СЂР°РёРІР°РµС‚СЃСЏ СЃ СѓС‡РµС‚РѕРј РІСЃРµС… Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№. РџСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё С†РµРїРё СЂР°СЃС‡РµС‚РѕРІ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ С„Р»Р°Рі Р°СЂС…РёРІР° РїРѕРєР°Р·Р°С‚РµР»СЏ Рё РґРѕРї. СѓСЃР»РѕРІРёСЏ СЂР°СЃС‡РµС‚Р°
+  PROCEDURE load_rel_desc(inBegDate IN DATE,inEndDate IN DATE,inSigns IN VARCHAR2,inUnit IN VARCHAR2,inAdvFilter VARCHAR2 DEFAULT NULL); -- РћР±РµСЂС‚РєР° Р·Р°РїСѓСЃРє РІСЃРµС…, РѕС‚ РєРѕС‚РѕСЂС‹С… Р·Р°РІРёСЃСЏС‚ СѓРєР°Р·Р°РЅРЅС‹Рµ Рё СЃР°РјРёС… СѓРєР°Р·Р°РЅРЅС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№ Р·Р° РѕРїСЂРµРґРµР»РµРЅРЅСѓСЋ РґР°С‚Сѓ/РїРµСЂРёРѕРґ. Р¦РµРїСЊ СЂР°СЃС‡РµС‚Р° РІС‹СЃС‚СЂР°РёРІР°РµС‚СЃСЏ СЃ СѓС‡РµС‚РѕРј РІСЃРµС… Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№. РџСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё С†РµРїРё СЂР°СЃС‡РµС‚РѕРІ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ С„Р»Р°Рі Р°СЂС…РёРІР° РїРѕРєР°Р·Р°С‚РµР»СЏ Рё РґРѕРї. СѓСЃР»РѕРІРёСЏ СЂР°СЃС‡РµС‚Р°
+  PROCEDURE load_all_anlts(inBegDate IN DATE,inEndDate IN DATE); -- РћР±РµСЂС‚РєР° Р·Р°РїСѓСЃРє СЂР°СЃС‡РµС‚Р° РІСЃРµС… Р°РЅР°Р»РёС‚РёРє Р·Р° РѕРїСЂРµРґРµР»РµРЅРЅСѓСЋ РґР°С‚Сѓ/РїРµСЂРёРѕРґ. Р’ РѕРґРЅРѕР№ РґР°С‚Рµ Р°РЅР°Р»РёС‚РёРєРё СЂР°СЃС‡РёС‚С‹РІР°СЋС‚СЃСЏ РїР°СЂР°Р»Р»РµР»СЊРЅРѕ, РїСЂРё СЌС‚РѕРј, РґР°С‚С‹ РІ РїРµСЂРёРѕРґРµ РїРµСЂРµСЃС‡РёС‚С‹РІР°СЋС‚СЃСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ 
   -- *******************************************************************************
   -- *******************************************************************************
-  -- Массовая загрузка показателя
-  PROCEDURE mass_load(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inPrepareSegments NUMBER); -- Обертка для массового расчета показателя
-  -- Склеивание периодов в исторических показателях
-  --(необходимо например после "раздельно - массовой" загрузки исторического показателя)
-  PROCEDURE sign_gluing(inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inMask IN VARCHAR2 DEFAULT '111'); -- Склеивание показателя, хранящегося периодами
-  PROCEDURE tmp_load_prev(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2); -- вставка первичных наборов данных за первые числа месяцев (при массовых расчетах за период)
-  PROCEDURE tmp_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAnltCode IN VARCHAR2); -- обработка первичных наборов, расчеты за каждую дату (при массовых расчетах за период)
-  PROCEDURE tb_upd_eff_end(inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inDate IN DATE DEFAULT NULL); -- апдейт колонки effective_end показателя, хранящегося периодами, на указанную дату, или 31.12.5999 если дата не указана
+  -- РњР°СЃСЃРѕРІР°СЏ Р·Р°РіСЂСѓР·РєР° РїРѕРєР°Р·Р°С‚РµР»СЏ
+  PROCEDURE mass_load(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inPrepareSegments NUMBER); -- РћР±РµСЂС‚РєР° РґР»СЏ РјР°СЃСЃРѕРІРѕРіРѕ СЂР°СЃС‡РµС‚Р° РїРѕРєР°Р·Р°С‚РµР»СЏ
+  -- РЎРєР»РµРёРІР°РЅРёРµ РїРµСЂРёРѕРґРѕРІ РІ РёСЃС‚РѕСЂРёС‡РµСЃРєРёС… РїРѕРєР°Р·Р°С‚РµР»СЏС…
+  --(РЅРµРѕР±С…РѕРґРёРјРѕ РЅР°РїСЂРёРјРµСЂ РїРѕСЃР»Рµ "СЂР°Р·РґРµР»СЊРЅРѕ - РјР°СЃСЃРѕРІРѕР№" Р·Р°РіСЂСѓР·РєРё РёСЃС‚РѕСЂРёС‡РµСЃРєРѕРіРѕ РїРѕРєР°Р·Р°С‚РµР»СЏ)
+  PROCEDURE sign_gluing(inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inMask IN VARCHAR2 DEFAULT '111'); -- РЎРєР»РµРёРІР°РЅРёРµ РїРѕРєР°Р·Р°С‚РµР»СЏ, С…СЂР°РЅСЏС‰РµРіРѕСЃСЏ РїРµСЂРёРѕРґР°РјРё
+  PROCEDURE tmp_load_prev(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2); -- РІСЃС‚Р°РІРєР° РїРµСЂРІРёС‡РЅС‹С… РЅР°Р±РѕСЂРѕРІ РґР°РЅРЅС‹С… Р·Р° РїРµСЂРІС‹Рµ С‡РёСЃР»Р° РјРµСЃСЏС†РµРІ (РїСЂРё РјР°СЃСЃРѕРІС‹С… СЂР°СЃС‡РµС‚Р°С… Р·Р° РїРµСЂРёРѕРґ)
+  PROCEDURE tmp_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAnltCode IN VARCHAR2); -- РѕР±СЂР°Р±РѕС‚РєР° РїРµСЂРІРёС‡РЅС‹С… РЅР°Р±РѕСЂРѕРІ, СЂР°СЃС‡РµС‚С‹ Р·Р° РєР°Р¶РґСѓСЋ РґР°С‚Сѓ (РїСЂРё РјР°СЃСЃРѕРІС‹С… СЂР°СЃС‡РµС‚Р°С… Р·Р° РїРµСЂРёРѕРґ)
+  PROCEDURE tb_upd_eff_end(inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inDate IN DATE DEFAULT NULL); -- Р°РїРґРµР№С‚ РєРѕР»РѕРЅРєРё effective_end РїРѕРєР°Р·Р°С‚РµР»СЏ, С…СЂР°РЅСЏС‰РµРіРѕСЃСЏ РїРµСЂРёРѕРґР°РјРё, РЅР° СѓРєР°Р·Р°РЅРЅСѓСЋ РґР°С‚Сѓ, РёР»Рё 31.12.5999 РµСЃР»Рё РґР°С‚Р° РЅРµ СѓРєР°Р·Р°РЅР°
   PROCEDURE tb_load_mass(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VARCHAR2
-    ,inMask IN VARCHAR2 DEFAULT '111111'); -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ mass_load!!! массовый расчет за период показателя, хранящегося периодами
+    ,inMask IN VARCHAR2 DEFAULT '111111'); -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ mass_load!!! РјР°СЃСЃРѕРІС‹Р№ СЂР°СЃС‡РµС‚ Р·Р° РїРµСЂРёРѕРґ РїРѕРєР°Р·Р°С‚РµР»СЏ, С…СЂР°РЅСЏС‰РµРіРѕСЃСЏ РїРµСЂРёРѕРґР°РјРё
   /***************************************************************
-   * Расшифровка маски:                                          *
-   *  1-й символ: Предварительная загрузка 1-х чисел месяца      *
-   *              в промежуточную тиаблицу                       *
-   *  2-й символ: Прогрузка данных в промежуточной таблице       *
-   *              за каждое число месяца, начиная со 2-го        *
-   *  3-й символ: Очистка целевой партиции (если 0 то происходит *
-   *              подгонка effective_start и effective_end       *
-   *              по началу и окончанию периода)                 *
-   *  4-й символ: Загрузка данных в целевую таблицу              *
-   *  5-й символ: Сжатие данных и перестроение индексов в        *
-   *              целевой таблице                                *
-   *  6-й символ: Сбор статистики по целевой таблице             *
+   * Р Р°СЃС€РёС„СЂРѕРІРєР° РјР°СЃРєРё:                                          *
+   *  1-Р№ СЃРёРјРІРѕР»: РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ Р·Р°РіСЂСѓР·РєР° 1-С… С‡РёСЃРµР» РјРµСЃСЏС†Р°      *
+   *              РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚РёР°Р±Р»РёС†Сѓ                       *
+   *  2-Р№ СЃРёРјРІРѕР»: РџСЂРѕРіСЂСѓР·РєР° РґР°РЅРЅС‹С… РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†Рµ       *
+   *              Р·Р° РєР°Р¶РґРѕРµ С‡РёСЃР»Рѕ РјРµСЃСЏС†Р°, РЅР°С‡РёРЅР°СЏ СЃРѕ 2-РіРѕ        *
+   *  3-Р№ СЃРёРјРІРѕР»: РћС‡РёСЃС‚РєР° С†РµР»РµРІРѕР№ РїР°СЂС‚РёС†РёРё (РµСЃР»Рё 0 С‚Рѕ РїСЂРѕРёСЃС…РѕРґРёС‚ *
+   *              РїРѕРґРіРѕРЅРєР° effective_start Рё effective_end       *
+   *              РїРѕ РЅР°С‡Р°Р»Сѓ Рё РѕРєРѕРЅС‡Р°РЅРёСЋ РїРµСЂРёРѕРґР°)                 *
+   *  4-Р№ СЃРёРјРІРѕР»: Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РІ С†РµР»РµРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ              *
+   *  5-Р№ СЃРёРјРІРѕР»: РЎР¶Р°С‚РёРµ РґР°РЅРЅС‹С… Рё РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РІ        *
+   *              С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ                                *
+   *  6-Р№ СЃРёРјРІРѕР»: РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ             *
    ***************************************************************/
-  PROCEDURE SignExtProcessing(inSign IN VARCHAR2,inDate IN DATE); -- НЕ ИСПОЛЬЗУЕТСЯ 
-  FUNCTION get_empty_sign_id RETURN NUMBER; -- Возвращает минимальный не занятый ИД из справочника показателей
-  FUNCTION DropSignPartitions(inSign IN VARCHAR2) RETURN VARCHAR2; -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ drop_sign!!! Удаление партиций с хранимыми данными (используется при удалении показателя)
-  PROCEDURE drop_sign(inSign IN VARCHAR2,outRes OUT VARCHAR2); -- Обертка. Удаление показателя
-  FUNCTION GetTreeList(inSQL IN CLOB) RETURN TTabTree PIPELINED; -- Возвращает иерархический  набор данных в виде дерева
-  FUNCTION GetChainList(inSQL IN CLOB) RETURN TTabCHBuilder PIPELINED; -- Возвращает иерархический набор данных на основе переданного SQL. Используется Чейн-билдером
+  PROCEDURE SignExtProcessing(inSign IN VARCHAR2,inDate IN DATE); -- РќР• РРЎРџРћР›Р¬Р—РЈР•РўРЎРЇ 
+  FUNCTION get_empty_sign_id RETURN NUMBER; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РЅРµ Р·Р°РЅСЏС‚С‹Р№ РР” РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° РїРѕРєР°Р·Р°С‚РµР»РµР№
+  FUNCTION DropSignPartitions(inSign IN VARCHAR2) RETURN VARCHAR2; -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ drop_sign!!! РЈРґР°Р»РµРЅРёРµ РїР°СЂС‚РёС†РёР№ СЃ С…СЂР°РЅРёРјС‹РјРё РґР°РЅРЅС‹РјРё (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё СѓРґР°Р»РµРЅРёРё РїРѕРєР°Р·Р°С‚РµР»СЏ)
+  PROCEDURE drop_sign(inSign IN VARCHAR2,outRes OUT VARCHAR2); -- РћР±РµСЂС‚РєР°. РЈРґР°Р»РµРЅРёРµ РїРѕРєР°Р·Р°С‚РµР»СЏ
+  FUNCTION GetTreeList(inSQL IN CLOB) RETURN TTabTree PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№  РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РІ РІРёРґРµ РґРµСЂРµРІР°
+  FUNCTION GetChainList(inSQL IN CLOB) RETURN TTabCHBuilder PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РЅР° РѕСЃРЅРѕРІРµ РїРµСЂРµРґР°РЅРЅРѕРіРѕ SQL. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Р§РµР№РЅ-Р±РёР»РґРµСЂРѕРј
   FUNCTION GetTreeSQL(inFullSQL IN CLOB
                    ,inStartSQL IN CLOB
                    ,inIncludeChilds IN INTEGER DEFAULT 0)
-    RETURN CLOB; -- НЕ ИСПОЛЬЗУЕТСЯ
-  FUNCTION ChainBuilder(inSQL CLOB) RETURN VARCHAR2; -- Динамическое построение Chain'а на основе переданного SQL
-  FUNCTION ChainStarter(inChainName IN VARCHAR2,inHeadJobName IN VARCHAR2 DEFAULT NULL) RETURN VARCHAR2; --Старт динамически построенного чейна
-  PROCEDURE ChainKiller(inChainName VARCHAR2); -- Удаление динамически построенного и отработавшего чейна
+    RETURN CLOB; -- РќР• РРЎРџРћР›Р¬Р—РЈР•РўРЎРЇ
+  FUNCTION ChainBuilder(inSQL CLOB) RETURN VARCHAR2; -- Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ РїРѕСЃС‚СЂРѕРµРЅРёРµ Chain'Р° РЅР° РѕСЃРЅРѕРІРµ РїРµСЂРµРґР°РЅРЅРѕРіРѕ SQL
+  FUNCTION ChainStarter(inChainName IN VARCHAR2,inHeadJobName IN VARCHAR2 DEFAULT NULL) RETURN VARCHAR2; --РЎС‚Р°СЂС‚ РґРёРЅР°РјРёС‡РµСЃРєРё РїРѕСЃС‚СЂРѕРµРЅРЅРѕРіРѕ С‡РµР№РЅР°
+  PROCEDURE ChainKiller(inChainName VARCHAR2); -- РЈРґР°Р»РµРЅРёРµ РґРёРЅР°РјРёС‡РµСЃРєРё РїРѕСЃС‚СЂРѕРµРЅРЅРѕРіРѕ Рё РѕС‚СЂР°Р±РѕС‚Р°РІС€РµРіРѕ С‡РµР№РЅР°
   
-  PROCEDURE calc(inBegDate IN DATE,inEndDate IN DATE,inSendMessage BOOLEAN DEFAULT FALSE); -- Запуск пула расчетов за период (оычно запускается за одну дату, в периоде даты пересчитывает последовательно)
-  PROCEDURE CalcSignsByGroup(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2); -- Пересчет всех показателей группы
-  PROCEDURE CalcSignsByStar(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2); -- Пересчет всех показателей звезды
-  PROCEDURE CalcAnltByGroup(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2,inParallelJobs NUMBER DEFAULT 30); -- Раскраска всех фактов звезды ключевыми значениями. В качестве входящего параметра принимает ИД группы аналитик
-  PROCEDURE CalcAnltByStar(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2,inParallelJobs NUMBER DEFAULT 30); -- Раскраска всех фактов звезды ключевыми значениями. В качестве входящего параметра принимает ИД звезды
-  /*********  ИМПОРТ - ЭКСПОРТ *************/
-  --FUNCTION AnltSpecImpGetCondition(inSignName VARCHAR2,inIds VARCHAR2 DEFAULT NULL,inProduct IN NUMBER DEFAULT 0) RETURN CLOB; -- 0 - показатель; 1 - продукт
-  PROCEDURE ImportAnltSpecs(inDate IN DATE,inAnltCodes IN VARCHAR2); --Параллельный запуск импорта спецификаций указанных аналитик
-  PROCEDURE AnltSpecImport(inDate IN DATE,inAnltCode IN VARCHAR2); --Импорт спецификации аналитики (часто требуется импортировать уже готовую иерархическую структуру в качестве спецификации, а не набивать руками)
- /******  ЗВЁЗДЫ И ВСЁ ЧТО С НИМИ СВЯЗАНО ***************************/
+  PROCEDURE calc(inBegDate IN DATE,inEndDate IN DATE,inSendMessage BOOLEAN DEFAULT FALSE); -- Р—Р°РїСѓСЃРє РїСѓР»Р° СЂР°СЃС‡РµС‚РѕРІ Р·Р° РїРµСЂРёРѕРґ (РѕС‹С‡РЅРѕ Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ Р·Р° РѕРґРЅСѓ РґР°С‚Сѓ, РІ РїРµСЂРёРѕРґРµ РґР°С‚С‹ РїРµСЂРµСЃС‡РёС‚С‹РІР°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ)
+  PROCEDURE CalcSignsByGroup(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2); -- РџРµСЂРµСЃС‡РµС‚ РІСЃРµС… РїРѕРєР°Р·Р°С‚РµР»РµР№ РіСЂСѓРїРїС‹
+  PROCEDURE CalcSignsByStar(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2); -- РџРµСЂРµСЃС‡РµС‚ РІСЃРµС… РїРѕРєР°Р·Р°С‚РµР»РµР№ Р·РІРµР·РґС‹
+  PROCEDURE CalcAnltByGroup(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2,inParallelJobs NUMBER DEFAULT 30); -- Р Р°СЃРєСЂР°СЃРєР° РІСЃРµС… С„Р°РєС‚РѕРІ Р·РІРµР·РґС‹ РєР»СЋС‡РµРІС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё. Р’ РєР°С‡РµСЃС‚РІРµ РІС…РѕРґСЏС‰РµРіРѕ РїР°СЂР°РјРµС‚СЂР° РїСЂРёРЅРёРјР°РµС‚ РР” РіСЂСѓРїРїС‹ Р°РЅР°Р»РёС‚РёРє
+  PROCEDURE CalcAnltByStar(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inJobName VARCHAR2,inParallelJobs NUMBER DEFAULT 30); -- Р Р°СЃРєСЂР°СЃРєР° РІСЃРµС… С„Р°РєС‚РѕРІ Р·РІРµР·РґС‹ РєР»СЋС‡РµРІС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё. Р’ РєР°С‡РµСЃС‚РІРµ РІС…РѕРґСЏС‰РµРіРѕ РїР°СЂР°РјРµС‚СЂР° РїСЂРёРЅРёРјР°РµС‚ РР” Р·РІРµР·РґС‹
+  /*********  РРњРџРћР Рў - Р­РљРЎРџРћР Рў *************/
+  --FUNCTION AnltSpecImpGetCondition(inSignName VARCHAR2,inIds VARCHAR2 DEFAULT NULL,inProduct IN NUMBER DEFAULT 0) RETURN CLOB; -- 0 - РїРѕРєР°Р·Р°С‚РµР»СЊ; 1 - РїСЂРѕРґСѓРєС‚
+  PROCEDURE ImportAnltSpecs(inDate IN DATE,inAnltCodes IN VARCHAR2); --РџР°СЂР°Р»Р»РµР»СЊРЅС‹Р№ Р·Р°РїСѓСЃРє РёРјРїРѕСЂС‚Р° СЃРїРµС†РёС„РёРєР°С†РёР№ СѓРєР°Р·Р°РЅРЅС‹С… Р°РЅР°Р»РёС‚РёРє
+  PROCEDURE AnltSpecImport(inDate IN DATE,inAnltCode IN VARCHAR2); --РРјРїРѕСЂС‚ СЃРїРµС†РёС„РёРєР°С†РёРё Р°РЅР°Р»РёС‚РёРєРё (С‡Р°СЃС‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ РёРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ СѓР¶Рµ РіРѕС‚РѕРІСѓСЋ РёРµСЂР°СЂС…РёС‡РµСЃРєСѓСЋ СЃС‚СЂСѓРєС‚СѓСЂСѓ РІ РєР°С‡РµСЃС‚РІРµ СЃРїРµС†РёС„РёРєР°С†РёРё, Р° РЅРµ РЅР°Р±РёРІР°С‚СЊ СЂСѓРєР°РјРё)
+ /******  Р—Р’РЃР—Р”Р« Р Р’РЎРЃ Р§РўРћ РЎ РќРРњР РЎР’РЇР—РђРќРћ ***************************/
   FUNCTION  GetAnltLineSQL(inSQL IN CLOB,inIDName IN VARCHAR2
-    ,inPIDName IN VARCHAR2,inName IN VARCHAR2,inValue IN VARCHAR2) RETURN CLOB; -- Возвращает динамически построенный SQL запрос для иерархического измерения, который используется при разворачивании звезды за дату
-  FUNCTION StarGetFldList(inDate DATE,inGroupID NUMBER) RETURN TTabStarFldList PIPELINED; -- Возвращает список всех таблиц звезды с полями и флагом предагрегации по каждому полю
-  PROCEDURE StarPrepareAggrTable(inDate IN DATE,inAggrID IN NUMBER); -- Подготовка таблицы - агрегата звезды за дату
-  PROCEDURE StarPrepareAggrs(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА подготовка всех агрегатов звезды за период
-  PROCEDURE StarPrepareDim(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER); -- Подготовка простых измерений звезды, содержащих детальные данные (динамический DDL)
-  PROCEDURE PrepareTableBySQL(inDate IN DATE,inTableName IN VARCHAR2,inSQL IN CLOB,inComment IN VARCHAR2 DEFAULT NULL); -- Подготовка таблицы (партиции по AS_OF_DATE) по произвольному SQL
-  PROCEDURE StarPrepareAnlt(inDate IN DATE,inGroupID IN NUMBER,inAnltCode IN VARCHAR2); -- Подготовка иерархических измерений звезды, содержащих детальные данные (динамический DDL)
-  PROCEDURE StarPrepareFct(inDate IN DATE,inGroupID IN NUMBER); -- Подготовка таблиц фактов звезды, содержащих детальные данные (динамический DDL)
-  --PROCEDURE StarFctOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER); -- зполнение таблицы фактов за дату, содержащей детальные данные (выполнение DML)
-  PROCEDURE StarFctOnDateSign(inDate IN DATE,inGroupID IN NUMBER,inSign IN VARCHAR2); -- вставка данных в таблицу фактов за дату, содержащую детальные данные (выполнение DML) альтернатива предыдущей общей заливке для выполнения многопоточной вставки по каждому показателю
-  PROCEDURE StarAggrOnDate(inDate IN DATE,inAggrID IN NUMBER); -- заполнение произвольной таблицы - предагрегата за дату (выполнение DML)
-  PROCEDURE StarDimOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER); -- заполнение таблицы измерения за дату, содержащей детальные данные (выполнение DML)
-  PROCEDURE StarAnltOnDate(inDate IN DATE,inGroupID IN NUMBER,inAnltAlias IN VARCHAR2); -- заполнение таблицы иерархического измерения (аналитики) за дату, содержащей детальные данные
+    ,inPIDName IN VARCHAR2,inName IN VARCHAR2,inValue IN VARCHAR2) RETURN CLOB; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРёРЅР°РјРёС‡РµСЃРєРё РїРѕСЃС‚СЂРѕРµРЅРЅС‹Р№ SQL Р·Р°РїСЂРѕСЃ РґР»СЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РёР·РјРµСЂРµРЅРёСЏ, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё СЂР°Р·РІРѕСЂР°С‡РёРІР°РЅРёРё Р·РІРµР·РґС‹ Р·Р° РґР°С‚Сѓ
+  FUNCTION StarGetFldList(inDate DATE,inGroupID NUMBER) RETURN TTabStarFldList PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РІСЃРµС… С‚Р°Р±Р»РёС† Р·РІРµР·РґС‹ СЃ РїРѕР»СЏРјРё Рё С„Р»Р°РіРѕРј РїСЂРµРґР°РіСЂРµРіР°С†РёРё РїРѕ РєР°Р¶РґРѕРјСѓ РїРѕР»СЋ
+  PROCEDURE StarPrepareAggrTable(inDate IN DATE,inAggrID IN NUMBER); -- РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС†С‹ - Р°РіСЂРµРіР°С‚Р° Р·РІРµР·РґС‹ Р·Р° РґР°С‚Сѓ
+  PROCEDURE StarPrepareAggrs(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ РїРѕРґРіРѕС‚РѕРІРєР° РІСЃРµС… Р°РіСЂРµРіР°С‚РѕРІ Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarPrepareDim(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER); -- РџРѕРґРіРѕС‚РѕРІРєР° РїСЂРѕСЃС‚С‹С… РёР·РјРµСЂРµРЅРёР№ Р·РІРµР·РґС‹, СЃРѕРґРµСЂР¶Р°С‰РёС… РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РґРёРЅР°РјРёС‡РµСЃРєРёР№ DDL)
+  PROCEDURE PrepareTableBySQL(inDate IN DATE,inTableName IN VARCHAR2,inSQL IN CLOB,inComment IN VARCHAR2 DEFAULT NULL); -- РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС†С‹ (РїР°СЂС‚РёС†РёРё РїРѕ AS_OF_DATE) РїРѕ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРјСѓ SQL
+  PROCEDURE StarPrepareAnlt(inDate IN DATE,inGroupID IN NUMBER,inAnltCode IN VARCHAR2); -- РџРѕРґРіРѕС‚РѕРІРєР° РёРµСЂР°СЂС…РёС‡РµСЃРєРёС… РёР·РјРµСЂРµРЅРёР№ Р·РІРµР·РґС‹, СЃРѕРґРµСЂР¶Р°С‰РёС… РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РґРёРЅР°РјРёС‡РµСЃРєРёР№ DDL)
+  PROCEDURE StarPrepareFct(inDate IN DATE,inGroupID IN NUMBER); -- РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС† С„Р°РєС‚РѕРІ Р·РІРµР·РґС‹, СЃРѕРґРµСЂР¶Р°С‰РёС… РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РґРёРЅР°РјРёС‡РµСЃРєРёР№ DDL)
+  --PROCEDURE StarFctOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER); -- Р·РїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС†С‹ С„Р°РєС‚РѕРІ Р·Р° РґР°С‚Сѓ, СЃРѕРґРµСЂР¶Р°С‰РµР№ РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РІС‹РїРѕР»РЅРµРЅРёРµ DML)
+  PROCEDURE StarFctOnDateSign(inDate IN DATE,inGroupID IN NUMBER,inSign IN VARCHAR2); -- РІСЃС‚Р°РІРєР° РґР°РЅРЅС‹С… РІ С‚Р°Р±Р»РёС†Сѓ С„Р°РєС‚РѕРІ Р·Р° РґР°С‚Сѓ, СЃРѕРґРµСЂР¶Р°С‰СѓСЋ РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РІС‹РїРѕР»РЅРµРЅРёРµ DML) Р°Р»СЊС‚РµСЂРЅР°С‚РёРІР° РїСЂРµРґС‹РґСѓС‰РµР№ РѕР±С‰РµР№ Р·Р°Р»РёРІРєРµ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕР№ РІСЃС‚Р°РІРєРё РїРѕ РєР°Р¶РґРѕРјСѓ РїРѕРєР°Р·Р°С‚РµР»СЋ
+  PROCEDURE StarAggrOnDate(inDate IN DATE,inAggrID IN NUMBER); -- Р·Р°РїРѕР»РЅРµРЅРёРµ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ С‚Р°Р±Р»РёС†С‹ - РїСЂРµРґР°РіСЂРµРіР°С‚Р° Р·Р° РґР°С‚Сѓ (РІС‹РїРѕР»РЅРµРЅРёРµ DML)
+  PROCEDURE StarDimOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER); -- Р·Р°РїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РёР·РјРµСЂРµРЅРёСЏ Р·Р° РґР°С‚Сѓ, СЃРѕРґРµСЂР¶Р°С‰РµР№ РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РІС‹РїРѕР»РЅРµРЅРёРµ DML)
+  PROCEDURE StarAnltOnDate(inDate IN DATE,inGroupID IN NUMBER,inAnltAlias IN VARCHAR2); -- Р·Р°РїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РёР·РјРµСЂРµРЅРёСЏ (Р°РЅР°Р»РёС‚РёРєРё) Р·Р° РґР°С‚Сѓ, СЃРѕРґРµСЂР¶Р°С‰РµР№ РґРµС‚Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ
 
-  PROCEDURE StarPrepare(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА запуск подготовки таблиц звезды
-  PROCEDURE StarClear(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА запуск очистки звезды за период
-  PROCEDURE StarAggrsLoadData(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА запуск загрузки данных в таблицы предагрегатов
+  PROCEDURE StarPrepare(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ Р·Р°РїСѓСЃРє РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС† Р·РІРµР·РґС‹
+  PROCEDURE StarClear(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ Р·Р°РїСѓСЃРє РѕС‡РёСЃС‚РєРё Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarAggrsLoadData(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ Р·Р°РїСѓСЃРє Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С… РІ С‚Р°Р±Р»РёС†С‹ РїСЂРµРґР°РіСЂРµРіР°С‚РѕРІ
   PROCEDURE
   /************************************
-   Описание маски (0 - не выполнять, 1 - выполнять):
-   1-й символ - предварительный пересчет всех показателей по кубу
-   2-й символ - предварительный пересчет всех аналитик по кубу
+   РћРїРёСЃР°РЅРёРµ РјР°СЃРєРё (0 - РЅРµ РІС‹РїРѕР»РЅСЏС‚СЊ, 1 - РІС‹РїРѕР»РЅСЏС‚СЊ):
+   1-Р№ СЃРёРјРІРѕР» - РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїРµСЂРµСЃС‡РµС‚ РІСЃРµС… РїРѕРєР°Р·Р°С‚РµР»РµР№ РїРѕ РєСѓР±Сѓ
+   2-Р№ СЃРёРјРІРѕР» - РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїРµСЂРµСЃС‡РµС‚ РІСЃРµС… Р°РЅР°Р»РёС‚РёРє РїРѕ РєСѓР±Сѓ
   ************************************/
-    StarExpand(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inMask VARCHAR2 DEFAULT '00',inDaemonId NUMBER DEFAULT NULL,inParallelJobs NUMBER DEFAULT 30); -- ОБЕРТКА разворачивание звезды за период
-  PROCEDURE StarCompress(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА сжатие таблиц детального слоя звезды за период
-  PROCEDURE StarAggrsCompress(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА сжатие таблиц - предагрегатов звезды за период
-  PROCEDURE StarGatherStats(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА сбор статистики по таблицам детального слоя звезды за период
-  PROCEDURE StarAggrsGatherStats(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА сбор статистики по таблицам - предагрегатам звезды за период
-  PROCEDURE StarDropOldParts(inDate IN DATE,inGroupID IN NUMBER); -- ОБЕРТКА удаление старых партиций с данными звезды (тех которые превысили запланированные сроки хранения)
-  FUNCTION StarFixEmptyComments(inGroupID IN NUMBER) RETURN VARCHAR2; -- По возможности, заполняет отсутствующие комментарии таблиц звезды значениями по умолчанию. Возвращает строку (сообщение о количестве заполненных комментариев)
-  FUNCTION StarFieldCommentsAsHTML(inGroupID IN NUMBER) RETURN CLOB; -- Возвращает CLOB (Готовое описание в виде HTML)
-  PROCEDURE StarAggrRecalcOnDate(inDate IN DATE, inAggrID IN NUMBER); -- ОБЕРТКА осуществляет полный перерасчет отдельного агрегата за дату (с подготовкой,очисткой,наполнением,сжатием и сбором статистики)
+    StarExpand(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inMask VARCHAR2 DEFAULT '00',inDaemonId NUMBER DEFAULT NULL,inParallelJobs NUMBER DEFAULT 30); -- РћР‘Р•Р РўРљРђ СЂР°Р·РІРѕСЂР°С‡РёРІР°РЅРёРµ Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarCompress(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ СЃР¶Р°С‚РёРµ С‚Р°Р±Р»РёС† РґРµС‚Р°Р»СЊРЅРѕРіРѕ СЃР»РѕСЏ Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarAggrsCompress(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ СЃР¶Р°С‚РёРµ С‚Р°Р±Р»РёС† - РїСЂРµРґР°РіСЂРµРіР°С‚РѕРІ Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarGatherStats(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ СЃР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С‚Р°Р±Р»РёС†Р°Рј РґРµС‚Р°Р»СЊРЅРѕРіРѕ СЃР»РѕСЏ Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarAggrsGatherStats(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ СЃР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С‚Р°Р±Р»РёС†Р°Рј - РїСЂРµРґР°РіСЂРµРіР°С‚Р°Рј Р·РІРµР·РґС‹ Р·Р° РїРµСЂРёРѕРґ
+  PROCEDURE StarDropOldParts(inDate IN DATE,inGroupID IN NUMBER); -- РћР‘Р•Р РўРљРђ СѓРґР°Р»РµРЅРёРµ СЃС‚Р°СЂС‹С… РїР°СЂС‚РёС†РёР№ СЃ РґР°РЅРЅС‹РјРё Р·РІРµР·РґС‹ (С‚РµС… РєРѕС‚РѕСЂС‹Рµ РїСЂРµРІС‹СЃРёР»Рё Р·Р°РїР»Р°РЅРёСЂРѕРІР°РЅРЅС‹Рµ СЃСЂРѕРєРё С…СЂР°РЅРµРЅРёСЏ)
+  FUNCTION StarFixEmptyComments(inGroupID IN NUMBER) RETURN VARCHAR2; -- РџРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё, Р·Р°РїРѕР»РЅСЏРµС‚ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё С‚Р°Р±Р»РёС† Р·РІРµР·РґС‹ Р·РЅР°С‡РµРЅРёСЏРјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ. Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ (СЃРѕРѕР±С‰РµРЅРёРµ Рѕ РєРѕР»РёС‡РµСЃС‚РІРµ Р·Р°РїРѕР»РЅРµРЅРЅС‹С… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ)
+  FUNCTION StarFieldCommentsAsHTML(inGroupID IN NUMBER) RETURN CLOB; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ CLOB (Р“РѕС‚РѕРІРѕРµ РѕРїРёСЃР°РЅРёРµ РІ РІРёРґРµ HTML)
+  PROCEDURE StarAggrRecalcOnDate(inDate IN DATE, inAggrID IN NUMBER); -- РћР‘Р•Р РўРљРђ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРѕР»РЅС‹Р№ РїРµСЂРµСЂР°СЃС‡РµС‚ РѕС‚РґРµР»СЊРЅРѕРіРѕ Р°РіСЂРµРіР°С‚Р° Р·Р° РґР°С‚Сѓ (СЃ РїРѕРґРіРѕС‚РѕРІРєРѕР№,РѕС‡РёСЃС‚РєРѕР№,РЅР°РїРѕР»РЅРµРЅРёРµРј,СЃР¶Р°С‚РёРµРј Рё СЃР±РѕСЂРѕРј СЃС‚Р°С‚РёСЃС‚РёРєРё)
   /********************************************************************/
-  /************************ Техническое обслуживание ******************/
-  PROCEDURE HistTableService(inTableName IN VARCHAR2,inMask IN VARCHAR2,inSign IN VARCHAR2 DEFAULT NULL,inParallelJobs IN NUMBER DEFAULT 30); -- ОБЕРТКА обслуживание таблиц ХД, хранящих данные периодами
-  PROCEDURE ServiceTables(inAgeDays NUMBER,inDaemonId NUMBER DEFAULT NULL); -- ОБЕРТКА запуск сервисного обслуживания таблиц
+  /************************ РўРµС…РЅРёС‡РµСЃРєРѕРµ РѕР±СЃР»СѓР¶РёРІР°РЅРёРµ ******************/
+  PROCEDURE HistTableService(inTableName IN VARCHAR2,inMask IN VARCHAR2,inSign IN VARCHAR2 DEFAULT NULL,inParallelJobs IN NUMBER DEFAULT 30); -- РћР‘Р•Р РўРљРђ РѕР±СЃР»СѓР¶РёРІР°РЅРёРµ С‚Р°Р±Р»РёС† РҐР”, С…СЂР°РЅСЏС‰РёС… РґР°РЅРЅС‹Рµ РїРµСЂРёРѕРґР°РјРё
+  PROCEDURE ServiceTables(inAgeDays NUMBER,inDaemonId NUMBER DEFAULT NULL); -- РћР‘Р•Р РўРљРђ Р·Р°РїСѓСЃРє СЃРµСЂРІРёСЃРЅРѕРіРѕ РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ С‚Р°Р±Р»РёС†
   /***************************************************************
-   * Расшифровка маски:                                          *
-   *  1-й символ: Сжатие данных                                  *
-   *  2-й символ: Перестроение индексов                          *
-   *  3-й символ: Сбор статистики                                *
+   * Р Р°СЃС€РёС„СЂРѕРІРєР° РјР°СЃРєРё:                                          *
+   *  1-Р№ СЃРёРјРІРѕР»: РЎР¶Р°С‚РёРµ РґР°РЅРЅС‹С…                                  *
+   *  2-Р№ СЃРёРјРІРѕР»: РџРµСЂРµСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ                          *
+   *  3-Р№ СЃРёРјРІРѕР»: РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё                                *
    ***************************************************************/
   /********************************************************************/
-  FUNCTION GetVarCLOBValue(inVarName VARCHAR2) RETURN CLOB DETERMINISTIC; -- Возвращает значение переменной приложения как есть
-  FUNCTION GetVarValue(inVarName VARCHAR2) RETURN VARCHAR2 DETERMINISTIC; -- Умный возврат значения переменной приложения (для простых возвращает как есть, для вычисляемых - выполняет PLSQL блок и возвращает результат выполнения)
+  FUNCTION GetVarCLOBValue(inVarName VARCHAR2) RETURN CLOB DETERMINISTIC; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ РїСЂРёР»РѕР¶РµРЅРёСЏ РєР°Рє РµСЃС‚СЊ
+  FUNCTION GetVarValue(inVarName VARCHAR2) RETURN VARCHAR2 DETERMINISTIC; -- РЈРјРЅС‹Р№ РІРѕР·РІСЂР°С‚ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РїСЂРёР»РѕР¶РµРЅРёСЏ (РґР»СЏ РїСЂРѕСЃС‚С‹С… РІРѕР·РІСЂР°С‰Р°РµС‚ РєР°Рє РµСЃС‚СЊ, РґР»СЏ РІС‹С‡РёСЃР»СЏРµРјС‹С… - РІС‹РїРѕР»РЅСЏРµС‚ PLSQL Р±Р»РѕРє Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ)
   /********************************************************************/
-  FUNCTION call_hist(inTable IN VARCHAR2, inID IN VARCHAR2,inAction VARCHAR2) RETURN VARCHAR2; --Включение хранения истории изменений на таблице с метаданными
-  FUNCTION CanHaveHistory(inTable IN VARCHAR2) RETURN BOOLEAN; -- Проверяет возможно ли включение истории изменений на таблице (не дает включить историю изменений если таблица хранит не метаданные)
-  PROCEDURE SetFlag(inName IN VARCHAR2,inDate IN DATE,inVal IN VARCHAR2 DEFAULT NULL,inAction NUMBER DEFAULT 1); --Обработка флагов -- 1 - UPSERT, 0 - DELETE 
-  FUNCTION GetFlag(inFlagName IN VARCHAR2, inDate IN DATE) RETURN VARCHAR2; -- Вернуть значение флага
-  PROCEDURE LastFlag(inFlagName IN VARCHAR2,inValue IN VARCHAR2,inDate IN OUT DATE); -- Записывает во входящую переменную последнюю дату указанного флага с указанным значением. Поиск осуществляется за период >= изначально указанной в даты
-  FUNCTION HaveFlagReady(inFlagName IN VARCHAR2,inFlagValue IN VARCHAR2 DEFAULT NULL,inStartDate DATE DEFAULT NULL) RETURN BOOLEAN; -- Возвращает TRUE если по указанному наименованию флага есть хотя бы один с указанным значением (по умолчанию проверяется значение READY), иначе возвращает FALSE
-  FUNCTION SQLasHTML(inSQL IN CLOB,inColNames IN VARCHAR2,inColAliases IN VARCHAR2,inStyle IN VARCHAR2 DEFAULT NULL,inShowLogo BOOLEAN DEFAULT FALSE,inTabHeader VARCHAR2 DEFAULT NULL) RETURN CLOB; -- Возвращает результат запроса в виде HTML
-  /*********************** РЕПЛИКАЦИИ ***********************************/
-  FUNCTION ReplGetImpScript(inGroupID IN NUMBER,inMask IN VARCHAR2 DEFAULT '11111111',inOwner VARCHAR2 DEFAULT NULL) RETURN CLOB; -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ ReplStart!!! Динамическое формирование DML - скрипта для реплики метаданных звезд
-  PROCEDURE ReplAnltOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2,inAnltCode IN VARCHAR2); -- Реплика иерархического измерения
-  PROCEDURE ReplDimOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2,inEntityID IN NUMBER); -- Реплика простого измерения
-  PROCEDURE ReplAggrOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2,inAggrID IN NUMBER); -- Реплика агрегата
-  PROCEDURE ReplAggrsOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2); --ОБЕРТКА реплика всех агрегатов указанной группы
-  PROCEDURE ReplStarDataOld(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inFctGroupIdOld IN NUMBER,inDBLink IN VARCHAR2); -- !!!СЛЕДУЕТ ИСПОЛЬЗОВАТЬ ЧЕРЕЗ ОБЕРТКУ ReplStart!!! Запуск реплики данных звезд
-  PROCEDURE ReplStart(inOPTP IN NUMBER,inDBLink IN VARCHAR2,inOPID NUMBER DEFAULT NULL); -- ОБЕРТКА Запуск полной реплики звезд
-  PROCEDURE ReplAggrsStart(inOPTP IN NUMBER,inDBLink IN VARCHAR2,inOPID NUMBER DEFAULT NULL); -- ОБЕРТКА Запуск реплики агрегатов звезд
-  FUNCTION Daemon(inCondition IN CLOB,inExecute IN CLOB,inCondParams IN VARCHAR2,inExecParams IN VARCHAR2,inComment IN VARCHAR2,inForce NUMBER DEFAULT 0) RETURN VARCHAR2; -- Функция - ДЕМОН. Выполняет EXECUTE - блок, если выполнены условия CONDITION - блока
-  PROCEDURE ExecuteDaemon(inIdentifier IN VARCHAR2,inCondParams IN VARCHAR2 DEFAULT NULL,inExecParams IN VARCHAR2 DEFAULT NULL,inForce NUMBER DEFAULT 0); -- ОБЕРТКА -- Запуск демона
-  PROCEDURE DaemonsRun; --ОБЕРТКА Запуск всех демонов (для использования в JOB'e)
+  FUNCTION call_hist(inTable IN VARCHAR2, inID IN VARCHAR2,inAction VARCHAR2) RETURN VARCHAR2; --Р’РєР»СЋС‡РµРЅРёРµ С…СЂР°РЅРµРЅРёСЏ РёСЃС‚РѕСЂРёРё РёР·РјРµРЅРµРЅРёР№ РЅР° С‚Р°Р±Р»РёС†Рµ СЃ РјРµС‚Р°РґР°РЅРЅС‹РјРё
+  FUNCTION CanHaveHistory(inTable IN VARCHAR2) RETURN BOOLEAN; -- РџСЂРѕРІРµСЂСЏРµС‚ РІРѕР·РјРѕР¶РЅРѕ Р»Рё РІРєР»СЋС‡РµРЅРёРµ РёСЃС‚РѕСЂРёРё РёР·РјРµРЅРµРЅРёР№ РЅР° С‚Р°Р±Р»РёС†Рµ (РЅРµ РґР°РµС‚ РІРєР»СЋС‡РёС‚СЊ РёСЃС‚РѕСЂРёСЋ РёР·РјРµРЅРµРЅРёР№ РµСЃР»Рё С‚Р°Р±Р»РёС†Р° С…СЂР°РЅРёС‚ РЅРµ РјРµС‚Р°РґР°РЅРЅС‹Рµ)
+  PROCEDURE SetFlag(inName IN VARCHAR2,inDate IN DATE,inVal IN VARCHAR2 DEFAULT NULL,inAction NUMBER DEFAULT 1); --РћР±СЂР°Р±РѕС‚РєР° С„Р»Р°РіРѕРІ -- 1 - UPSERT, 0 - DELETE 
+  FUNCTION GetFlag(inFlagName IN VARCHAR2, inDate IN DATE) RETURN VARCHAR2; -- Р’РµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ С„Р»Р°РіР°
+  PROCEDURE LastFlag(inFlagName IN VARCHAR2,inValue IN VARCHAR2,inDate IN OUT DATE); -- Р—Р°РїРёСЃС‹РІР°РµС‚ РІРѕ РІС…РѕРґСЏС‰СѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ РїРѕСЃР»РµРґРЅСЋСЋ РґР°С‚Сѓ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С„Р»Р°РіР° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј. РџРѕРёСЃРє РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ Р·Р° РїРµСЂРёРѕРґ >= РёР·РЅР°С‡Р°Р»СЊРЅРѕ СѓРєР°Р·Р°РЅРЅРѕР№ РІ РґР°С‚С‹
+  FUNCTION HaveFlagReady(inFlagName IN VARCHAR2,inFlagValue IN VARCHAR2 DEFAULT NULL,inStartDate DATE DEFAULT NULL) RETURN BOOLEAN; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ TRUE РµСЃР»Рё РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ С„Р»Р°РіР° РµСЃС‚СЊ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ READY), РёРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ FALSE
+  FUNCTION SQLasHTML(inSQL IN CLOB,inColNames IN VARCHAR2,inColAliases IN VARCHAR2,inStyle IN VARCHAR2 DEFAULT NULL,inShowLogo BOOLEAN DEFAULT FALSE,inTabHeader VARCHAR2 DEFAULT NULL) RETURN CLOB; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ Р·Р°РїСЂРѕСЃР° РІ РІРёРґРµ HTML
+  /*********************** Р Р•РџР›РРљРђР¦РР ***********************************/
+  FUNCTION ReplGetImpScript(inGroupID IN NUMBER,inMask IN VARCHAR2 DEFAULT '11111111',inOwner VARCHAR2 DEFAULT NULL) RETURN CLOB; -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ ReplStart!!! Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ DML - СЃРєСЂРёРїС‚Р° РґР»СЏ СЂРµРїР»РёРєРё РјРµС‚Р°РґР°РЅРЅС‹С… Р·РІРµР·Рґ
+  PROCEDURE ReplAnltOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2,inAnltCode IN VARCHAR2); -- Р РµРїР»РёРєР° РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РёР·РјРµСЂРµРЅРёСЏ
+  PROCEDURE ReplDimOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2,inEntityID IN NUMBER); -- Р РµРїР»РёРєР° РїСЂРѕСЃС‚РѕРіРѕ РёР·РјРµСЂРµРЅРёСЏ
+  PROCEDURE ReplAggrOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2,inAggrID IN NUMBER); -- Р РµРїР»РёРєР° Р°РіСЂРµРіР°С‚Р°
+  PROCEDURE ReplAggrsOnDate(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inDBLink IN VARCHAR2); --РћР‘Р•Р РўРљРђ СЂРµРїР»РёРєР° РІСЃРµС… Р°РіСЂРµРіР°С‚РѕРІ СѓРєР°Р·Р°РЅРЅРѕР№ РіСЂСѓРїРїС‹
+  PROCEDURE ReplStarDataOld(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUMBER,inFctGroupIdOld IN NUMBER,inDBLink IN VARCHAR2); -- !!!РЎР›Р•Р”РЈР•Рў РРЎРџРћР›Р¬Р—РћР’РђРўР¬ Р§Р•Р Р•Р— РћР‘Р•Р РўРљРЈ ReplStart!!! Р—Р°РїСѓСЃРє СЂРµРїР»РёРєРё РґР°РЅРЅС‹С… Р·РІРµР·Рґ
+  PROCEDURE ReplStart(inOPTP IN NUMBER,inDBLink IN VARCHAR2,inOPID NUMBER DEFAULT NULL); -- РћР‘Р•Р РўРљРђ Р—Р°РїСѓСЃРє РїРѕР»РЅРѕР№ СЂРµРїР»РёРєРё Р·РІРµР·Рґ
+  PROCEDURE ReplAggrsStart(inOPTP IN NUMBER,inDBLink IN VARCHAR2,inOPID NUMBER DEFAULT NULL); -- РћР‘Р•Р РўРљРђ Р—Р°РїСѓСЃРє СЂРµРїР»РёРєРё Р°РіСЂРµРіР°С‚РѕРІ Р·РІРµР·Рґ
+  FUNCTION Daemon(inCondition IN CLOB,inExecute IN CLOB,inCondParams IN VARCHAR2,inExecParams IN VARCHAR2,inComment IN VARCHAR2,inForce NUMBER DEFAULT 0) RETURN VARCHAR2; -- Р¤СѓРЅРєС†РёСЏ - Р”Р•РњРћРќ. Р’С‹РїРѕР»РЅСЏРµС‚ EXECUTE - Р±Р»РѕРє, РµСЃР»Рё РІС‹РїРѕР»РЅРµРЅС‹ СѓСЃР»РѕРІРёСЏ CONDITION - Р±Р»РѕРєР°
+  PROCEDURE ExecuteDaemon(inIdentifier IN VARCHAR2,inCondParams IN VARCHAR2 DEFAULT NULL,inExecParams IN VARCHAR2 DEFAULT NULL,inForce NUMBER DEFAULT 0); -- РћР‘Р•Р РўРљРђ -- Р—Р°РїСѓСЃРє РґРµРјРѕРЅР°
+  PROCEDURE DaemonsRun; --РћР‘Р•Р РўРљРђ Р—Р°РїСѓСЃРє РІСЃРµС… РґРµРјРѕРЅРѕРІ (РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ JOB'e)
   /*******************************************************************************************/
-  PROCEDURE DSPrepareTable(inModelName IN VARCHAR2,inDate IN DATE,inTableType IN VARCHAR2 DEFAULT 'MD'); -- Подготавливает таблицу для хранения данных, связанных с моделью
-  FUNCTION DSGetFtr(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2) RETURN TTab PIPELINED; -- Возвращает набор данных для фичи (на основе SQL, написанного разработчиком для указанной фичи)
-  PROCEDURE DSFtrOnDate(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2); -- Вставка подготовленного набора размеченных данных за дату для фичи
-  FUNCTION DSFitGetFtrSQL(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2,inTop INTEGER DEFAULT 3) RETURN VARCHAR2; -- Возвращает SQL для дообучения модели по одной фиче
-  PROCEDURE DSFitFtrOnDate(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2,inTopPrdCou INTEGER DEFAULT 3); -- Вставка набора - результата обучения за дату для фичи
-  PROCEDURE DSCompressTable(inModelName VARCHAR2,inDate IN DATE,inTableType IN VARCHAR2 DEFAULT 'MD'); --ОБЕРТКА сжатие таблицы хранения размеченных данных модели
-  PROCEDURE DSFitFtrSetWeight(inDate IN DATE,inModelName IN VARCHAR2,inFtrName VARCHAR2); -- Устанавливает вес фичи по доле угаданных
-  PROCEDURE DSMDOnDate(inDate IN DATE,inModelName IN VARCHAR2); --ОБЕРТКА Подготовка размеченных данных модели
-  PROCEDURE DSFitOnDate(inDate IN DATE,inModelName IN VARCHAR2,inTop IN INTEGER DEFAULT 3); --ОБЕРТКА Обучение модели
+  PROCEDURE DSPrepareTable(inModelName IN VARCHAR2,inDate IN DATE,inTableType IN VARCHAR2 DEFAULT 'MD'); -- РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµС‚ С‚Р°Р±Р»РёС†Сѓ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…, СЃРІСЏР·Р°РЅРЅС‹С… СЃ РјРѕРґРµР»СЊСЋ
+  FUNCTION DSGetFtr(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2) RETURN TTab PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РґР»СЏ С„РёС‡Рё (РЅР° РѕСЃРЅРѕРІРµ SQL, РЅР°РїРёСЃР°РЅРЅРѕРіРѕ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕР№ С„РёС‡Рё)
+  PROCEDURE DSFtrOnDate(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2); -- Р’СЃС‚Р°РІРєР° РїРѕРґРіРѕС‚РѕРІР»РµРЅРЅРѕРіРѕ РЅР°Р±РѕСЂР° СЂР°Р·РјРµС‡РµРЅРЅС‹С… РґР°РЅРЅС‹С… Р·Р° РґР°С‚Сѓ РґР»СЏ С„РёС‡Рё
+  FUNCTION DSFitGetFtrSQL(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2,inTop INTEGER DEFAULT 3) RETURN VARCHAR2; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ SQL РґР»СЏ РґРѕРѕР±СѓС‡РµРЅРёСЏ РјРѕРґРµР»Рё РїРѕ РѕРґРЅРѕР№ С„РёС‡Рµ
+  PROCEDURE DSFitFtrOnDate(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2,inTopPrdCou INTEGER DEFAULT 3); -- Р’СЃС‚Р°РІРєР° РЅР°Р±РѕСЂР° - СЂРµР·СѓР»СЊС‚Р°С‚Р° РѕР±СѓС‡РµРЅРёСЏ Р·Р° РґР°С‚Сѓ РґР»СЏ С„РёС‡Рё
+  PROCEDURE DSCompressTable(inModelName VARCHAR2,inDate IN DATE,inTableType IN VARCHAR2 DEFAULT 'MD'); --РћР‘Р•Р РўРљРђ СЃР¶Р°С‚РёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ СЂР°Р·РјРµС‡РµРЅРЅС‹С… РґР°РЅРЅС‹С… РјРѕРґРµР»Рё
+  PROCEDURE DSFitFtrSetWeight(inDate IN DATE,inModelName IN VARCHAR2,inFtrName VARCHAR2); -- РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІРµСЃ С„РёС‡Рё РїРѕ РґРѕР»Рµ СѓРіР°РґР°РЅРЅС‹С…
+  PROCEDURE DSMDOnDate(inDate IN DATE,inModelName IN VARCHAR2); --РћР‘Р•Р РўРљРђ РџРѕРґРіРѕС‚РѕРІРєР° СЂР°Р·РјРµС‡РµРЅРЅС‹С… РґР°РЅРЅС‹С… РјРѕРґРµР»Рё
+  PROCEDURE DSFitOnDate(inDate IN DATE,inModelName IN VARCHAR2,inTop IN INTEGER DEFAULT 3); --РћР‘Р•Р РўРљРђ РћР±СѓС‡РµРЅРёРµ РјРѕРґРµР»Рё
 
   TYPE TrecRegrData IS RECORD(x NUMBER,y NUMBER);
   TYPE TTabRegrData IS TABLE OF TrecRegrData;
   
-  FUNCTION DSRegrGetData(inSQL CLOB) RETURN TTabRegrData PIPELINED; --Возвращает набор данных для регрессии в виде коллекции (x,y)
-  FUNCTION DSRegrGetAvg(inSQL IN VARCHAR2,inDeep IN INTEGER,inIter IN INTEGER DEFAULT 2) RETURN TTabRegrData PIPELINED; -- Возвращает усредненный набор данных на основе заданного
-  FUNCTION DSRegrLTRGetData(inSQL CLOB) RETURN TTabRegrData PIPELINED; --Возвращает набор данных - линейный тренд (по начальному набору для регрессии)
-  FUNCTION DSRegrLTRGetKoef(inSQL IN CLOB,inDeep IN INTEGER DEFAULT 3,inIter IN INTEGER DEFAULT 3) RETURN TrecRegrData DETERMINISTIC; --Возвращает коэффициенты для линейного тренда в виде записи (rec.x = A, rec.y = B)
-  PROCEDURE DSRegrLTRGetKoef(inSQL IN CLOB,outM OUT NUMBER,outB OUT NUMBER); --Возвращает через разделитель коэффициенты для линейного тренда
-  FUNCTION DSRegrLTRPredict(inSQL IN CLOB,inX IN NUMBER,inDeep IN INTEGER DEFAULT 3,inIter IN INTEGER DEFAULT 3) RETURN NUMBER; -- ОБКРТКА Прогнозирует Y по X на основе линейного тренда
+  FUNCTION DSRegrGetData(inSQL CLOB) RETURN TTabRegrData PIPELINED; --Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РґР»СЏ СЂРµРіСЂРµСЃСЃРёРё РІ РІРёРґРµ РєРѕР»Р»РµРєС†РёРё (x,y)
+  FUNCTION DSRegrGetAvg(inSQL IN VARCHAR2,inDeep IN INTEGER,inIter IN INTEGER DEFAULT 2) RETURN TTabRegrData PIPELINED; -- Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓСЃСЂРµРґРЅРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РЅР° РѕСЃРЅРѕРІРµ Р·Р°РґР°РЅРЅРѕРіРѕ
+  FUNCTION DSRegrLTRGetData(inSQL CLOB) RETURN TTabRegrData PIPELINED; --Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… - Р»РёРЅРµР№РЅС‹Р№ С‚СЂРµРЅРґ (РїРѕ РЅР°С‡Р°Р»СЊРЅРѕРјСѓ РЅР°Р±РѕСЂСѓ РґР»СЏ СЂРµРіСЂРµСЃСЃРёРё)
+  FUNCTION DSRegrLTRGetKoef(inSQL IN CLOB,inDeep IN INTEGER DEFAULT 3,inIter IN INTEGER DEFAULT 3) RETURN TrecRegrData DETERMINISTIC; --Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РґР»СЏ Р»РёРЅРµР№РЅРѕРіРѕ С‚СЂРµРЅРґР° РІ РІРёРґРµ Р·Р°РїРёСЃРё (rec.x = A, rec.y = B)
+  PROCEDURE DSRegrLTRGetKoef(inSQL IN CLOB,outM OUT NUMBER,outB OUT NUMBER); --Р’РѕР·РІСЂР°С‰Р°РµС‚ С‡РµСЂРµР· СЂР°Р·РґРµР»РёС‚РµР»СЊ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РґР»СЏ Р»РёРЅРµР№РЅРѕРіРѕ С‚СЂРµРЅРґР°
+  FUNCTION DSRegrLTRPredict(inSQL IN CLOB,inX IN NUMBER,inDeep IN INTEGER DEFAULT 3,inIter IN INTEGER DEFAULT 3) RETURN NUMBER; -- РћР‘РљР РўРљРђ РџСЂРѕРіРЅРѕР·РёСЂСѓРµС‚ Y РїРѕ X РЅР° РѕСЃРЅРѕРІРµ Р»РёРЅРµР№РЅРѕРіРѕ С‚СЂРµРЅРґР°
   /*******************************************************************************************/
   FUNCTION RegistryCreateObjDDL(inTableName IN VARCHAR2
                                ,inTableComment IN VARCHAR2
                                ,inMask IN VARCHAR2 DEFAULT '11111'
                                ,inOwner VARCHAR2 DEFAULT NULL
                                ,inTableSpaceName VARCHAR2 DEFAULT NULL
-                               ) RETURN CLOB; -- Формирование DDL создания по метаданным таблиц реестра
-  FUNCTION RegistryGetDDLScript(inOwner IN VARCHAR2,inTablespaceName IN VARCHAR2, inExtFilter IN VARCHAR2 DEFAULT NULL) RETURN CLOB; -- ОБЕРТКА возвращает скрипт для создания объектов по данным репозитория
-  FUNCTION RegistryGetDMLScript(inOwner IN VARCHAR2,inExtFilter IN VARCHAR2 DEFAULT NULL) RETURN CLOB; -- ОБЕРТКА возвращает скрипт для вставки общих метаданных объектов по данным репозитория
+                               ) RETURN CLOB; -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ DDL СЃРѕР·РґР°РЅРёСЏ РїРѕ РјРµС‚Р°РґР°РЅРЅС‹Рј С‚Р°Р±Р»РёС† СЂРµРµСЃС‚СЂР°
+  FUNCTION RegistryGetDDLScript(inOwner IN VARCHAR2,inTablespaceName IN VARCHAR2, inExtFilter IN VARCHAR2 DEFAULT NULL) RETURN CLOB; -- РћР‘Р•Р РўРљРђ РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРєСЂРёРїС‚ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ РїРѕ РґР°РЅРЅС‹Рј СЂРµРїРѕР·РёС‚РѕСЂРёСЏ
+  FUNCTION RegistryGetDMLScript(inOwner IN VARCHAR2,inExtFilter IN VARCHAR2 DEFAULT NULL) RETURN CLOB; -- РћР‘Р•Р РўРљРђ РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРєСЂРёРїС‚ РґР»СЏ РІСЃС‚Р°РІРєРё РѕР±С‰РёС… РјРµС‚Р°РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РїРѕ РґР°РЅРЅС‹Рј СЂРµРїРѕР·РёС‚РѕСЂРёСЏ
 END pkg_etl_signs;
 /
 CREATE OR REPLACE PACKAGE BODY DM_SKB.pkg_etl_signs
@@ -403,11 +403,11 @@ BEGIN
   EXCEPTION WHEN NO_DATA_FOUND THEN
     RAISE errNoRecipients;
   END;
-  vTheme := 'Оповещение от проекта '||v_project_name||' ('||inTheme||')';
+  vTheme := 'РћРїРѕРІРµС‰РµРЅРёРµ РѕС‚ РїСЂРѕРµРєС‚Р° '||v_project_name||' ('||inTheme||')';
   v_headers := '<h3>' || vTheme ||'</h3>';
   v_body_message :=
-    v_headers||'<p><b>Текст сообщения:</b></p><p>'||inMessage||'</p>'||
-    '<p>Вы получили это сообщение т.к. подписаны на рассылку уведомлений в системе нотификаций.<p>'||GetVarValue('vStopNotification');
+    v_headers||'<p><b>РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ:</b></p><p>'||inMessage||'</p>'||
+    '<p>Р’С‹ РїРѕР»СѓС‡РёР»Рё СЌС‚Рѕ СЃРѕРѕР±С‰РµРЅРёРµ С‚.Рє. РїРѕРґРїРёСЃР°РЅС‹ РЅР° СЂР°СЃСЃС‹Р»РєСѓ СѓРІРµРґРѕРјР»РµРЅРёР№ РІ СЃРёСЃС‚РµРјРµ РЅРѕС‚РёС„РёРєР°С†РёР№.<p>'||GetVarValue('vStopNotification');
                  
   INSERT INTO iskra.atb_emails( mail_user, mail_to, mail_to_copy, mail_subject, mail_body, mail_status ) 
      VALUES ('single_base_sales_kb'
@@ -419,10 +419,10 @@ BEGIN
   COMMIT;  
 EXCEPTION
   WHEN errNoProj THEN 
-    vMes := 'ERROR :: Проекта с номером '||inProjID ||' не существует в системе нотификаций';
+    vMes := 'ERROR :: РџСЂРѕРµРєС‚Р° СЃ РЅРѕРјРµСЂРѕРј '||inProjID ||' РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ СЃРёСЃС‚РµРјРµ РЅРѕС‚РёС„РёРєР°С†РёР№';
     pr_log_write(LOWER(vOWner)||'.pkg_etl_signs.send_message_about_project',vMes);
   WHEN errNoRecipients THEN 
-    vMes := 'ERROR :: Отсутствует список получателей рассылки от проекта ('||inProjID||') "'||v_project_name||'"';
+    vMes := 'ERROR :: РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚ СЃРїРёСЃРѕРє РїРѕР»СѓС‡Р°С‚РµР»РµР№ СЂР°СЃСЃС‹Р»РєРё РѕС‚ РїСЂРѕРµРєС‚Р° ('||inProjID||') "'||v_project_name||'"';
     pr_log_write(LOWER(vOWner)||'.pkg_etl_signs.send_message_about_project',vMes);
   WHEN OTHERS THEN
     vMes := 'ERROR :: '||SQLERRM;
@@ -431,7 +431,7 @@ END send_message_about_project;
 
 PROCEDURE SendMainLogs(inOPID NUMBER)
   IS
-    vPars VARCHAR2(32700) := 'SELECT pnam,CASE ptyp WHEN ''S'' THEN ''Строка'' WHEN ''D'' THEN ''Дата'' ELSE ''Число'' END AS ptyp,pval FROM lg_pars WHERE opid = '||inOPID||' AND stid = 0';
+    vPars VARCHAR2(32700) := 'SELECT pnam,CASE ptyp WHEN ''S'' THEN ''РЎС‚СЂРѕРєР°'' WHEN ''D'' THEN ''Р”Р°С‚Р°'' ELSE ''Р§РёСЃР»Рѕ'' END AS ptyp,pval FROM lg_pars WHERE opid = '||inOPID||' AND stid = 0';
     vBuff VARCHAR2(32700) :=
     'SELECT CASE WHEN to_char(l.mstx) LIKE ''%ERROR ::%'' THEN ''<span style="color: red">''||to_char(p.stid)||''</span>'' ELSE to_char(p.stid) END AS stid
            ,CASE WHEN to_char(l.mstx) LIKE ''%ERROR ::%'' THEN ''<span style="color: red">''||to_char(p.snam)||''</span>'' ELSE to_char(p.snam) END AS snam
@@ -447,11 +447,11 @@ PROCEDURE SendMainLogs(inOPID NUMBER)
 BEGIN
   SELECT opnm INTO vName FROM lg_oper WHERE opid = inOPID;
   send_message_about_project(to_number(GetVarValue('vProjectID')), vName||': OPID = '||inOPID,
-     SQLasHTML(vPars,'PNAM#!#PTYP#!#PVAL','Наименование параметра:#!#Тип параметра:#!#Значение параметра:',NULL,FALSE,'<span class="TabHeaderText">Значения параметров:</span>')||'<br/>'||
+     SQLasHTML(vPars,'PNAM#!#PTYP#!#PVAL','РќР°РёРјРµРЅРѕРІР°РЅРёРµ РїР°СЂР°РјРµС‚СЂР°:#!#РўРёРї РїР°СЂР°РјРµС‚СЂР°:#!#Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР°:',NULL,FALSE,'<span class="TabHeaderText">Р—РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ:</span>')||'<br/>'||
     SQLasHTML(vBuff,'STID#!#SNAM#!#STDT#!#EDDT#!#TI#!#MSTX'
-                    ,'Ид этапа:#!#Наименование этапа:#!#Время старта:#!#Время окончания:#!#Время выполнения:#!#Результат:',' ',FALSE,'<span class="TabHeaderText">Результаты логирования:</span>'));
+                    ,'РРґ СЌС‚Р°РїР°:#!#РќР°РёРјРµРЅРѕРІР°РЅРёРµ СЌС‚Р°РїР°:#!#Р’СЂРµРјСЏ СЃС‚Р°СЂС‚Р°:#!#Р’СЂРµРјСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ:#!#Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ:#!#Р РµР·СѓР»СЊС‚Р°С‚:',' ',FALSE,'<span class="TabHeaderText">Р РµР·СѓР»СЊС‚Р°С‚С‹ Р»РѕРіРёСЂРѕРІР°РЅРёСЏ:</span>'));
   
-  --dbms_output.put_line(SQLasHTML(vBuff,'STID#!#SNAM#!#STDT#!#EDDT#!#TI#!#MSTX','Ид этапа:#!#Наименование этапа:#!#Время старта:#!#Время окончания:#!#Время выполнения:#!#Результат:'));
+  --dbms_output.put_line(SQLasHTML(vBuff,'STID#!#SNAM#!#STDT#!#EDDT#!#TI#!#MSTX','РРґ СЌС‚Р°РїР°:#!#РќР°РёРјРµРЅРѕРІР°РЅРёРµ СЌС‚Р°РїР°:#!#Р’СЂРµРјСЏ СЃС‚Р°СЂС‚Р°:#!#Р’СЂРµРјСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ:#!#Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ:#!#Р РµР·СѓР»СЊС‚Р°С‚:'));
 EXCEPTION WHEN OTHERS THEN
   NULL;
   send_message_about_project(to_number(GetVarValue('vProjectID')), 'OPID = '||inOPID, SQLERRM);
@@ -473,7 +473,7 @@ BEGIN
    COMMIT;
 END pr_stat_write;
 
-FUNCTION get_ti_as_hms (inInterval IN NUMBER /*интервал в днях*/) RETURN VARCHAR2
+FUNCTION get_ti_as_hms (inInterval IN NUMBER /*РёРЅС‚РµСЂРІР°Р» РІ РґРЅСЏС…*/) RETURN VARCHAR2
   IS
 BEGIN
   RETURN LPAD(TO_CHAR(TRUNC(inInterval*24*60*60/3600)),3,' ')||'h '||LPAD(TO_CHAR(TRUNC(MOD(inInterval*24*60*60,3600)/60)),2,' ')||'m '||LPAD(TO_CHAR(ROUND(MOD(MOD(inInterval*24*60*60,3600),60),0)),2,' ')||'s';
@@ -607,7 +607,7 @@ BEGIN
       EXECUTE IMMEDIATE vCond USING OUT vResult;
       --dbms_output.put_line(vCond);
     EXCEPTION WHEN OTHERS THEN
-      pr_log_write(lower(vOwner)||'.pkg_etl_signs.GetConditionResult','ERROR :: Comment: '||inComment||' :: Возможно не заданы значения входящих параметров: '||CHR(10)||'-------------------'||CHR(10)||vCond);
+      pr_log_write(lower(vOwner)||'.pkg_etl_signs.GetConditionResult','ERROR :: Comment: '||inComment||' :: Р’РѕР·РјРѕР¶РЅРѕ РЅРµ Р·Р°РґР°РЅС‹ Р·РЅР°С‡РµРЅРёСЏ РІС…РѕРґСЏС‰РёС… РїР°СЂР°РјРµС‚СЂРѕРІ: '||CHR(10)||'-------------------'||CHR(10)||vCond);
     END;
     --dbms_output.put_line('DECLARE vRes BOOLEAN; BEGIN vRes := '||vCond||'; IF vRes THEN :1 := 1; ELSE :1 := 0; END IF; END;');
     --dbms_output.put_line(sign_name)
@@ -642,7 +642,7 @@ PROCEDURE mass_load_parallel_by_date_pe(inBeg IN DATE, inEnd IN DATE, inUnit IN 
     vMes := 'START :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.mass_load_parallel_by_date_pe" started.';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load_parallel_by_date_pe',vMes);
 
-    -- Формирование строки доп. параметров
+    -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РґРѕРї. РїР°СЂР°РјРµС‚СЂРѕРІ
     IF inParams IS NOT NULL THEN
       FOR idx IN (
         SELECT SUBSTR(str,1,INSTR(str,' ',1,1)-1) AS param_type
@@ -657,10 +657,10 @@ PROCEDURE mass_load_parallel_by_date_pe(inBeg IN DATE, inEnd IN DATE, inUnit IN 
       END LOOP;
       vParams := SUBSTR(vParams,1,LENGTH(vParams) - 1)  ;
     END IF;
-    --Вычисление количества потоков
+    --Р’С‹С‡РёСЃР»РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° РїРѕС‚РѕРєРѕРІ
     SELECT TRUNC(to_number(VALUE)/5*4) INTO vPLev FROM v$parameter WHERE NAME = 'job_queue_processes';
 
-    -- Создание временной таблицы
+    -- РЎРѕР·РґР°РЅРёРµ РІСЂРµРјРµРЅРЅРѕР№ С‚Р°Р±Р»РёС†С‹
     EXECUTE IMMEDIATE 'CREATE TABLE '||lower(vOwner)||'.tmp_'||vTask||' (id NUMBER,exec_sql VARCHAR2(2000))';
     FOR idx IN (SELECT rownum AS id
                ,'begin '||inUnit||'(to_date('''''||to_char(inBeg+rownum-1,'DD.MM.YYYY')||''''',''''DD.MM.YYYY''''),to_date('''''||to_char(inBeg+rownum-1,'DD.MM.YYYY')||''''',''''DD.MM.YYYY'''')'||NVL2(vParams,','||vParams,'')||'); end;' AS vSQL
@@ -676,16 +676,16 @@ PROCEDURE mass_load_parallel_by_date_pe(inBeg IN DATE, inEnd IN DATE, inUnit IN 
     END LOOP;
 
 
-      --Наименование задачи
+      --РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р·Р°РґР°С‡Рё
       DBMS_PARALLEL_EXECUTE.CREATE_TASK(task_name => vTask);
 
-      --Раскладка по потокам
+      --Р Р°СЃРєР»Р°РґРєР° РїРѕ РїРѕС‚РѕРєР°Рј
       DBMS_PARALLEL_EXECUTE.CREATE_CHUNKS_BY_SQL
         (task_name => vTask
         ,sql_stmt =>'SELECT id,id FROM '||lower(vOwner)||'.tmp_'||vTask||' ORDER BY 1'
         ,by_rowid => FALSE
         );
-      --Запуск задачи на выполнение
+      --Р—Р°РїСѓСЃРє Р·Р°РґР°С‡Рё РЅР° РІС‹РїРѕР»РЅРµРЅРёРµ
       DBMS_PARALLEL_EXECUTE.RUN_TASK (task_name => vTask,
          sql_stmt => 'declare
                         vSQL VARCHAR2(4000);
@@ -700,7 +700,7 @@ PROCEDURE mass_load_parallel_by_date_pe(inBeg IN DATE, inEnd IN DATE, inUnit IN 
          ,language_flag => DBMS_SQL.NATIVE
          , parallel_level => vPLev );
 
-      --Финишный контроль и удаление задачи
+      --Р¤РёРЅРёС€РЅС‹Р№ РєРѕРЅС‚СЂРѕР»СЊ Рё СѓРґР°Р»РµРЅРёРµ Р·Р°РґР°С‡Рё
       vTry := 0;
       vStatus := DBMS_PARALLEL_EXECUTE.task_status(vTask);
 
@@ -713,7 +713,7 @@ PROCEDURE mass_load_parallel_by_date_pe(inBeg IN DATE, inEnd IN DATE, inUnit IN 
 
       DBMS_PARALLEL_EXECUTE.drop_task(vTask);
 
-      -- Удаление временной таблицы
+      -- РЈРґР°Р»РµРЅРёРµ РІСЂРµРјРµРЅРЅРѕР№ С‚Р°Р±Р»РёС†С‹
       EXECUTE IMMEDIATE 'DROP TABLE '||lower(vOwner)||'.tmp_'||vTask;
 
     vEndTime := SYSDATE;
@@ -770,7 +770,7 @@ BEGIN
   vMes := 'START :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.mass_load_parallel_by_ydate_pe" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load_parallel_by_ydate_pe',vMes);
 
-  -- Формирование строки доп. параметров
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РґРѕРї. РїР°СЂР°РјРµС‚СЂРѕРІ
   IF inParams IS NOT NULL THEN
     FOR idx IN (
       SELECT SUBSTR(str,1,INSTR(str,' ',1,1)-1) AS param_type
@@ -786,7 +786,7 @@ BEGIN
     vParams := SUBSTR(vParams,1,LENGTH(vParams) - 1)  ;
   END IF;
 
-  --Создание временной таблицы
+  --РЎРѕР·РґР°РЅРёРµ РІСЂРµРјРµРЅРЅРѕР№ С‚Р°Р±Р»РёС†С‹
   EXECUTE IMMEDIATE 'CREATE TABLE '||lower(vOwner)||'.tmp_'||vTask||' (id NUMBER,exec_sql VARCHAR2(2000))';
 
   IF inLastDay AND NVL(to_number(inMonthlyDay, 'FM99', 'nls_numeric_characters='', '''),0) = 0 THEN
@@ -824,7 +824,7 @@ BEGIN
                       ,CASE WHEN EXTRACT(MONTH FROM ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1)) = EXTRACT(MONTH FROM ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1) + NVL(to_number(inMonthlyDay, 'FM99', 'nls_numeric_characters='', '''),0) - 1) THEN
                          'BEGIN
                          '||inUnit||'(to_date('''''||TO_CHAR(ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1) + NVL(to_number(inMonthlyDay, 'FM99', 'nls_numeric_characters='', '''),0) - 1,'DD.MM.YYYY')||''''',''''DD.MM.YYYY''''),to_date('''''||TO_CHAR(ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1) + NVL(to_number(inMonthlyDay, 'FM99', 'nls_numeric_characters='', '''),0) - 1,'DD.MM.YYYY')||''''',''''DD.MM.YYYY'''')'||NVL2(vParams,','||vParams,'')||'); END;'
-                       ELSE 'BEGIN '||lower(vOwner)||'.pkg_etl_signs.pr_log_write('''''||inUnit||''''',''''INFORMATION :: "'||inMonthlyDay||'.'||TRIM(to_char(EXTRACT(MONTH FROM ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1)),'00')||'.'||EXTRACT(YEAR FROM ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1)))||'" - дата отсутствует в указанном месяце. Расчет не требуется''''); END;'
+                       ELSE 'BEGIN '||lower(vOwner)||'.pkg_etl_signs.pr_log_write('''''||inUnit||''''',''''INFORMATION :: "'||inMonthlyDay||'.'||TRIM(to_char(EXTRACT(MONTH FROM ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1)),'00')||'.'||EXTRACT(YEAR FROM ADD_MONTHS(TRUNC(InEndDate,'MM'),-ROWNUM + 1)))||'" - РґР°С‚Р° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РІ СѓРєР°Р·Р°РЅРЅРѕРј РјРµСЃСЏС†Рµ. Р Р°СЃС‡РµС‚ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ''''); END;'
                        END AS exec_sql
                     FROM DUAL CONNECT BY ROWNUM <= MONTHS_BETWEEN(TRUNC(InEndDate,'MM'),TRUNC(inBegDate,'MM')) + 1
                 ORDER BY 1
@@ -844,18 +844,18 @@ BEGIN
     END LOOP;
   END IF;
 
-  --Вычисление количества потоков
+  --Р’С‹С‡РёСЃР»РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° РїРѕС‚РѕРєРѕРІ
   SELECT TRUNC(to_number(VALUE)/5*4) INTO vPLev FROM v$parameter WHERE NAME = 'job_queue_processes';
 
-  --Наименование задачи
+  --РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р·Р°РґР°С‡Рё
   DBMS_PARALLEL_EXECUTE.CREATE_TASK(task_name => vTask);
-  --Раскладка по потокам
+  --Р Р°СЃРєР»Р°РґРєР° РїРѕ РїРѕС‚РѕРєР°Рј
   DBMS_PARALLEL_EXECUTE.CREATE_CHUNKS_BY_SQL
     (task_name => vTask
     ,sql_stmt =>'SELECT id,id FROM '||lower(vOwner)||'.tmp_'||vTask||' ORDER BY 1'
     ,by_rowid => FALSE
     );
-  --Запуск задачи на выполнение
+  --Р—Р°РїСѓСЃРє Р·Р°РґР°С‡Рё РЅР° РІС‹РїРѕР»РЅРµРЅРёРµ
   DBMS_PARALLEL_EXECUTE.RUN_TASK (task_name => vTask,
      sql_stmt => 'declare
                     vSQL VARCHAR2(4000);
@@ -870,7 +870,7 @@ BEGIN
      ,language_flag => DBMS_SQL.NATIVE
      , parallel_level => vPLev );
 
-  --Финишный контроль и удаление задачи
+  --Р¤РёРЅРёС€РЅС‹Р№ РєРѕРЅС‚СЂРѕР»СЊ Рё СѓРґР°Р»РµРЅРёРµ Р·Р°РґР°С‡Рё
   vTry := 0;
   vStatus := DBMS_PARALLEL_EXECUTE.task_status(vTask);
 
@@ -883,7 +883,7 @@ BEGIN
 
   DBMS_PARALLEL_EXECUTE.drop_task(vTask);
 
-  -- Удаление временной таблицы
+  -- РЈРґР°Р»РµРЅРёРµ РІСЂРµРјРµРЅРЅРѕР№ С‚Р°Р±Р»РёС†С‹
   EXECUTE IMMEDIATE 'DROP TABLE '||lower(vOwner)||'.tmp_'||vTask;
 
   vEndTime := SYSDATE;
@@ -915,15 +915,15 @@ PROCEDURE mass_load_parallel_by_year
 BEGIN
   IF inLastDay THEN vLstDay := 'TRUE'; ELSE vLstDay := 'FALSE'; END IF;
   IF inYearParallel THEN
-    --Наименование задачи
+    --РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р·Р°РґР°С‡Рё
     vTask := dbms_parallel_execute.generate_task_name;
-    --Создание задачи
+    --РЎРѕР·РґР°РЅРёРµ Р·Р°РґР°С‡Рё
     DBMS_PARALLEL_EXECUTE.CREATE_TASK(task_name => vTask);
 
-   -- Вычисление количества потоков
+   -- Р’С‹С‡РёСЃР»РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° РїРѕС‚РѕРєРѕРІ
     SELECT TRUNC(to_number(VALUE)/5*4) INTO vPLev FROM v$parameter WHERE NAME = 'job_queue_processes';
 
-    --Раскладка по потокам
+    --Р Р°СЃРєР»Р°РґРєР° РїРѕ РїРѕС‚РѕРєР°Рј
     DBMS_PARALLEL_EXECUTE.CREATE_CHUNKS_BY_SQL
       (task_name => vTask
       ,sql_stmt =>
@@ -967,13 +967,13 @@ BEGIN
                     commit;
                   end;';
 
-    --Запуск задачи на выполнение
+    --Р—Р°РїСѓСЃРє Р·Р°РґР°С‡Рё РЅР° РІС‹РїРѕР»РЅРµРЅРёРµ
     DBMS_PARALLEL_EXECUTE.RUN_TASK (task_name => vTask
        ,sql_stmt => vSql_stmt
        ,language_flag => DBMS_SQL.NATIVE
        , parallel_level => vPLev );
 
-    --Финишный контроль и удаление задачи
+    --Р¤РёРЅРёС€РЅС‹Р№ РєРѕРЅС‚СЂРѕР»СЊ Рё СѓРґР°Р»РµРЅРёРµ Р·Р°РґР°С‡Рё
     vTry := 0;
     vStatus := DBMS_PARALLEL_EXECUTE.task_status(vTask);
 
@@ -1065,7 +1065,7 @@ PROCEDURE prepare_entity(inId IN NUMBER,outRes OUT CLOB)
     vTmpIdxName               VARCHAR2(256);
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Получение и сохранение в переменные метаданных сущности
+  -- РџРѕР»СѓС‡РµРЅРёРµ Рё СЃРѕС…СЂР°РЅРµРЅРёРµ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ РјРµС‚Р°РґР°РЅРЅС‹С… СЃСѓС‰РЅРѕСЃС‚Рё
   BEGIN
     SELECT id
           ,fct_table_name
@@ -1078,9 +1078,9 @@ BEGIN
       FROM tb_entity
       WHERE id = inId;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    raise_application_error(-20000,'Сущность ID = '||inId||' не найдена в таблице "'||lower(vOwner)||'.tb_entity"');
+    raise_application_error(-20000,'РЎСѓС‰РЅРѕСЃС‚СЊ ID = '||inId||' РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_entity"');
   END;
-  -- Создание таблицы для хранения показателей по датам
+  -- РЎРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїРѕРєР°Р·Р°С‚РµР»РµР№ РїРѕ РґР°С‚Р°Рј
   dbms_lob.createtemporary(outRes,FALSE);
 
   vBuff :=
@@ -1104,7 +1104,7 @@ BEGIN
     dbms_lob.writeappend(outRes,LENGTH(vRes),vRes);
   END;
 
-  -- Создание таблицы для хранения показателей периодами
+  -- РЎРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїРѕРєР°Р·Р°С‚РµР»РµР№ РїРµСЂРёРѕРґР°РјРё
   vBuff :=
   'CREATE TABLE '||lower(vOwner)||'.'||lower(vHistTableName)||' ('||CHR(10)||
   '  EFFECTIVE_START DATE'||CHR(10)||
@@ -1125,7 +1125,7 @@ BEGIN
     dbms_lob.writeappend(outRes,LENGTH(vRes),vRes);
   END;
 
-  -- Создание промежуточной таблицы
+  -- РЎРѕР·РґР°РЅРёРµ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†С‹
   vBuff :=
   'CREATE TABLE '||lower(vOwner)||'.'||lower(vTmpTableName)||' ('||CHR(10)||
   '  EFFECTIVE_START DATE'||CHR(10)||
@@ -1148,8 +1148,8 @@ BEGIN
     dbms_lob.writeappend(outRes,LENGTH(vRes),vRes);
   END;
 
-  -- Создание уникальных индексов
-  -- Формирование наименований индексов
+  -- РЎРѕР·РґР°РЅРёРµ СѓРЅРёРєР°Р»СЊРЅС‹С… РёРЅРґРµРєСЃРѕРІ
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РёРЅРґРµРєСЃРѕРІ
   BEGIN
     SELECT 'uix_'||object_id INTO vHistIdxName
       FROM all_objects
@@ -1157,7 +1157,7 @@ BEGIN
         AND object_name = UPPER(vHistTableName)
         AND object_type = 'TABLE';
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    vRes := /*outRes||*/CHR(10)||'-----------------------'||CHR(10)||'Объект '||lower(vOwner)||'.'||lower(vHistTableName)||' не найден'||CHR(10)||vBuff;
+    vRes := /*outRes||*/CHR(10)||'-----------------------'||CHR(10)||'РћР±СЉРµРєС‚ '||lower(vOwner)||'.'||lower(vHistTableName)||' РЅРµ РЅР°Р№РґРµРЅ'||CHR(10)||vBuff;
     dbms_lob.writeappend(outRes,LENGTH(vRes),vRes);
   END;
 
@@ -1168,14 +1168,14 @@ BEGIN
         AND object_name = UPPER(vTmpTableName)
         AND object_type = 'TABLE';
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    vRes := /*outRes||*/CHR(10)||'-----------------------'||CHR(10)||'Объект '||lower(vOwner)||'.'||lower(vTmpTableName)||' не найден'||CHR(10)||vBuff;
+    vRes := /*outRes||*/CHR(10)||'-----------------------'||CHR(10)||'РћР±СЉРµРєС‚ '||lower(vOwner)||'.'||lower(vTmpTableName)||' РЅРµ РЅР°Р№РґРµРЅ'||CHR(10)||vBuff;
     dbms_lob.writeappend(outRes,LENGTH(vRes),vRes);
   END;
-  -- Формирование набора ключевых колонок, входящих в индекс
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РЅР°Р±РѕСЂР° РєР»СЋС‡РµРІС‹С… РєРѕР»РѕРЅРѕРє, РІС…РѕРґСЏС‰РёС… РІ РёРЅРґРµРєСЃ
   --SELECT LISTAGG(SUBSTR(Str,1,INSTR(Str,' ') - 1),',') WITHIN GROUP (ORDER BY rownum) INTO vKeyIdxColumns
   --  FROM TABLE(parse_str(vKeyColumns,','));
 
-  -- Формирование и запуск DDL
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ Рё Р·Р°РїСѓСЃРє DDL
   vBuff := 'CREATE UNIQUE INDEX '||lower(vOwner)||'.'||vHistIdxName||' ON '||lower(vHistTableName)||CHR(10)||
            '  (SIGN_NAME,OBJ_GID,SOURCE_SYSTEM_ID,EFFECTIVE_END)'||CHR(10)||
            'LOCAL COMPRESS NOLOGGING';
@@ -1208,11 +1208,11 @@ FUNCTION get_sign(inSign IN VARCHAR2,inDate IN DATE, inSQL IN VARCHAR2 DEFAULT N
   IS
     vSQL CLOB;
     rec TRec;
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Сохранение метаданных показателя в переменные
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РјРµС‚Р°РґР°РЅРЅС‹С… РїРѕРєР°Р·Р°С‚РµР»СЏ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ
   SELECT p.sign_sql
     INTO vSQL
     FROM tb_signs_pool p
@@ -1245,7 +1245,7 @@ BEGIN
   dbms_sql.close_cursor(cur);
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign','ERROR :: "'||UPPER(inSign)||'"  - Показатель не найден в таблице "'||lower(vOwner)||'.tb_signs_pool"');
+    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign','ERROR :: "'||UPPER(inSign)||'"  - РџРѕРєР°Р·Р°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_pool"');
   WHEN OTHERS THEN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign','ERROR :: "'||UPPER(inSign)||'"  - '||SQLERRM||CHR(10)||'----------'||CHR(10)/*||vSQL*/);
 END get_sign;
@@ -1253,8 +1253,8 @@ END get_sign;
 FUNCTION get_sign_anlt(inSign IN VARCHAR2, inDate IN DATE, inAnltCode IN VARCHAR2, inReverse NUMBER DEFAULT 0) RETURN TTab PIPELINED
   IS
     rec TRec;
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
     vSQL CLOB;
     vAnltSQL CLOB;
     vAnltID NUMBER;
@@ -1268,7 +1268,7 @@ FUNCTION get_sign_anlt(inSign IN VARCHAR2, inDate IN DATE, inAnltCode IN VARCHAR
     vReverse BOOLEAN := inReverse = 1;
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
--- Сохранение метаданных показателя в переменные
+-- РЎРѕС…СЂР°РЅРµРЅРёРµ РјРµС‚Р°РґР°РЅРЅС‹С… РїРѕРєР°Р·Р°С‚РµР»СЏ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ
 SELECT a.anlt_sql,a.id,lower(vOwner)||'.'||e.fct_table_name,lower(vOwner)||'.'||e.hist_table_name,p.hist_flg
       ,(SELECT COUNT(1) FROM tb_signs_anlt_spec WHERE anlt_id = a.id) AS cou
   INTO vSQL,vAnltID,vFctTable,vHistTable,vHistFlg,vCou
@@ -1366,7 +1366,7 @@ SELECT a.anlt_sql,a.id,lower(vOwner)||'.'||e.fct_table_name,lower(vOwner)||'.'||
 
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign_anlt','ERROR :: "'||UPPER(inSign)||'"  - Показатель не найден в таблице "'||lower(vOwner)||'.tb_signs_pool"');
+    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign_anlt','ERROR :: "'||UPPER(inSign)||'"  - РџРѕРєР°Р·Р°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_pool"');
   WHEN OTHERS THEN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign_anlt','ERROR :: "'||UPPER(inSign)||'"  - '||SQLERRM);
 
@@ -1377,8 +1377,8 @@ FUNCTION get_anlt_spec_imp(inDate IN DATE, inAnltCode IN VARCHAR2) RETURN TTabAn
   IS
     vSQL CLOB;
     rec TRecAnltSpecImp;
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
   SELECT spec_import_sql
@@ -1408,7 +1408,7 @@ BEGIN
   dbms_sql.close_cursor(cur);
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_anlt_spec_imp','ERROR :: "'||UPPER(inAnltCode)||'"  - Аналитика не найдена в таблице "'||lower(vOwner)||'.tb_signs_anlt"');
+    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_anlt_spec_imp','ERROR :: "'||UPPER(inAnltCode)||'"  - РђРЅР°Р»РёС‚РёРєР° РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_anlt"');
   WHEN OTHERS THEN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_anlt_spec_imp','ERROR :: "'||UPPER(inAnltCode)||'"  - '||SQLERRM||CHR(10)||'----------'||CHR(10)||vSQL);
 END get_anlt_spec_imp;
@@ -1417,8 +1417,8 @@ FUNCTION get_sign_mass(inSign IN VARCHAR2,inDate IN DATE) RETURN TTabMass PIPELI
   IS
     vSQL CLOB;
     rec TRecMass;
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
   SELECT mass_sql INTO vSQL FROM tb_signs_pool WHERE sign_name = UPPER(inSign);
@@ -1448,7 +1448,7 @@ BEGIN
   dbms_sql.close_cursor(cur);
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign','ERROR :: "'||UPPER(inSign)||'"  - Показатель не найден в таблице "'||lower(vOwner)||'.tb_signs_pool"');
+    pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign','ERROR :: "'||UPPER(inSign)||'"  - РџРѕРєР°Р·Р°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_pool"');
   WHEN OTHERS THEN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.get_sign','ERROR :: "'||UPPER(inSign)||'"  - '||SQLERRM);
 END get_sign_mass;
@@ -1466,7 +1466,7 @@ FUNCTION CheckSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHAR
     vDML CLOB;
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Получение кода сабпартиции
+  -- РџРѕР»СѓС‡РµРЅРёРµ РєРѕРґР° СЃР°Р±РїР°СЂС‚РёС†РёРё
   BEGIN
     SELECT p.sp_code,p.hist_flg
           ,lower(vOwner)||'.'||e.fct_table_name AS fct_table_name
@@ -1487,9 +1487,9 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
-  -- Очистка или создание
+  -- РћС‡РёСЃС‚РєР° РёР»Рё СЃРѕР·РґР°РЅРёРµ
   IF vHistFlg = 0 THEN
     dbms_lob.createtemporary(vDML,FALSE);
     vBuff := 'BEGIN'||CHR(10);
@@ -1547,7 +1547,7 @@ PROCEDURE CheckSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VARCHA
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
   vDays := inEndDate - inBegDate;
-  -- Получение кода сабпартиции
+  -- РџРѕР»СѓС‡РµРЅРёРµ РєРѕРґР° СЃР°Р±РїР°СЂС‚РёС†РёРё
   BEGIN
     SELECT p.sp_code,p.hist_flg
           ,lower(vOwner)||'.'||e.fct_table_name AS fct_table_name
@@ -1568,9 +1568,9 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
-  -- Очистка или создание
+  -- РћС‡РёСЃС‚РєР° РёР»Рё СЃРѕР·РґР°РЅРёРµ
   FOR idx IN 0..vDays LOOP
     IF vHistFlg = 0 THEN
       BEGIN
@@ -1615,7 +1615,7 @@ FUNCTION CompressSubpartition(inDate IN DATE,inSign IN VARCHAR2,inAnltCode IN VA
     vHistATable VARCHAR2(256);
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Получение кода сабпартиции
+  -- РџРѕР»СѓС‡РµРЅРёРµ РєРѕРґР° СЃР°Р±РїР°СЂС‚РёС†РёРё
   BEGIN
     SELECT p.sp_code,p.hist_flg
           ,lower(vOwner)||'.'||e.fct_table_name AS fct_table_name
@@ -1636,9 +1636,9 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
-  -- Сжатие
+  -- РЎР¶Р°С‚РёРµ
   vTIBegin := SYSDATE;
   IF vHistFlg = 0 THEN
     EXECUTE IMMEDIATE 'alter table '||CASE WHEN inAnltCode IS NULL THEN vFCTTable ELSE vFCTATable END||' move subpartition '||vSPCode||'_'||to_char(inDate,'YYYYMMDD')||' compress';
@@ -1668,7 +1668,7 @@ PROCEDURE CompressSubpartition(inBegDate IN DATE,inEndDate IN DATE,inSign IN VAR
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
   vDays := inEndDate - inBegDate;
-  -- Получение кода сабпартиции
+  -- РџРѕР»СѓС‡РµРЅРёРµ РєРѕРґР° СЃР°Р±РїР°СЂС‚РёС†РёРё
   BEGIN
     SELECT p.sp_code,p.hist_flg
           ,lower(vOwner)||'.'||e.fct_table_name AS fct_table_name
@@ -1689,9 +1689,9 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
-  -- Сжатие
+  -- РЎР¶Р°С‚РёРµ
     IF vHistFlg = 0 THEN
      FOR idx IN 0..vDays LOOP
       BEGIN
@@ -1723,7 +1723,7 @@ PROCEDURE tb_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inAn
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
   vDays := inEndDate - inBegDate;
-  -- Получение наименования таблицы для загрузки
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ РґР»СЏ Р·Р°РіСЂСѓР·РєРё
   BEGIN
     SELECT UPPER(vOwner||'.'||e.hist_table_name) AS hist_table_name
           ,lower(vOwner)||'.'||ae.hist_table_name AS hist_a_table_name
@@ -1741,7 +1741,7 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
   FOR days IN 0..vDays LOOP
@@ -1914,7 +1914,7 @@ PROCEDURE ptb_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inA
 BEGIN
   EXECUTE IMMEDIATE 'alter session set "_FIX_CONTROL" = "11814428:0"';
   vDays := inEndDate - inBegDate;
-  -- Получение наименования таблицы для загрузки
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ РґР»СЏ Р·Р°РіСЂСѓР·РєРё
   BEGIN
     SELECT UPPER(vOwner||'.'||e.fct_table_name) AS fct_table_name
           ,lower(vOwner)||'.'||ae.fct_table_name AS fct_a_table_name
@@ -1933,7 +1933,7 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
   FOR days IN 0..vDays LOOP
@@ -1996,29 +1996,29 @@ BEGIN
       FROM tb_signs_pool p
       WHERE p.sign_name = UPPER(inSign);
   --EXCEPTION WHEN NO_DATA_FOUND THEN
-  --  RAISE_APPLICATION_ERROR(-20000,'Показатель "'||UPPER(inSign)||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+  --  RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||UPPER(inSign)||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   --END;
 
   IF vCond = 1 THEN
     FOR idx IN 0..vDays
     LOOP
       IF inPrepareSegments = 1 THEN
-        -- Подготовка субпартиций
+        -- РџРѕРґРіРѕС‚РѕРІРєР° СЃСѓР±РїР°СЂС‚РёС†РёР№
         vTIBegin := SYSDATE;
         vMes := CheckSubpartition(inBegDate+idx,inBegDate+idx,UPPER(inSign),inAnltCode);
-        -- Сохранение времени  подготовки в таблицу статистики расчетов
+        -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІСЂРµРјРµРЅРё  РїРѕРґРіРѕС‚РѕРІРєРё РІ С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂР°СЃС‡РµС‚РѕРІ
         vEndTime := SYSDATE;
         pr_stat_write(inSign,inAnltCode,(vEndTime - vTIBegin)*24*60*60,'PREPARE');
       END IF;
-      -- Вставка данных в таблицу
+      -- Р’СЃС‚Р°РІРєР° РґР°РЅРЅС‹С… РІ С‚Р°Р±Р»РёС†Сѓ
       vTIBegin := SYSDATE;
-      IF vHistFlg = 0 THEN -- Для "FCT" показателей
+      IF vHistFlg = 0 THEN -- Р”Р»СЏ "FCT" РїРѕРєР°Р·Р°С‚РµР»РµР№
         vBuff :=
         'BEGIN'||CHR(10)||
         lower(vOwner)||'.pkg_etl_signs.ptb_load_daily(:1,:2,:3,:4);'||CHR(10)||
         'END;';
         EXECUTE IMMEDIATE vBuff USING IN inBegDate+idx,IN inBegDate+idx,IN UPPER(inSign),IN inAnltCode;
-      ELSE -- Для "HIST" показателей
+      ELSE -- Р”Р»СЏ "HIST" РїРѕРєР°Р·Р°С‚РµР»РµР№
         vBuff :=
         'BEGIN'||CHR(10)||
            lower(vOwner)||'.pkg_etl_signs.tb_load_daily(:1,:2,:3,:4);'||CHR(10)||
@@ -2026,18 +2026,18 @@ BEGIN
         EXECUTE IMMEDIATE vBuff USING IN inBegDate+idx,IN inBegDate+idx,IN UPPER(inSign),IN inAnltCode;
       END IF;
 
-      -- Сохранение времени расчета в таблицу статистики расчетов
+      -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІСЂРµРјРµРЅРё СЂР°СЃС‡РµС‚Р° РІ С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂР°СЃС‡РµС‚РѕРІ
       vEndTime := SYSDATE;
       pr_stat_write(inSign,inAnltCode,(vEndTime - vTIBegin)*24*60*60,'CALC');
-      --Сжатие субпартиций
+      --РЎР¶Р°С‚РёРµ СЃСѓР±РїР°СЂС‚РёС†РёР№
       vTIBegin := SYSDATE;
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.load_sign',CompressSubpartition(inBegDate+idx,UPPER(inSign),inAnltCode));
-      -- Сохранение времени сжатия в таблицу статистики расчетов
+      -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІСЂРµРјРµРЅРё СЃР¶Р°С‚РёСЏ РІ С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂР°СЃС‡РµС‚РѕРІ
       vEndTime := SYSDATE;
       pr_stat_write(inSign,inAnltCode,(vEndTime - vTIBegin)*24*60*60,'COMPRESS');
     END LOOP;
   ELSE
-      pr_log_write(lower(vOwner)||'.pkg_etl_signs.load_sign','ERROR :: "'||inSign||'" - Не выполнено доп.условие запуска расчета показателя, расчет не может быть запущен');
+      pr_log_write(lower(vOwner)||'.pkg_etl_signs.load_sign','ERROR :: "'||inSign||'" - РќРµ РІС‹РїРѕР»РЅРµРЅРѕ РґРѕРї.СѓСЃР»РѕРІРёРµ Р·Р°РїСѓСЃРєР° СЂР°СЃС‡РµС‚Р° РїРѕРєР°Р·Р°С‚РµР»СЏ, СЂР°СЃС‡РµС‚ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РїСѓС‰РµРЅ');
   END IF;
 
   vEndTime := SYSDATE;
@@ -2092,7 +2092,7 @@ BEGIN
   EXECUTE IMMEDIATE 'DECLARE vCou INTEGER; BEGIN SELECT COUNT(1) INTO vCou FROM ('||CHR(10)||vBuff||CHR(10)||'); :1 := vCou; EXCEPTION WHEN OTHERS THEN :1 := 9999999999; END;' USING OUT vCou;
   --dbms_output.put_line(vCou);
   IF vCou BETWEEN 1 AND 9999999998 THEN
-    send_message_about_project(to_number(GetVarValue('vProjectID')),'Период: '||vBegDate||' - '||vEndDate||' :: Не выполнены условия ежедневного расчета для следующих показателей:',SQLasHTML(vBuff,'MESS','Описание:'));
+    send_message_about_project(to_number(GetVarValue('vProjectID')),'РџРµСЂРёРѕРґ: '||vBegDate||' - '||vEndDate||' :: РќРµ РІС‹РїРѕР»РЅРµРЅС‹ СѓСЃР»РѕРІРёСЏ РµР¶РµРґРЅРµРІРЅРѕРіРѕ СЂР°СЃС‡РµС‚Р° РґР»СЏ СЃР»РµРґСѓСЋС‰РёС… РїРѕРєР°Р·Р°С‚РµР»РµР№:',SQLasHTML(vBuff,'MESS','РћРїРёСЃР°РЅРёРµ:'));
   END IF;
   
   vBuff :=
@@ -2266,11 +2266,11 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||UPPER(inSign)||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||UPPER(inSign)||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
-  -- Установка архивного флага в таблице показателей (чтобы не было пересечения с ежедневной
-  -- загрузкой. Ежедневка смотрит на этот флаг и если 1, то не расчитывает показатель)
+  -- РЈСЃС‚Р°РЅРѕРІРєР° Р°СЂС…РёРІРЅРѕРіРѕ С„Р»Р°РіР° РІ С‚Р°Р±Р»РёС†Рµ РїРѕРєР°Р·Р°С‚РµР»РµР№ (С‡С‚РѕР±С‹ РЅРµ Р±С‹Р»Рѕ РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ РµР¶РµРґРЅРµРІРЅРѕР№
+  -- Р·Р°РіСЂСѓР·РєРѕР№. Р•Р¶РµРґРЅРµРІРєР° СЃРјРѕС‚СЂРёС‚ РЅР° СЌС‚РѕС‚ С„Р»Р°Рі Рё РµСЃР»Рё 1, С‚Рѕ РЅРµ СЂР°СЃС‡РёС‚С‹РІР°РµС‚ РїРѕРєР°Р·Р°С‚РµР»СЊ)
   vBuff :=
   'BEGIN'||CHR(10)||
   '  UPDATE '||lower(vOwner)||'.tb_signs_pool SET archive_flg = 1 WHERE sign_name = '''||UPPER(inSign)||''';'||CHR(10)||
@@ -2282,11 +2282,11 @@ BEGIN
     RAISE_APPLICATION_ERROR(-20000,'ERROR :: UPD_1');
   END;
 
- -- Загрузка данных
+ -- Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…
  IF inPrepareSegments = 1 AND vMassSQL IS NOT NULL AND vHistFlg = 1 AND inAnltCode IS NULL THEN
-   -- Если в "HIST" показателе заполнено поле MASS_SQL, то используем его для быстрой заливки
+   -- Р•СЃР»Рё РІ "HIST" РїРѕРєР°Р·Р°С‚РµР»Рµ Р·Р°РїРѕР»РЅРµРЅРѕ РїРѕР»Рµ MASS_SQL, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµРј РµРіРѕ РґР»СЏ Р±С‹СЃС‚СЂРѕР№ Р·Р°Р»РёРІРєРё
 
-   -- Подготовка субпартиций в промежуточной таблице
+   -- РџРѕРґРіРѕС‚РѕРІРєР° СЃСѓР±РїР°СЂС‚РёС†РёР№ РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†Рµ
    vBuff := 'ALTER TABLE '||CASE WHEN inAnltCode IS NULL THEN vTmpTable ELSE vTmpATable END||' DROP PARTITION '||UPPER(inSign);
    BEGIN
      EXECUTE IMMEDIATE vBuff;
@@ -2296,10 +2296,10 @@ BEGIN
 
    vBuff := 'ALTER TABLE '||CASE WHEN inAnltCode IS NULL THEN vTmpTable ELSE vTmpATable END||' ADD PARTITION '||UPPER(inSign)||' VALUES('''||UPPER(inSign)||''') NOLOGGING STORAGE(INITIAL 64K NEXT 4M) (SUBPARTITION '||vSPCode||'_NEW VALUES LESS THAN (MAXVALUE))';
    EXECUTE IMMEDIATE vBuff;
-   -- Окончание подготовки субпартиций в промежуточной таблице
+   -- РћРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё СЃСѓР±РїР°СЂС‚РёС†РёР№ РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†Рµ
 
-   -- Вставка данных в промежуточную таблицу
-   vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - вставка данных во временную таблицу --------';
+   -- Р’СЃС‚Р°РІРєР° РґР°РЅРЅС‹С… РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ
+   vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РІСЃС‚Р°РІРєР° РґР°РЅРЅС‹С… РІРѕ РІСЂРµРјРµРЅРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ --------';
    pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load',vMes);
 
    vTIBegin := SYSDATE;
@@ -2329,10 +2329,10 @@ BEGIN
      pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load',vMes);
    END;
 
-   vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание вставки данных во временную таблицу. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+   vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С… РІРѕ РІСЂРµРјРµРЅРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
    pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load',vMes);
 
-   -- Склеивание в целевую таблицу
+   -- РЎРєР»РµРёРІР°РЅРёРµ РІ С†РµР»РµРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ
    --***--
    pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load',CheckSubpartition(inBegDate,inEndDate,UPPER(inSign),inAnltCode));
    --***--
@@ -2340,13 +2340,13 @@ BEGIN
    
 
   ELSE
-    IF vHistFlg = 0 THEN -- для "FCT" показателей
+    IF vHistFlg = 0 THEN -- РґР»СЏ "FCT" РїРѕРєР°Р·Р°С‚РµР»РµР№
       vTIBegin := SYSDATE;
-      vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - загрузка данных --------';
+      vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… --------';
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load',vMes);
 
       vMes := CheckSubpartition(inBegDate,inEndDate,UPPER(inSign),UPPER(inAnltCode));
-      -- Сохранение времени  подготовки в таблицу статистики расчетов
+      -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІСЂРµРјРµРЅРё  РїРѕРґРіРѕС‚РѕРІРєРё РІ С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂР°СЃС‡РµС‚РѕРІ
       /*vEndTime := SYSDATE;
       INSERT INTO tb_signs_calc_stat (sign_name,anlt_code,action,sec)
         VALUES(inSign,inAnltCode,'PREPARE',ROUND((vEndTime - vTIBegin)*24*60*60/(inEndDate - inBegDate),1));*/
@@ -2355,14 +2355,14 @@ BEGIN
       mass_load_parallel_by_month(inBegDate,inEndDate,lower(vOwner)||'.pkg_etl_signs.load_sign','VARCHAR2 '||UPPER(inSign)||'::VARCHAR2 '||UPPER(inAnltCode)||'::NUMBER 0');
 
       vEndTime := SYSDATE;
-      vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание загрузки данных. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+      vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С…. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.mass_load',vMes);
-    ELSE -- для "HIST" показателей
+    ELSE -- РґР»СЏ "HIST" РїРѕРєР°Р·Р°С‚РµР»РµР№
       vMask := '11'||'0'||'100';
       tb_load_mass(inBegDate,inEndDate,UPPER(inSign),inAnltCode,vMask);
     END IF;
   END IF;
-  -- Возврат архивного флага в исходную
+  -- Р’РѕР·РІСЂР°С‚ Р°СЂС…РёРІРЅРѕРіРѕ С„Р»Р°РіР° РІ РёСЃС…РѕРґРЅСѓСЋ
   vBuff :=
   'BEGIN'||CHR(10)||
   '  UPDATE tb_signs_pool SET archive_flg = 0 WHERE sign_name = '''||UPPER(inSign)||''';'||CHR(10)||
@@ -2405,7 +2405,7 @@ PROCEDURE sign_gluing(inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inMask IN VARCHA
 BEGIN
   vMes := 'START :: "'||inSign||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.sign_gluing" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.sign_gluing',vMes);
-  -- Получение метаданных
+  -- РџРѕР»СѓС‡РµРЅРёРµ РјРµС‚Р°РґР°РЅРЅС‹С…
   BEGIN
     SELECT p.sp_code
           ,UPPER(vOwner||'.'||e.tmp_table_name) AS tmp_table_name
@@ -2432,12 +2432,12 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
   IF vTmpStage THEN
     vTIBegin := SYSDATE;
-    vMes := 'CONTINUE :: ------ Вставка '||UPPER(inSign)||' во временную таблицу ------';
+    vMes := 'CONTINUE :: ------ Р’СЃС‚Р°РІРєР° '||UPPER(inSign)||' РІРѕ РІСЂРµРјРµРЅРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ ------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.sign_gluing',vMes);
 
     vBuff := 'ALTER TABLE '||CASE WHEN inAnltCode IS NULL THEN vTmpTable ELSE vTmpATable END||' TRUNCATE PARTITION '||UPPER(inSign);
@@ -2479,13 +2479,13 @@ BEGIN
     END;
     vTmpStatus := SUBSTR(vMes,1,INSTR(vMes,' ') - 1);
 
-    vMes := 'CONTINUE :: ------ Окончание вставки '||UPPER(inSign)||' во временную таблицу. Время выполнения '||get_ti_as_hms(vEndTime - vTIBegin)||' ------';
+    vMes := 'CONTINUE :: ------ РћРєРѕРЅС‡Р°РЅРёРµ РІСЃС‚Р°РІРєРё '||UPPER(inSign)||' РІРѕ РІСЂРµРјРµРЅРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ '||get_ti_as_hms(vEndTime - vTIBegin)||' ------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.sign_gluing',vMes);
   END IF;
   -------
   IF vTargetStage AND vTmpStatus = 'SUCCESSFULLY' THEN
     vTIBegin := SYSDATE;
-    vMes := 'CONTINUE :: ------ Склеивание '||UPPER(inSign)||' в целевую таблицу ------';
+    vMes := 'CONTINUE :: ------ РЎРєР»РµРёРІР°РЅРёРµ '||UPPER(inSign)||' РІ С†РµР»РµРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ ------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.sign_gluing',vMes);
 
     IF vTargetTruncate THEN
@@ -2559,10 +2559,10 @@ BEGIN
     ' END;';
     BEGIN
       EXECUTE IMMEDIATE vBuff USING IN UPPER(inSign),OUT vCou;
-      --RAISE_APPLICATION_ERROR(-20000,'ERROR :: ТЕСТОВАЯ ОШИБКА');
+      --RAISE_APPLICATION_ERROR(-20000,'ERROR :: РўР•РЎРўРћР’РђРЇ РћРЁРР‘РљРђ');
       --dbms_output.put_line(vBuff);
     
-      -- Сохранение времени расчета в таблицу статистики расчетов
+      -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІСЂРµРјРµРЅРё СЂР°СЃС‡РµС‚Р° РІ С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂР°СЃС‡РµС‚РѕРІ
       /*
       INSERT INTO tb_signs_calc_stat (sign_name,anlt_code,action,sec)
         VALUES(inSign,inAnltCode,'GLUING',(vEndTime - vTIBegin)*24*60*60);*/
@@ -2578,7 +2578,7 @@ BEGIN
     vGluingStatus := SUBSTR(vMes,1,INSTR(vMes,' ') - 1);
     
     IF vGluingStatus = 'SUCCESSFULLY' THEN
-      -- Удаление временной партиции
+      -- РЈРґР°Р»РµРЅРёРµ РІСЂРµРјРµРЅРЅРѕР№ РїР°СЂС‚РёС†РёРё
       vBuff := 'ALTER TABLE '||CASE WHEN inAnltCode IS NULL THEN vTmpTable ELSE vTmpATable END||' DROP PARTITION '||UPPER(inSign);
       BEGIN
         EXECUTE IMMEDIATE vBuff;
@@ -2601,7 +2601,7 @@ BEGIN
     END IF;
 
 
-    vMes := 'CONTINUE :: ------ Окончание склеивания '||UPPER(inSign)||' в целевую таблицу. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||'------';
+    vMes := 'CONTINUE :: ------ РћРєРѕРЅС‡Р°РЅРёРµ СЃРєР»РµРёРІР°РЅРёСЏ '||UPPER(inSign)||' РІ С†РµР»РµРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||'------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.sign_gluing',vMes);
 
   END IF;
@@ -2648,7 +2648,7 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||UPPER(inSign)||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||UPPER(inSign)||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
   FOR idx IN 0..vDays
@@ -2707,7 +2707,7 @@ PROCEDURE tmp_load_daily(inBegDate IN DATE,inEndDate IN DATE,inSign VARCHAR2,inA
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
   vDays := inEndDate - inBegDate;
-  -- Получение наименования таблицы для загрузки
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ РґР»СЏ Р·Р°РіСЂСѓР·РєРё
   BEGIN
     SELECT UPPER(vOwner||'.'||e.tmp_table_name) AS tmp_table_name
           ,UPPER(vOwner||'.'||ae.tmp_table_name) AS tmp_a_table_name
@@ -2725,7 +2725,7 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
   FOR days IN 0..vDays LOOP
@@ -2828,7 +2828,7 @@ PROCEDURE tb_upd_eff_end(inSign IN VARCHAR2,inAnltCode IN VARCHAR2,inDate IN DAT
 BEGIN
   vMes := 'START :: "'||UPPER(inSign)||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.tb_upd_eff_end" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.load_sign',vMes);
-  -- Получение наименования таблицы для апдейта
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ РґР»СЏ Р°РїРґРµР№С‚Р°
   BEGIN
     SELECT UPPER(vOwner||'.'||e.hist_table_name) AS hist_table_name
           ,UPPER(vOwner||'.'||ae.hist_table_name) AS hist_a_table_name
@@ -2846,7 +2846,7 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
   vBuff :=
   'DECLARE'||CHR(10)||
@@ -2939,7 +2939,7 @@ BEGIN
   vMes := 'START :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.tb_load_mass" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
-  -- Получение метаданных
+  -- РџРѕР»СѓС‡РµРЅРёРµ РјРµС‚Р°РґР°РЅРЅС‹С…
   BEGIN
     SELECT p.sp_code
           ,UPPER(vOwner||'.'||e.tmp_table_name) AS tmp_table_name
@@ -2964,10 +2964,10 @@ BEGIN
              ON ae.id = a.entity_id
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
-  -- Подготовка субпартиций в промежуточной таблице
+  -- РџРѕРґРіРѕС‚РѕРІРєР° СЃСѓР±РїР°СЂС‚РёС†РёР№ РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†Рµ
   IF vPrev THEN
     vBuff := 'ALTER TABLE '||CASE WHEN inAnltCode IS NULL THEN vTmpTable ELSE vTmpATable END||' DROP PARTITION '||UPPER(inSign);
     BEGIN
@@ -2991,10 +2991,10 @@ BEGIN
     EXECUTE IMMEDIATE vBuff;
 
     vTIBegin := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - загрузка первых чисел месяца в промежуточную таблицу --------';
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - Р·Р°РіСЂСѓР·РєР° РїРµСЂРІС‹С… С‡РёСЃРµР» РјРµСЃСЏС†Р° РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
-    -- Вставка данных в промежуточную таблицу за первые числа каждого месяца
+    -- Р’СЃС‚Р°РІРєР° РґР°РЅРЅС‹С… РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ Р·Р° РїРµСЂРІС‹Рµ С‡РёСЃР»Р° РєР°Р¶РґРѕРіРѕ РјРµСЃСЏС†Р°
     /*mass_load_parallel_by_year(TRUNC(inBegDate,'DD'),inEndDate
       ,lower(vOwner)||'.pkg_etl_signs.tmp_load_prev'
       ,'VARCHAR2 '||UPPER(inSign),FALSE,'01',inHeadJobName);*/
@@ -3003,18 +3003,18 @@ BEGIN
       ,'VARCHAR2 '||UPPER(inSign)||'::VARCHAR2 '||inAnltCode,FALSE,'01'/*,inHeadJobName*/);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание загрузки первых чисел месяца в промежуточную таблицу. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ Р·Р°РіСЂСѓР·РєРё РїРµСЂРІС‹С… С‡РёСЃРµР» РјРµСЃСЏС†Р° РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
   END IF;
 
   IF vDaily THEN
     vTIBegin := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - прогрузка всех чисел месяца в промежуточную таблицу (распараллеливание по месяцам) --------';
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РїСЂРѕРіСЂСѓР·РєР° РІСЃРµС… С‡РёСЃРµР» РјРµСЃСЏС†Р° РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ (СЂР°СЃРїР°СЂР°Р»Р»РµР»РёРІР°РЅРёРµ РїРѕ РјРµСЃСЏС†Р°Рј) --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
     FOR idx IN 2..31
       LOOP
-        -- Прогрузка всех чисел месяца в промежуточную таблицу (распараллеливание по месяцам)
+        -- РџСЂРѕРіСЂСѓР·РєР° РІСЃРµС… С‡РёСЃРµР» РјРµСЃСЏС†Р° РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ (СЂР°СЃРїР°СЂР°Р»Р»РµР»РёРІР°РЅРёРµ РїРѕ РјРµСЃСЏС†Р°Рј)
         /*mass_load_parallel_by_year(TRUNC(inBegDate,'DD'),inEndDate
           ,lower(vOwner)||'.pkg_etl_signs.tmp_load_daily'
           ,'VARCHAR2 '||UPPER(inSign),FALSE,to_char(idx,'00'),inHeadJobName);*/
@@ -3024,13 +3024,13 @@ BEGIN
       END LOOP;
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание прогрузки всех чисел месяца в промежуточную таблицу. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїСЂРѕРіСЂСѓР·РєРё РІСЃРµС… С‡РёСЃРµР» РјРµСЃСЏС†Р° РІ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
   END IF;
 
 
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - Подготовка существующих данных в целевой таблице --------';
+  vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РџРѕРґРіРѕС‚РѕРІРєР° СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РґР°РЅРЅС‹С… РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ --------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
   IF vTruncateTarget THEN
@@ -3044,7 +3044,7 @@ BEGIN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
   ELSE
     IF vLoadTarget THEN
-      -- Установка effective_end у записей, соответствующих дате начала периода
+      -- РЈСЃС‚Р°РЅРѕРІРєР° effective_end Сѓ Р·Р°РїРёСЃРµР№, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… РґР°С‚Рµ РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
       vBuff :=
       'BEGIN'||CHR(10)||
       '  UPDATE '||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||' SET effective_end = to_date('''||to_char(inBegDate - 1,'DD.MM.YYYY')||''',''DD.MM.YYYY'')'||CHR(10)||
@@ -3057,7 +3057,7 @@ BEGIN
       EXECUTE IMMEDIATE vBuff USING OUT vCou;
       vMes := 'SUCCESSFULLY :: ------- "'||UPPER(inSign)||'" - "effective_end" - '||vCou||' rows updated in table "'||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||'"';
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
-      -- Установка effective_start у записей, соответствующих дате окончания периода
+      -- РЈСЃС‚Р°РЅРѕРІРєР° effective_start Сѓ Р·Р°РїРёСЃРµР№, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… РґР°С‚Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
       vBuff :=
       'BEGIN'||CHR(10)||
       '  UPDATE '||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||' SET effective_start = to_date('''||to_char(last_day(inEndDate) + 1,'DD.MM.YYYY')||''',''DD.MM.YYYY'')'||CHR(10)||
@@ -3070,7 +3070,7 @@ BEGIN
       EXECUTE IMMEDIATE vBuff USING OUT vCou;
       vMes := 'SUCCESSFULLY :: ------- "'||UPPER(inSign)||'" - "effective_start" - '||vCou||' rows updated in table "'||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||'"';
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
-      -- Удаление записей, с effective_start больше или равно даты начала периода
+      -- РЈРґР°Р»РµРЅРёРµ Р·Р°РїРёСЃРµР№, СЃ effective_start Р±РѕР»СЊС€Рµ РёР»Рё СЂР°РІРЅРѕ РґР°С‚С‹ РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
       vBuff :=
       'BEGIN'||CHR(10)||
       'DELETE FROM '||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||CHR(10)||
@@ -3082,7 +3082,7 @@ BEGIN
       EXECUTE IMMEDIATE vBuff USING OUT vCou;
       vMes := 'SUCCESSFULLY :: ------- "'||UPPER(inSign)||'" - '||vCou||' rows deleted from table "'||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||'"';
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
-      -- Удаление записей, с effective_start больше или равно текущей даты (такие получаются когда считаем всё, по вчерашний день)
+      -- РЈРґР°Р»РµРЅРёРµ Р·Р°РїРёСЃРµР№, СЃ effective_start Р±РѕР»СЊС€Рµ РёР»Рё СЂР°РІРЅРѕ С‚РµРєСѓС‰РµР№ РґР°С‚С‹ (С‚Р°РєРёРµ РїРѕР»СѓС‡Р°СЋС‚СЃСЏ РєРѕРіРґР° СЃС‡РёС‚Р°РµРј РІСЃС‘, РїРѕ РІС‡РµСЂР°С€РЅРёР№ РґРµРЅСЊ)
       vBuff :=
       'BEGIN'||CHR(10)||
       'DELETE FROM '||CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END||CHR(10)||
@@ -3099,25 +3099,25 @@ BEGIN
   END IF;
 
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание подготовки существующих данных в целевой таблице. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+  vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РґР°РЅРЅС‹С… РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
   IF vLoadTarget THEN
     vTIBegin := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - загрузка данных в целевую таблицу --------';
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РІ С†РµР»РµРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
     vTIBegin := SYSDATE;
     sign_gluing(UPPER(inSign),UPPER(inAnltCode),'010');
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание загрузки данных в целевую таблицу. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С… РІ С†РµР»РµРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
-    -- Проставляем effective_end = 31.12.5999 на последних записях
-    -- !!!ТОЛЬКО ЕСЛИ ДАТА ОКОНЧАНИЯ НЕ РАНЕЕ ВЧЕРАШНЕЙ ИНАЧЕ БУДЕТ ОШИБКА Unique constraint!!!
+    -- РџСЂРѕСЃС‚Р°РІР»СЏРµРј effective_end = 31.12.5999 РЅР° РїРѕСЃР»РµРґРЅРёС… Р·Р°РїРёСЃСЏС…
+    -- !!!РўРћР›Р¬РљРћ Р•РЎР›Р Р”РђРўРђ РћРљРћРќР§РђРќРРЇ РќР• Р РђРќР•Р• Р’Р§Р•Р РђРЁРќР•Р™ РРќРђР§Р• Р‘РЈР”Р•Рў РћРЁРР‘РљРђ Unique constraint!!!
     IF last_day(inEndDate) >= TRUNC(SYSDATE - 1,'DD') THEN
-       vMes := 'CONTINUE :: -------- "'||UPPER(inSign)||'" - EFFECTIVE_END -> "31.12.5999" апдейт последних записей ---------';
+       vMes := 'CONTINUE :: -------- "'||UPPER(inSign)||'" - EFFECTIVE_END -> "31.12.5999" Р°РїРґРµР№С‚ РїРѕСЃР»РµРґРЅРёС… Р·Р°РїРёСЃРµР№ ---------';
        pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
        vTIBegin := SYSDATE;
@@ -3129,13 +3129,13 @@ BEGIN
      END IF;
 
      vEndTime := SYSDATE;
-     vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - EFFECTIVE_END -> "31.12.5999" окончание апдейта последних записей. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+     vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - EFFECTIVE_END -> "31.12.5999" РѕРєРѕРЅС‡Р°РЅРёРµ Р°РїРґРµР№С‚Р° РїРѕСЃР»РµРґРЅРёС… Р·Р°РїРёСЃРµР№. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
      pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
   END IF;
 
   IF vCompress THEN
-    -- Сжатие данных в целевой таблице
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - сжатие данных в целевой таблице --------';
+    -- РЎР¶Р°С‚РёРµ РґР°РЅРЅС‹С… РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - СЃР¶Р°С‚РёРµ РґР°РЅРЅС‹С… РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
     vTIBegin := SYSDATE;
@@ -3150,14 +3150,14 @@ BEGIN
     END;
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание сжатия данных в целевой таблице. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ СЃР¶Р°С‚РёСЏ РґР°РЅРЅС‹С… РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
-    -- Перестроение индексов в целевой таблице
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - перестроение индексов в целевой таблице --------';
+    -- РџРµСЂРµСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
-    -- Получение наименования индекса
+    -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РёРЅРґРµРєСЃР°
     SELECT index_name INTO vIdx FROM all_indexes
       WHERE owner = UPPER(vOwner) AND table_name = UPPER(SUBSTR(CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END,INSTR(CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END,'.',1,1) + 1,LENGTH(CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END) - INSTR(CASE WHEN inAnltCode IS NULL THEN vHistTable ELSE vHistATable END,'.',1,1)))
         AND uniqueness = 'UNIQUE'
@@ -3176,12 +3176,12 @@ BEGIN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание перестроения индексов в целевой таблице. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРµСЂРµСЃС‚СЂРѕРµРЅРёСЏ РёРЅРґРµРєСЃРѕРІ РІ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
   END IF;
 
   IF vStats THEN
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - сбор статистики по целевой таблице --------';
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - СЃР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
     vTIBegin := SYSDATE;
@@ -3197,7 +3197,7 @@ BEGIN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - окончание сбора статистики по целевой таблице. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||UPPER(inSign)||'" - РѕРєРѕРЅС‡Р°РЅРёРµ СЃР±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С†РµР»РµРІРѕР№ С‚Р°Р±Р»РёС†Рµ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.tb_load_mass',vMes);
   END IF;
 
@@ -3226,18 +3226,18 @@ BEGIN
   vMes := 'START :: "'||UPPER(inSign)||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.SignExtProcessing" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.SignExtProcessing',vMes);
 
-  -- Получение ext_plsql
+  -- РџРѕР»СѓС‡РµРЅРёРµ ext_plsql
   BEGIN
     SELECT ext_plsql
       INTO vStmt
       FROM tb_signs_pool p
       WHERE p.sign_name = UPPER(inSign);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Показатель "'||inSign||'" не найден в таблице '||lower(vOwner)||'.tb_signs_pool');
+    RAISE_APPLICATION_ERROR(-20000,'РџРѕРєР°Р·Р°С‚РµР»СЊ "'||inSign||'" РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ '||lower(vOwner)||'.tb_signs_pool');
   END;
 
   EXECUTE IMMEDIATE 'ALTER SESSION SET nls_date_format = ''DD.MM.RRRR HH24:MI:SS''';
-  -- Обработка
+  -- РћР±СЂР°Р±РѕС‚РєР°
   EXECUTE IMMEDIATE vStmt USING IN UPPER(inSign),IN inDate,OUT vRes;
 
   vEndTime := SYSDATE;
@@ -3366,41 +3366,41 @@ PROCEDURE drop_sign(inSign IN VARCHAR2,outRes OUT VARCHAR2)
   IS
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Удаление партиции
+  -- РЈРґР°Р»РµРЅРёРµ РїР°СЂС‚РёС†РёРё
   outRes := DropSignPartitions(UPPER(inSign));
 
-  -- Удаление привязки к аналитикам
+  -- РЈРґР°Р»РµРЅРёРµ РїСЂРёРІСЏР·РєРё Рє Р°РЅР°Р»РёС‚РёРєР°Рј
   BEGIN
     DELETE FROM tb_sign_2_anlt WHERE sign_name = UPPER(inSign);
-    outRes := outRes||CHR(10)||'------------'||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - Удалено '||SQL%ROWCOUNT||' привязок к аналитикам';
+    outRes := outRes||CHR(10)||'------------'||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - РЈРґР°Р»РµРЅРѕ '||SQL%ROWCOUNT||' РїСЂРёРІСЏР·РѕРє Рє Р°РЅР°Р»РёС‚РёРєР°Рј';
   EXCEPTION WHEN OTHERS THEN
-    outRes := outRes||CHR(10)||'------------'||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - не возможно удалить привязки к аналитикам :: '||SQLERRM;
+    outRes := outRes||CHR(10)||'------------'||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - РЅРµ РІРѕР·РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ РїСЂРёРІСЏР·РєРё Рє Р°РЅР°Р»РёС‚РёРєР°Рј :: '||SQLERRM;
     RAISE_APPLICATION_ERROR(-20000,outRes);
   END;
 
-  -- Удаление привязки к группе
+  -- РЈРґР°Р»РµРЅРёРµ РїСЂРёРІСЏР·РєРё Рє РіСЂСѓРїРїРµ
   BEGIN
     DELETE FROM tb_signs_2_group WHERE sign_name = UPPER(inSign);
-    outRes := outRes||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - Удалено '||SQL%ROWCOUNT||' привязок к группам';
+    outRes := outRes||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - РЈРґР°Р»РµРЅРѕ '||SQL%ROWCOUNT||' РїСЂРёРІСЏР·РѕРє Рє РіСЂСѓРїРїР°Рј';
   EXCEPTION WHEN OTHERS THEN
-    outRes := outRes||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - не возможно удалить привязки к группам :: '||SQLERRM;
+    outRes := outRes||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - РЅРµ РІРѕР·РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ РїСЂРёРІСЏР·РєРё Рє РіСЂСѓРїРїР°Рј :: '||SQLERRM;
     RAISE_APPLICATION_ERROR(-20000,outRes);
   END;
-  -- Удаление зависимости от других показателей
+  -- РЈРґР°Р»РµРЅРёРµ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РґСЂСѓРіРёС… РїРѕРєР°Р·Р°С‚РµР»РµР№
   BEGIN
     DELETE FROM tb_sign_2_sign WHERE sign_name = UPPER(inSign) OR prev_sign_name = UPPER(inSign);
-    outRes := outRes||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - Удалено '||SQL%ROWCOUNT||' зависимостей от других показателей';
+    outRes := outRes||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - РЈРґР°Р»РµРЅРѕ '||SQL%ROWCOUNT||' Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№ РѕС‚ РґСЂСѓРіРёС… РїРѕРєР°Р·Р°С‚РµР»РµР№';
   EXCEPTION WHEN OTHERS THEN
-    outRes := outRes||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - не возможно удалить зависимости от других показателей :: '||SQLERRM;
+    outRes := outRes||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - РЅРµ РІРѕР·РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РґСЂСѓРіРёС… РїРѕРєР°Р·Р°С‚РµР»РµР№ :: '||SQLERRM;
     RAISE_APPLICATION_ERROR(-20000,outRes);
   END;
 
-  -- Удаление из списка показателей
+  -- РЈРґР°Р»РµРЅРёРµ РёР· СЃРїРёСЃРєР° РїРѕРєР°Р·Р°С‚РµР»РµР№
   BEGIN
     DELETE FROM tb_signs_pool WHERE sign_name = UPPER(inSign);
-    outRes := outRes||CHR(10)||'------------'||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - Показатель удален из списка показателей';
+    outRes := outRes||CHR(10)||'------------'||CHR(10)||'SUCCESSFULLY :: "'||UPPER(inSign)||'" - РџРѕРєР°Р·Р°С‚РµР»СЊ СѓРґР°Р»РµРЅ РёР· СЃРїРёСЃРєР° РїРѕРєР°Р·Р°С‚РµР»РµР№';
   EXCEPTION WHEN OTHERS THEN
-    outRes := outRes||CHR(10)||'------------'||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - не возможно удалить показатель в таблице "'||lower(vOwner)||'.tb_signs_pool" :: '||SQLERRM;
+    outRes := outRes||CHR(10)||'------------'||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - РЅРµ РІРѕР·РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ РїРѕРєР°Р·Р°С‚РµР»СЊ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_pool" :: '||SQLERRM;
   END;
 EXCEPTION WHEN OTHERS THEN
   outRes := outRes||CHR(10)||'------------'||CHR(10)||'ERROR :: "'||UPPER(inSign)||'" - '||SQLERRM;
@@ -3409,8 +3409,8 @@ END drop_sign;
 FUNCTION GetTreeList(inSQL IN CLOB) RETURN TTabTree PIPELINED
   IS
     rec TRecTree;
-      cur INTEGER;       -- хранит идентификатор (ID) курсора
-      ret INTEGER;       -- хранит возвращаемое по вызову значение
+      cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+      ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
 BEGIN
   cur := dbms_sql.open_cursor;
   dbms_sql.parse(cur, inSQL, dbms_sql.native);
@@ -3429,8 +3429,8 @@ END;
 FUNCTION GetChainList(inSQL IN CLOB) RETURN TTabCHBuilder PIPELINED
   IS
     rec TRecCHBuilder;
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
 BEGIN
     cur := dbms_sql.open_cursor;
     dbms_sql.parse(cur, inSQL, dbms_sql.native);
@@ -3534,7 +3534,7 @@ FUNCTION ChainBuilder(inSQL CLOB) RETURN VARCHAR2
     PrgCou INTEGER := 0;
 BEGIN
   
-  -- Программы
+  -- РџСЂРѕРіСЂР°РјРјС‹
   dbms_lob.createtemporary(vPrg,FALSE);
   dbms_lob.writeappend(vPrg,LENGTH('BEGIN'||CHR(10)),'BEGIN'||CHR(10));
 
@@ -3543,7 +3543,7 @@ BEGIN
   '                                    program_type        => ''PLSQL_BLOCK'','||CHR(10)||
   '                                    program_action      => ''BEGIN NULL; END;'','||CHR(10)||
   '                                    enabled             => true,'||CHR(10)||
-  '                                    comments            => ''Старт'');'||CHR(10);
+  '                                    comments            => ''РЎС‚Р°СЂС‚'');'||CHR(10);
   dbms_lob.writeappend(vPrg,LENGTH(vBuff),vBuff);
 
   FOR idx IN (
@@ -3576,7 +3576,7 @@ BEGIN
   END LOOP;
   dbms_lob.writeappend(vPrg,LENGTH('END;'),'END;');
 
-  -- Параметры программ
+  -- РџР°СЂР°РјРµС‚СЂС‹ РїСЂРѕРіСЂР°РјРј
   dbms_lob.createtemporary(vArg,FALSE);
   dbms_lob.writeappend(vArg,LENGTH('BEGIN'||CHR(10)),'BEGIN'||CHR(10));
  
@@ -3616,14 +3616,14 @@ BEGIN
   END LOOP;
   dbms_lob.writeappend(vArg,LENGTH('END;'),'END;');
 
-  -- Цепь и шаги
+  -- Р¦РµРїСЊ Рё С€Р°РіРё
   dbms_lob.createtemporary(vStp,FALSE);
   dbms_lob.writeappend(vStp,LENGTH('BEGIN'||CHR(10)),'BEGIN'||CHR(10));
 
   vBuff :=
   '  sys.dbms_scheduler.create_chain(chain_name          => '''||vChainName||''','||CHR(10)||
   '                                  evaluation_interval => INTERVAL ''3'' MINUTE,'||CHR(10)||
-  '                                  comments            => ''Головной CHAIN'');'||CHR(10);
+  '                                  comments            => ''Р“РѕР»РѕРІРЅРѕР№ CHAIN'');'||CHR(10);
   dbms_lob.writeappend(vStp,length(vBuff),vBuff);
 
   vBuff :=
@@ -3656,7 +3656,7 @@ BEGIN
   END LOOP;
   dbms_lob.writeappend(vStp,LENGTH('END;'),'END;');
 
-  -- Правила
+  -- РџСЂР°РІРёР»Р°
   dbms_lob.createtemporary(vRul,FALSE);
   dbms_lob.writeappend(vRul,LENGTH('BEGIN'||CHR(10)),'BEGIN'||CHR(10));
 
@@ -3665,7 +3665,7 @@ BEGIN
   '                                       rule_name  => '''||vOwner||'.RUL_START_'||vID||''','||CHR(10)||
   '                                       condition  => ''TRUE'','||CHR(10)||
   '                                       action     => ''START "STP_START"'','||CHR(10)||
-  '                                       comments   => ''Старт'');'||CHR(10);
+  '                                       comments   => ''РЎС‚Р°СЂС‚'');'||CHR(10);
   dbms_lob.writeappend(vRul,length(vBuff),vBuff);
 
   FOR idx IN (
@@ -3686,7 +3686,7 @@ BEGIN
   END LOOP;
   dbms_lob.writeappend(vRul,LENGTH('END;'),'END;');
 
-  -- Активация программ и цепи
+  -- РђРєС‚РёРІР°С†РёСЏ РїСЂРѕРіСЂР°РјРј Рё С†РµРїРё
   dbms_lob.createtemporary(vAct,FALSE);
   dbms_lob.writeappend(vAct,LENGTH('BEGIN'||CHR(10)),'BEGIN'||CHR(10));
 
@@ -3764,32 +3764,32 @@ PROCEDURE ChainKiller(inChainName VARCHAR2)
   vPrgName VARCHAR2(256);
   vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Ожидание пока отработает цепь
+  -- РћР¶РёРґР°РЅРёРµ РїРѕРєР° РѕС‚СЂР°Р±РѕС‚Р°РµС‚ С†РµРїСЊ
   LOOP
     SELECT COUNT(1) INTO vRunChCou
       FROM all_scheduler_running_chains
       WHERE lower(owner)||'.'||lower(chain_name) = LOWER(inChainName)
         AND completed = 'FALSE';
     EXIT WHEN vRunChCou = 0;
-    -- ждем 10 секунд, затем проверяем снова
+    -- Р¶РґРµРј 10 СЃРµРєСѓРЅРґ, Р·Р°С‚РµРј РїСЂРѕРІРµСЂСЏРµРј СЃРЅРѕРІР°
     --stage.mysleep(10);
     dbms_lock.sleep(10);
   END LOOP;
 
-  -- Открытие курсора с наименованиями программ
+  -- РћС‚РєСЂС‹С‚РёРµ РєСѓСЂСЃРѕСЂР° СЃ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏРјРё РїСЂРѕРіСЂР°РјРј
   OPEN curPrg FOR
     SELECT LOWER(owner||'.'||program_name) AS prg_name
       FROM all_scheduler_chain_steps
       WHERE lower(owner)||'.'||lower(chain_name) = LOWER(inChainName);
 
-  -- Удаление цепи
+  -- РЈРґР°Р»РµРЅРёРµ С†РµРїРё
   BEGIN
     sys.dbms_scheduler.drop_chain(LOWER(inChainName),TRUE);
   EXCEPTION WHEN OTHERS THEN
     NULL;
   END;
 
-  -- Удаление программ
+  -- РЈРґР°Р»РµРЅРёРµ РїСЂРѕРіСЂР°РјРј
   LOOP
     FETCH curPrg INTO vPrgName;
     EXIT WHEN curPrg%NOTFOUND;
@@ -3833,7 +3833,7 @@ BEGIN
     --dbms_output.put_line(vBuff);
    
     vEndTime := SYSDATE;
-    -- Отправка ошибок на почту если они обнаружены в расчете
+    -- РћС‚РїСЂР°РІРєР° РѕС€РёР±РѕРє РЅР° РїРѕС‡С‚Сѓ РµСЃР»Рё РѕРЅРё РѕР±РЅР°СЂСѓР¶РµРЅС‹ РІ СЂР°СЃС‡РµС‚Рµ
     IF inSendMessage THEN
       WITH
       dt AS (
@@ -3863,12 +3863,12 @@ BEGIN
           WHERE l.message LIKE '%ERROR%' OR LOWER(l.unit) LIKE '%myexecute%' AND l.message LIKE 'ORA-%'
         ORDER BY l.id DESC]';
 
-      send_message_about_project(to_number(GetVarValue('vProjectID')),'DWHLegator (ошибки расчета от '||to_char(vEndTime,'DD.MM.RRRR HH24:MI:SS')||')'
-        ,SQLasHTML(vBuff,'ID#!#DAT#!#UNIT#!#MESSAGE','ИД записи:#!#Время:#!#Процедура:#!#Сообщение:'));
+      send_message_about_project(to_number(GetVarValue('vProjectID')),'DWHLegator (РѕС€РёР±РєРё СЂР°СЃС‡РµС‚Р° РѕС‚ '||to_char(vEndTime,'DD.MM.RRRR HH24:MI:SS')||')'
+        ,SQLasHTML(vBuff,'ID#!#DAT#!#UNIT#!#MESSAGE','РР” Р·Р°РїРёСЃРё:#!#Р’СЂРµРјСЏ:#!#РџСЂРѕС†РµРґСѓСЂР°:#!#РЎРѕРѕР±С‰РµРЅРёРµ:'));
       
       END IF;
     END IF;
-    -- Окончание отправки ошибок
+    -- РћРєРѕРЅС‡Р°РЅРёРµ РѕС‚РїСЂР°РІРєРё РѕС€РёР±РѕРє
     
     vMes := 'FINISH :: "'||vBegDate||'" :: Procedure '||UPPER(vOwner)||'.PKG_ETL_SIGNS.CALC finished in '||get_ti_as_hms(vEndTime - vBegTime)||' successfully';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.calc',vMes);
@@ -4011,7 +4011,7 @@ BEGIN
   --dbms_output.put_line(vBuff);
 END CalcAnltByStar;
 
-/******************************** ИМПОРТ - ЭКСПОРТ **************************************/
+/******************************** РРњРџРћР Рў - Р­РљРЎРџРћР Рў **************************************/
 /*FUNCTION AnltSpecImpGetCondition(inSignName VARCHAR2,inIds VARCHAR2 DEFAULT NULL,inProduct IN NUMBER DEFAULT 0) RETURN CLOB
   IS
     vCond CLOB;
@@ -4080,7 +4080,7 @@ BEGIN
   vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.AnltSpecImport" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.AnltSpecImport',vMes);
 
-  -- ИД аналитики
+  -- РР” Р°РЅР°Р»РёС‚РёРєРё
   SELECT id
     INTO vAnltID
     FROM tb_signs_anlt
@@ -4103,7 +4103,7 @@ BEGIN
                AND dbms_lob.substr(src.condition,1,30) != '1 = 0'
                AND dest.block_import = 0;
 
-  vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Аналитика "'||UPPER(inAnltCode)||'"  - '||SQL%ROWCOUNT||' rows merged into table "'||vOwner||'.tb_signs_anlt_spec"';
+  vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - РђРЅР°Р»РёС‚РёРєР° "'||UPPER(inAnltCode)||'"  - '||SQL%ROWCOUNT||' rows merged into table "'||vOwner||'.tb_signs_anlt_spec"';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.AnltSpecImport',vMes);
   COMMIT;
 
@@ -4112,7 +4112,7 @@ BEGIN
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.AnltSpecImport',vMes);
 EXCEPTION 
   WHEN NO_DATA_FOUND THEN
-    vMes := 'ERROR :: "'||UPPER(inAnltCode)||'"  - Аналитика не найдена в таблице "'||lower(vOwner)||'.tb_signs_anlt"';
+    vMes := 'ERROR :: "'||UPPER(inAnltCode)||'"  - РђРЅР°Р»РёС‚РёРєР° РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_anlt"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.AnltSpecImport',vMes);
   WHEN OTHERS THEN
     vEndTime := SYSDATE;
@@ -4122,7 +4122,7 @@ EXCEPTION
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.AnltSpecImport',vMes);
 END AnltSpecImport;
 
-/********************* ЗВЕЗДЫ И ВСЁ ЧТО С НИМИ СВЯЗАНО **********************************/
+/********************* Р—Р’Р•Р—Р”Р« Р Р’РЎРЃ Р§РўРћ РЎ РќРРњР РЎР’РЇР—РђРќРћ **********************************/
 FUNCTION  GetAnltLineSQL(inSQL IN CLOB,inIDName IN VARCHAR2
   ,inPIDName IN VARCHAR2,inName IN VARCHAR2,inValue IN VARCHAR2) RETURN CLOB
   IS
@@ -4296,9 +4296,9 @@ BEGIN
              ,(SELECT entity_name FROM tb_entity WHERE parent_id IS NULL CONNECT BY ID = PRIOR parent_id START WITH ID = p.entity_id) AS p_e_name
              ,p.sign_descr
              ,grp.group_name
-             ,CASE WHEN p.data_type = 'Строка' THEN 'VARCHAR2(4000)'
-                   WHEN p.data_type = 'Число' THEN 'NUMBER'
-                   WHEN p.data_type = 'Дата'  THEN 'DATE'
+             ,CASE WHEN p.data_type = 'РЎС‚СЂРѕРєР°' THEN 'VARCHAR2(4000)'
+                   WHEN p.data_type = 'Р§РёСЃР»Рѕ' THEN 'NUMBER'
+                   WHEN p.data_type = 'Р”Р°С‚Р°'  THEN 'DATE'
               END AS sgn_data_type
          FROM grp
               INNER JOIN tb_signs_2_group s2g
@@ -4317,12 +4317,12 @@ BEGIN
             ,col_type
             ,preaggr_flg
             ,CASE WHEN comm IS NULL THEN
-               CASE WHEN REGEXP_LIKE(col_name,'ID[[:digit:]]{1,}') THEN 'ИД '
-                    WHEN REGEXP_LIKE(col_name,'NAME[[:digit:]]{1,}') THEN 'Наименование '
-                 ELSE 'Значение '
-               END||CASE WHEN SUBSTR(col_name,INSTR(col_name,REGEXP_SUBSTR(col_name,'[[:digit:]]'))) = 1 THEN 'верхнего'
+               CASE WHEN REGEXP_LIKE(col_name,'ID[[:digit:]]{1,}') THEN 'РР” '
+                    WHEN REGEXP_LIKE(col_name,'NAME[[:digit:]]{1,}') THEN 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ '
+                 ELSE 'Р—РЅР°С‡РµРЅРёРµ '
+               END||CASE WHEN SUBSTR(col_name,INSTR(col_name,REGEXP_SUBSTR(col_name,'[[:digit:]]'))) = 1 THEN 'РІРµСЂС…РЅРµРіРѕ'
                            ELSE to_char(to_number(SUBSTR(col_name,INSTR(col_name,REGEXP_SUBSTR(col_name,'[[:digit:]]')))) - 1)
-                            END||' уровня'
+                            END||' СѓСЂРѕРІРЅСЏ'
                ELSE comm
              END AS col_comment
             ,to_number(CASE WHEN ff.tbl LIKE 'DIM\_%' ESCAPE '\' THEN SUBSTR(ff.tbl,INSTR(ff.tbl,'#') + 1) END) AS entity_id
@@ -4332,9 +4332,9 @@ BEGIN
                  CASE WHEN lev = 2 OR anlt_flg = -1 THEN tbl_prefix ELSE 'DIM_'||group_id END||
                    CASE WHEN tbl_prefix LIKE 'FCT%' AND (lev > 1 OR lev IS NULL) THEN NULL ELSE CASE WHEN lev = 1 THEN '#'||to_char(p_e_id) ELSE '#'||anlt_alias END
                  END AS tbl
-                ,CASE WHEN NOT(lev = 2 OR anlt_flg = -1) THEN 'Измерение: Группа - "'||group_name||'"; Сущность - "'||p_e_name||'"'
+                ,CASE WHEN NOT(lev = 2 OR anlt_flg = -1) THEN 'РР·РјРµСЂРµРЅРёРµ: Р“СЂСѓРїРїР° - "'||group_name||'"; РЎСѓС‰РЅРѕСЃС‚СЊ - "'||p_e_name||'"'
                       WHEN tbl_prefix LIKE 'FCT%' AND (lev > 1 OR lev IS NULL) THEN group_name
-                   ELSE REPLACE(anlt_name,'СУКА ::','Иерархическое измерение:')
+                   ELSE REPLACE(anlt_name,'РЎРЈРљРђ ::','РРµСЂР°СЂС…РёС‡РµСЃРєРѕРµ РёР·РјРµСЂРµРЅРёРµ:')
                  END AS table_comment
                 ,sgn_alias
                 ,preaggr_flg
@@ -4369,16 +4369,16 @@ BEGIN
         SELECT DISTINCT
                anlt.anlt_alias AS table_alias
               ,'ANLTLINE_'||grp.head_group_id||'#'||anlt.anlt_alias AS table_name
-              ,REPLACE(anlt.anlt_name,'СУКА ::','Иерархическое измерение:') AS table_comment
+              ,REPLACE(anlt.anlt_name,'РЎРЈРљРђ ::','РРµСЂР°СЂС…РёС‡РµСЃРєРѕРµ РёР·РјРµСЂРµРЅРёРµ:') AS table_comment
               ,anlt.col_name
               ,'VARCHAR2(4000)' AS col_type
               ,0 AS preaggr_flg
-              ,CASE WHEN REGEXP_LIKE(col_name,'ID[[:digit:]]{1,}') THEN 'ИД '
-                    WHEN REGEXP_LIKE(col_name,'NAME[[:digit:]]{1,}') THEN 'Наименование '
-                 ELSE 'Значение '
-               END||CASE WHEN SUBSTR(col_name,INSTR(col_name,REGEXP_SUBSTR(col_name,'[[:digit:]]'))) = 1 THEN 'верхнего'
+              ,CASE WHEN REGEXP_LIKE(col_name,'ID[[:digit:]]{1,}') THEN 'РР” '
+                    WHEN REGEXP_LIKE(col_name,'NAME[[:digit:]]{1,}') THEN 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ '
+                 ELSE 'Р—РЅР°С‡РµРЅРёРµ '
+               END||CASE WHEN SUBSTR(col_name,INSTR(col_name,REGEXP_SUBSTR(col_name,'[[:digit:]]'))) = 1 THEN 'РІРµСЂС…РЅРµРіРѕ'
                            ELSE to_char(to_number(SUBSTR(col_name,INSTR(col_name,REGEXP_SUBSTR(col_name,'[[:digit:]]')))) - 1)
-                    END||' уровня' AS col_comment
+                    END||' СѓСЂРѕРІРЅСЏ' AS col_comment
               ,NULL
               ,NULL
           FROM grp
@@ -4409,7 +4409,7 @@ PROCEDURE StarPrepareAggrTable(inDate IN DATE,inAggrID IN NUMBER)
     vGroupID NUMBER;
     vAggrSQL CLOB;
     vAggrNAme VARCHAR2(4000);
-    -- список наименований полей через запятую (для использования при построении динамического SQL)
+    -- СЃРїРёСЃРѕРє РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ (РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ SQL)
     vMes VARCHAR2(4000);
     vBegTime DATE := SYSDATE;
     vEndTime DATE;
@@ -4426,11 +4426,11 @@ BEGIN
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAggrTable',vMes);
 EXCEPTION 
   WHEN NO_DATA_FOUND THEN
-    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'"  - Описание агрегата "ID = '||inAggrID||'" не найдено в таблице "'||lower(vOwner)||'.tb_signs_aggrs"';
+    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'"  - РћРїРёСЃР°РЅРёРµ Р°РіСЂРµРіР°С‚Р° "ID = '||inAggrID||'" РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_aggrs"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAggrTable',vMes);
   WHEN OTHERS THEN
     vEndTime := SYSDATE;
-    vMes := 'ERROR :: Агрегат "ID = '||inAggrID||'" :: '||SQLERRM;
+    vMes := 'ERROR :: РђРіСЂРµРіР°С‚ "ID = '||inAggrID||'" :: '||SQLERRM;
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAggrTable',vMes);
     
     vMes := 'FINISH :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarPrepareAggrTable" finished in '||get_ti_as_hms(vEndTime - vBegTime)||' with errors';
@@ -4473,7 +4473,7 @@ BEGIN
     load_new(vBuff,vJobName);
   --dbms_output.put_line(vBuff);
   ELSE
-    vMes := 'INFORMATION :: У группы "'||vGroupName||'" отсутствуют агрегаты. Подготовка не требуется';
+    vMes := 'INFORMATION :: РЈ РіСЂСѓРїРїС‹ "'||vGroupName||'" РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ Р°РіСЂРµРіР°С‚С‹. РџРѕРґРіРѕС‚РѕРІРєР° РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAggrs',vMes);
   END IF;
 
@@ -4493,34 +4493,34 @@ END StarPrepareAggrs;
 PROCEDURE StarPrepareDim(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER)
   IS
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
-    -- список наименований полей через запятую (для использования при построении динамического SQL)
+    -- СЃРїРёСЃРѕРє РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ (РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ SQL)
     vFieldsForCreate VARCHAR2(32700);
     --
     vDDL CLOB;
 
     vBuff VARCHAR2(32700);
-    vStarDimTable VARCHAR2(256) := vOwner||'.dim_'||inGroupID||'#'||inEntityID; -- наименование таблицы фактов в звезде
-    vGroupName VARCHAR2(4000);   -- наименование группы показателей измерений
-    vEntityName VARCHAR2(4000);  -- нименование сущности
+    vStarDimTable VARCHAR2(256) := vOwner||'.dim_'||inGroupID||'#'||inEntityID; -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С„Р°РєС‚РѕРІ РІ Р·РІРµР·РґРµ
+    vGroupName VARCHAR2(4000);   -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹ РїРѕРєР°Р·Р°С‚РµР»РµР№ РёР·РјРµСЂРµРЅРёР№
+    vEntityName VARCHAR2(4000);  -- РЅРёРјРµРЅРѕРІР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё
     vTabCou INTEGER;
 
     vMes VARCHAR2(4000);
     vTIBegin DATE;
     vENdTime DATE;
 BEGIN
-  -- Получение наименования группы
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹
   SELECT group_name INTO vGroupName FROM tb_signs_group WHERE group_id = inGroupID;
-  -- Получение наименования сущности
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ СЃСѓС‰РЅРѕСЃС‚Рё
   SELECT entity_name INTO vEntityName FROM tb_entity WHERE id = inEntityID;
 
   /*******************************************************************/
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - начало подготовки таблицы -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - РЅР°С‡Р°Р»Рѕ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹ -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareDim',vMes);
 
   /*******************************************************************/
 
-  -- Формирование строковых переменных со списком полей через запятую
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРѕРІС‹С… РїРµСЂРµРјРµРЅРЅС‹С… СЃРѕ СЃРїРёСЃРєРѕРј РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
   vFieldsForCreate := NULL;
   FOR idx IN (
     SELECT DISTINCT
@@ -4535,8 +4535,8 @@ BEGIN
       WHERE s2g.group_id = inGroupID
   ) LOOP
         vFieldsForCreate := vFieldsForCreate||','||idx.sign_name||' '||
-        CASE WHEN idx.data_type = 'Число' THEN 'NUMBER'
-             WHEN idx.data_type = 'Дата' THEN 'DATE'
+        CASE WHEN idx.data_type = 'Р§РёСЃР»Рѕ' THEN 'NUMBER'
+             WHEN idx.data_type = 'Р”Р°С‚Р°' THEN 'DATE'
           ELSE 'VARCHAR2(4000)'
         END;
   END LOOP;
@@ -4549,11 +4549,11 @@ BEGIN
   'BEGIN'||CHR(10);
   dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-  -- Проверка на существование таблиц измерений для звезды
+  -- РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС† РёР·РјРµСЂРµРЅРёР№ РґР»СЏ Р·РІРµР·РґС‹
   SELECT COUNT(1) INTO vTabCou FROM dba_all_tables
     WHERE owner = UPPER(vOwner) AND table_name = 'DIM_'||inGroupID||'#'||inEntityID;
     
-  -- ЕСЛИ ТАБЛИЦА ОТСУТСТВУЕТ, ТО СОЗДАЕМ
+  -- Р•РЎР›Р РўРђР‘Р›РР¦Рђ РћРўРЎРЈРўРЎРўР’РЈР•Рў, РўРћ РЎРћР—Р”РђР•Рњ
   IF vTabCou = 0 THEN
     vBuff :=
     '  EXECUTE IMMEDIATE ''CREATE TABLE '||vStarDimTable||CHR(10)||
@@ -4562,10 +4562,10 @@ BEGIN
     '   (PARTITION P'||to_char(inDate,'RRRRMMDD')||' VALUES(to_date('''''||to_char(inDate,'DD.MM.YYYY')||''''',''''DD.MM.YYYY'''')) STORAGE (INITIAL 64K NEXT 4M)) NOLOGGING'';'||CHR(10)||CHR(10);
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-    -- Комментарии для колонок таблицы
-    vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vStarDimTable||'.as_of_date IS ''''Отчетная дата'''' '';'||CHR(10);
+    -- РљРѕРјРјРµРЅС‚Р°СЂРёРё РґР»СЏ РєРѕР»РѕРЅРѕРє С‚Р°Р±Р»РёС†С‹
+    vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vStarDimTable||'.as_of_date IS ''''РћС‚С‡РµС‚РЅР°СЏ РґР°С‚Р°'''' '';'||CHR(10);
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
-    vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vStarDimTable||'.obj_sid IS ''''Ид объекта (уникально в переделах одной даты). Используется для связки с фактами (по ключевым полям фактов).'''' '';'||CHR(10);
+    vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vStarDimTable||'.obj_sid IS ''''РРґ РѕР±СЉРµРєС‚Р° (СѓРЅРёРєР°Р»СЊРЅРѕ РІ РїРµСЂРµРґРµР»Р°С… РѕРґРЅРѕР№ РґР°С‚С‹). РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЃРІСЏР·РєРё СЃ С„Р°РєС‚Р°РјРё (РїРѕ РєР»СЋС‡РµРІС‹Рј РїРѕР»СЏРј С„Р°РєС‚РѕРІ).'''' '';'||CHR(10);
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
     FOR idx IN (
       SELECT DISTINCT
@@ -4582,15 +4582,15 @@ BEGIN
       vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vStarDimTable||'.'||LOWER(idx.sign_name)||' IS '''''||REPLACE(idx.sign_descr,'''','''''')||''''' '';'||CHR(10);
       dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
     END LOOP;
-    -- Вешаем комментарий на таблицу
+    -- Р’РµС€Р°РµРј РєРѕРјРјРµРЅС‚Р°СЂРёР№ РЅР° С‚Р°Р±Р»РёС†Сѓ
     vBuff :=
-    '  EXECUTE IMMEDIATE ''COMMENT ON TABLE '||vStarDimTable||' IS ''''Измерение: Группа - "'||vGroupName||'"; Сущность - "'||vEntityName||'"'''' '';'||CHR(10)||
+    '  EXECUTE IMMEDIATE ''COMMENT ON TABLE '||vStarDimTable||' IS ''''РР·РјРµСЂРµРЅРёРµ: Р“СЂСѓРїРїР° - "'||vGroupName||'"; РЎСѓС‰РЅРѕСЃС‚СЊ - "'||vEntityName||'"'''' '';'||CHR(10)||
     '  vBuff := ''SUCCESSFULLY :: Table "'||vStarDimTable||'" created''||CHR(10);'||CHR(10);
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
- -- ЕСЛИ ТАБЛИЦА УЖЕ СУЩЕСТВУЕТ
+ -- Р•РЎР›Р РўРђР‘Р›РР¦Рђ РЈР–Р• РЎРЈР©Р•РЎРўР’РЈР•Рў
   ELSE
-    -- Если партиция отсутствует - добавляем
+    -- Р•СЃР»Рё РїР°СЂС‚РёС†РёСЏ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ - РґРѕР±Р°РІР»СЏРµРј
     vBuff :=
     '  BEGIN'||CHR(10)||
     '    EXECUTE IMMEDIATE ''ALTER TABLE '||vStarDimTable||' ADD PARTITION P'||to_char(inDate,'RRRRMMDD')||' VALUES (to_date('''''||to_char(inDate,'DD.MM.YYYY')||''''',''''DD.MM.YYYY'''')) STORAGE (INITIAL 64K NEXT 4M) NOLOGGING'';'||CHR(10)||
@@ -4600,14 +4600,14 @@ BEGIN
     '  END;'||CHR(10);
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-    -- Т.к., к моменту текущего разворачивания, ключевые колонки (как количество так и наименование), могут измениться
-    -- то необходимо добавить недостающие (если таковые найдутся)
-    -- !!!Пока что предполагается, что количество может только увеличиться!!!
+    -- Рў.Рє., Рє РјРѕРјРµРЅС‚Сѓ С‚РµРєСѓС‰РµРіРѕ СЂР°Р·РІРѕСЂР°С‡РёРІР°РЅРёСЏ, РєР»СЋС‡РµРІС‹Рµ РєРѕР»РѕРЅРєРё (РєР°Рє РєРѕР»РёС‡РµСЃС‚РІРѕ С‚Р°Рє Рё РЅР°РёРјРµРЅРѕРІР°РЅРёРµ), РјРѕРіСѓС‚ РёР·РјРµРЅРёС‚СЊСЃСЏ
+    -- С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ РґРѕР±Р°РІРёС‚СЊ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ (РµСЃР»Рё С‚Р°РєРѕРІС‹Рµ РЅР°Р№РґСѓС‚СЃСЏ)
+    -- !!!РџРѕРєР° С‡С‚Рѕ РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РјРѕР¶РµС‚ С‚РѕР»СЊРєРѕ СѓРІРµР»РёС‡РёС‚СЊСЃСЏ!!!
     FOR idx IN (
       SELECT DISTINCT
              NVL(s2g.sgn_alias,p.sign_name) AS sign_name
-            ,CASE WHEN p.data_type = 'Число' THEN 'NUMBER'
-                  WHEN p.data_type = 'Дата' THEN 'DATE'
+            ,CASE WHEN p.data_type = 'Р§РёСЃР»Рѕ' THEN 'NUMBER'
+                  WHEN p.data_type = 'Р”Р°С‚Р°' THEN 'DATE'
                ELSE 'VARCHAR2(4000)'
              END AS data_type
             ,LISTAGG(p.sign_descr,'; ') WITHIN GROUP (ORDER BY p.id) OVER (PARTITION BY NVL(s2g.sgn_alias,p.sign_name)) AS sign_descr
@@ -4632,9 +4632,9 @@ BEGIN
     ) LOOP
       vBuff :=
       '  BEGIN'||CHR(10)||
-      -- Добавление колонки
+      -- Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕР»РѕРЅРєРё
       '    EXECUTE IMMEDIATE ''ALTER TABLE '||vStarDimTable||' ADD '||idx.sign_name||' '||idx.data_type||' '';'||CHR(10)||
-      -- Добавление комментария
+      -- Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ
       '    EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vStarDimTable||'.'||LOWER(idx.sign_name)||' IS '''''||REPLACE(idx.sign_descr,'''','''''')||''''' '';'||CHR(10)||
       '    vBuff := vBuff||''SUCCESSFULLY :: Column "'||vStarDimTable||'.'||lower(idx.sign_name)||'" added''||CHR(10);'||CHR(10)||
       '  EXCEPTION WHEN OTHERS THEN'||CHR(10)||
@@ -4644,7 +4644,7 @@ BEGIN
     END LOOP;
   END IF;
 
-  -- Финальный END
+  -- Р¤РёРЅР°Р»СЊРЅС‹Р№ END
   vBuff :=
   '  :1 := vBuff;'||CHR(10)||
   'END;'||CHR(10);
@@ -4653,12 +4653,12 @@ BEGIN
   EXECUTE IMMEDIATE vDDL USING OUT vMes;
   --dbms_output.put_line(vDDL);
   IF vMes IS NULL THEN
-    vMes := 'SUCCESSFULLY :: Table "'||vStarDimTable||'" - подготовка не требуется';
+    vMes := 'SUCCESSFULLY :: Table "'||vStarDimTable||'" - РїРѕРґРіРѕС‚РѕРІРєР° РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
   END IF;
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareDim',vMes);
 
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareDim',vMes);
 
 EXCEPTION WHEN OTHERS THEN
@@ -4682,7 +4682,7 @@ BEGIN
   vTableName := LOWER(vOwner)||'.'||inTableName;
   
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Таблица: "'||vTableName||'" - начало подготовки -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - РўР°Р±Р»РёС†Р°: "'||vTableName||'" - РЅР°С‡Р°Р»Рѕ РїРѕРґРіРѕС‚РѕРІРєРё -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.PrepareTableBySQL',vMes);
 
   dbms_lob.createtemporary(vDDL,FALSE);
@@ -4693,11 +4693,11 @@ BEGIN
   'BEGIN'||CHR(10);
   dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-  -- Проверка на существование таблиц измерений для звезды
+  -- РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС† РёР·РјРµСЂРµРЅРёР№ РґР»СЏ Р·РІРµР·РґС‹
   SELECT COUNT(1) INTO vTabCou FROM dba_all_tables
     WHERE owner = UPPER(vOwner) AND table_name = UPPER(inTableName);
     
-  -- ЕСЛИ ТАБЛИЦА ОТСУТСТВУЕТ, ТО СОЗДАЕМ
+  -- Р•РЎР›Р РўРђР‘Р›РР¦Рђ РћРўРЎРЈРўРЎРўР’РЈР•Рў, РўРћ РЎРћР—Р”РђР•Рњ
   IF vTabCou = 0 THEN
    vBuff := 'EXECUTE IMMEDIATE q''{CREATE TABLE '||vTableName||' ('||CHR(10)||'  AS_OF_DATE DATE'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
@@ -4715,20 +4715,20 @@ BEGIN
    ' ) NOLOGGING}'';'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-   vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vTableName||'.as_of_date IS ''''Отчетная дата'''' '';'||CHR(10);
+   vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||vTableName||'.as_of_date IS ''''РћС‚С‡РµС‚РЅР°СЏ РґР°С‚Р°'''' '';'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-   -- Вешаем комментарий на таблицу
+   -- Р’РµС€Р°РµРј РєРѕРјРјРµРЅС‚Р°СЂРёР№ РЅР° С‚Р°Р±Р»РёС†Сѓ
    vBuff :=
    '  EXECUTE IMMEDIATE ''COMMENT ON TABLE '||vTableName||' IS ''''''||q''{'||inComment||'}''||'''''' '';'||CHR(10)||
    '  vBuff := ''SUCCESSFULLY :: Table "'||vTableName||'" created''||CHR(10);'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-   -- ЕСЛИ ТАБЛИЦА УЖЕ СУЩЕСТВУЕТ
+   -- Р•РЎР›Р РўРђР‘Р›РР¦Рђ РЈР–Р• РЎРЈР©Р•РЎРўР’РЈР•Рў
    ELSE
-    -- Т.к., к моменту текущего разворачивания, ключевые колонки (как количество так и наименование), могут измениться
-    -- то необходимо добавить недостающие (если таковые найдутся)
-    -- !!!Пока что предполагается, что количество может только увеличиться!!!
+    -- Рў.Рє., Рє РјРѕРјРµРЅС‚Сѓ С‚РµРєСѓС‰РµРіРѕ СЂР°Р·РІРѕСЂР°С‡РёРІР°РЅРёСЏ, РєР»СЋС‡РµРІС‹Рµ РєРѕР»РѕРЅРєРё (РєР°Рє РєРѕР»РёС‡РµСЃС‚РІРѕ С‚Р°Рє Рё РЅР°РёРјРµРЅРѕРІР°РЅРёРµ), РјРѕРіСѓС‚ РёР·РјРµРЅРёС‚СЊСЃСЏ
+    -- С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ РґРѕР±Р°РІРёС‚СЊ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ (РµСЃР»Рё С‚Р°РєРѕРІС‹Рµ РЅР°Р№РґСѓС‚СЃСЏ)
+    -- !!!РџРѕРєР° С‡С‚Рѕ РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РјРѕР¶РµС‚ С‚РѕР»СЊРєРѕ СѓРІРµР»РёС‡РёС‚СЊСЃСЏ!!!
     FOR idx IN (
       SELECT col_name,col_type||CASE WHEN col_type = 'VARCHAR2' THEN '(4000)'/*'('||col_len||')'*/ END AS col_type
         FROM TABLE(DescribeColumns(inSQL))
@@ -4753,7 +4753,7 @@ BEGIN
       dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
     END LOOP;
 
-   -- Если партиция отсутствует - добавляем
+   -- Р•СЃР»Рё РїР°СЂС‚РёС†РёСЏ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ - РґРѕР±Р°РІР»СЏРµРј
    vBuff :=
     '  BEGIN'||CHR(10)||
     '    EXECUTE IMMEDIATE ''ALTER TABLE '||vTableName||' ADD PARTITION P'||to_char(inDate,'RRRRMMDD')||' VALUES (to_date('''''||to_char(inDate,'DD.MM.YYYY')||''''',''''DD.MM.YYYY'''')) STORAGE (INITIAL 64K NEXT 1M) NOLOGGING'';'||CHR(10)||
@@ -4764,7 +4764,7 @@ BEGIN
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
   END IF;
 
-  -- Финальный END
+  -- Р¤РёРЅР°Р»СЊРЅС‹Р№ END
   vBuff :=
   '  :1 := vBuff;'||CHR(10)||
   'END;'||CHR(10);
@@ -4774,12 +4774,12 @@ BEGIN
   --dbms_output.put_line(vDDL);
 
   IF vMes IS NULL THEN
-    vMes := 'SUCCESSFULLY :: Table "'||vTableName||'" - подготовка не требуется';
+    vMes := 'SUCCESSFULLY :: Table "'||vTableName||'" - РїРѕРґРіРѕС‚РѕРІРєР° РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
   END IF;
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.PrepareTableBySQL',vMes);
 
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Таблица: "'||vTableName||'" - окончание подготовки. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - РўР°Р±Р»РёС†Р°: "'||vTableName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.PrepareTableBySQL',vMes);
 EXCEPTION
 WHEN OTHERS THEN
@@ -4787,7 +4787,7 @@ WHEN OTHERS THEN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.PrepareTableBySQL',vMes);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Таблица: "'||vTableName||'" - окончание подготовки. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - РўР°Р±Р»РёС†Р°: "'||vTableName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.PrepareTableBySQL',vMes);
 END PrepareTableBySQL;
 
@@ -4798,7 +4798,7 @@ PROCEDURE StarPrepareAnlt(inDate IN DATE,inGroupID IN NUMBER,inAnltCode IN VARCH
     vAnltAlias VARCHAR2(30);
     vAnltID NUMBER;
     vAnltName VARCHAR2(4000);
-    vGroupName VARCHAR2(4000);   -- наименование группы показателей измерений
+    vGroupName VARCHAR2(4000);   -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹ РїРѕРєР°Р·Р°С‚РµР»РµР№ РёР·РјРµСЂРµРЅРёР№
     vTabCou INTEGER;
 
     vBuff VARCHAR2(32700);
@@ -4812,13 +4812,13 @@ PROCEDURE StarPrepareAnlt(inDate IN DATE,inGroupID IN NUMBER,inAnltCode IN VARCH
     errNoGroup EXCEPTION;
     errNoAnlt EXCEPTION;
 BEGIN
-  -- Сохранение в переменную наименования группы
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹
   BEGIN
     SELECT group_name INTO vGroupName FROM tb_signs_group WHERE group_id = inGroupID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
     RAISE errNoGroup;  
   END;
-  -- Сохранение в переменную альяса и ИД аналитики
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ Р°Р»СЊСЏСЃР° Рё РР” Р°РЅР°Р»РёС‚РёРєРё
   BEGIN
     SELECT anlt_alias,id,anlt_name
       INTO vAnltAlias,vAnltID,vAnltName
@@ -4831,7 +4831,7 @@ BEGIN
   vStarAnltTable := LOWER(vOwner)||'.anltline_'||inGroupID||'#'||vAnltAlias;
   
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" - начало подготовки таблицы -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" - РЅР°С‡Р°Р»Рѕ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹ -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 
   dbms_lob.createtemporary(vDDL,FALSE);
@@ -4842,11 +4842,11 @@ BEGIN
   'BEGIN'||CHR(10);
   dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-  -- Проверка на существование таблиц измерений для звезды
+  -- РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС† РёР·РјРµСЂРµРЅРёР№ РґР»СЏ Р·РІРµР·РґС‹
   SELECT COUNT(1) INTO vTabCou FROM dba_all_tables
     WHERE owner = UPPER(vOwner) AND table_name = UPPER('anltline_'||inGroupID||'#'||vAnltAlias);
     
-  -- ЕСЛИ ТАБЛИЦА ОТСУТСТВУЕТ, ТО СОЗДАЕМ
+  -- Р•РЎР›Р РўРђР‘Р›РР¦Рђ РћРўРЎРЈРўРЎРўР’РЈР•Рў, РўРћ РЎРћР—Р”РђР•Рњ
   IF vTabCou = 0 THEN
    vBuff := 'EXECUTE IMMEDIATE q''{CREATE TABLE '||vStarAnltTable||' ('||CHR(10)||'  AS_OF_DATE DATE'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
@@ -4864,17 +4864,17 @@ BEGIN
    ' ) NOLOGGING}'';'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-   -- Вешаем комментарий на таблицу
+   -- Р’РµС€Р°РµРј РєРѕРјРјРµРЅС‚Р°СЂРёР№ РЅР° С‚Р°Р±Р»РёС†Сѓ
    vBuff :=
-   '  EXECUTE IMMEDIATE ''COMMENT ON TABLE '||vStarAnltTable||' IS ''''Иерархическое измерение: Группа - "'||vGroupName||'"; Аналитика: - "'||vAnltName||'"'''' '';'||CHR(10)||
+   '  EXECUTE IMMEDIATE ''COMMENT ON TABLE '||vStarAnltTable||' IS ''''РРµСЂР°СЂС…РёС‡РµСЃРєРѕРµ РёР·РјРµСЂРµРЅРёРµ: Р“СЂСѓРїРїР° - "'||vGroupName||'"; РђРЅР°Р»РёС‚РёРєР°: - "'||vAnltName||'"'''' '';'||CHR(10)||
    '  vBuff := ''SUCCESSFULLY :: Table "'||vStarAnltTable||'" created''||CHR(10);'||CHR(10);
    dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
 
-   -- ЕСЛИ ТАБЛИЦА УЖЕ СУЩЕСТВУЕТ
+   -- Р•РЎР›Р РўРђР‘Р›РР¦Рђ РЈР–Р• РЎРЈР©Р•РЎРўР’РЈР•Рў
    ELSE
-    -- Т.к., к моменту текущего разворачивания, ключевые колонки (как количество так и наименование), могут измениться
-    -- то необходимо добавить недостающие (если таковые найдутся)
-    -- !!!Пока что предполагается, что количество может только увеличиться!!!
+    -- Рў.Рє., Рє РјРѕРјРµРЅС‚Сѓ С‚РµРєСѓС‰РµРіРѕ СЂР°Р·РІРѕСЂР°С‡РёРІР°РЅРёСЏ, РєР»СЋС‡РµРІС‹Рµ РєРѕР»РѕРЅРєРё (РєР°Рє РєРѕР»РёС‡РµСЃС‚РІРѕ С‚Р°Рє Рё РЅР°РёРјРµРЅРѕРІР°РЅРёРµ), РјРѕРіСѓС‚ РёР·РјРµРЅРёС‚СЊСЃСЏ
+    -- С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ РґРѕР±Р°РІРёС‚СЊ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ (РµСЃР»Рё С‚Р°РєРѕРІС‹Рµ РЅР°Р№РґСѓС‚СЃСЏ)
+    -- !!!РџРѕРєР° С‡С‚Рѕ РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РјРѕР¶РµС‚ С‚РѕР»СЊРєРѕ СѓРІРµР»РёС‡РёС‚СЊСЃСЏ!!!
     FOR idx IN (
       SELECT col_name,col_type||CASE WHEN col_type = 'VARCHAR2' THEN '('||col_len||')' END AS col_type
         FROM TABLE(DescribeColumns(GetAnltLineSQL('SELECT anlt_spec_val AS id,parent_val AS parent_id,anlt_spec_name AS name,anlt_spec_val AS value FROM '||LOWER(vOwner)||'.tb_signs_anlt_spec WHERE anlt_id = '||vAnltID,'id','parent_id','name','value')))
@@ -4888,7 +4888,7 @@ BEGIN
       dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
     END LOOP;
 
-   -- Если партиция отсутствует - добавляем
+   -- Р•СЃР»Рё РїР°СЂС‚РёС†РёСЏ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ - РґРѕР±Р°РІР»СЏРµРј
    vBuff :=
     '  BEGIN'||CHR(10)||
     '    EXECUTE IMMEDIATE ''ALTER TABLE '||vStarAnltTable||' ADD PARTITION P'||to_char(inDate,'RRRRMMDD')||' VALUES (to_date('''''||to_char(inDate,'DD.MM.YYYY')||''''',''''DD.MM.YYYY'''')) STORAGE (INITIAL 64K NEXT 1M) NOLOGGING'';'||CHR(10)||
@@ -4899,7 +4899,7 @@ BEGIN
     dbms_lob.writeappend(vDDL,LENGTH(vBuff),vBuff);
   END IF;
 
-  -- Финальный END
+  -- Р¤РёРЅР°Р»СЊРЅС‹Р№ END
   vBuff :=
   '  :1 := vBuff;'||CHR(10)||
   'END;'||CHR(10);
@@ -4909,41 +4909,41 @@ BEGIN
   --dbms_output.put_line(vDDL);
 
   IF vMes IS NULL THEN
-    vMes := 'SUCCESSFULLY :: Table "'||vStarAnltTable||'" - подготовка не требуется';
+    vMes := 'SUCCESSFULLY :: Table "'||vStarAnltTable||'" - РїРѕРґРіРѕС‚РѕРІРєР° РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
   END IF;
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 EXCEPTION
   WHEN errNoGroup THEN
-    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" не найдена в таблице "'||UPPER(vOwner)||'.TB_SIGNS_GROUP"';
+    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||UPPER(vOwner)||'.TB_SIGNS_GROUP"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
     
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
   WHEN errNoAnlt THEN
-    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" не найдена в таблице "'||UPPER(vOwner)||'.TB_SIGNS_ANLT"';
+    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||UPPER(vOwner)||'.TB_SIGNS_ANLT"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
   WHEN errNoSpec THEN
-    vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" не имеет спецификации, подготовка не требуется';
+    vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" РЅРµ РёРјРµРµС‚ СЃРїРµС†РёС„РёРєР°С†РёРё, РїРѕРґРіРѕС‚РѕРІРєР° РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
   WHEN OTHERS THEN
     vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt" :: '||SQLERRM;
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||inAnltCode||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+    vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||inAnltCode||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareAnlt',vMes);
 END StarPrepareAnlt;
 
@@ -4966,21 +4966,21 @@ PROCEDURE StarPrepareFct(inDate IN DATE,inGroupID IN NUMBER)
     vENdTime DATE;
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Получение наименования группы
+  -- РџРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹
   SELECT group_name INTO vGroupName FROM tb_signs_group WHERE group_id = inGroupID;
 
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - начало подготовки таблицы -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЅР°С‡Р°Р»Рѕ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹ -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct',vMes);
 
-  -- Получение и сохранение в строки ключевых колонок
+  -- РџРѕР»СѓС‡РµРЅРёРµ Рё СЃРѕС…СЂР°РЅРµРЅРёРµ РІ СЃС‚СЂРѕРєРё РєР»СЋС‡РµРІС‹С… РєРѕР»РѕРЅРѕРє
   SELECT LISTAGG(anlt_alias,',') WITHIN GROUP (ORDER BY anlt_alias) AS Fields
-        ,LISTAGG(anlt_alias||CASE WHEN data_type = 'Число' THEN ' NUMBER'
-                      WHEN data_type = 'Дата' THEN ' DATE'
+        ,LISTAGG(anlt_alias||CASE WHEN data_type = 'Р§РёСЃР»Рѕ' THEN ' NUMBER'
+                      WHEN data_type = 'Р”Р°С‚Р°' THEN ' DATE'
                  ELSE ' VARCHAR2(4000)' END
                  ,',') WITHIN GROUP (ORDER BY anlt_alias) AS CreateFields
-        ,LISTAGG(anlt_alias||CASE WHEN data_type = 'Число' THEN ' NUMBER'
-                      WHEN data_type = 'Дата' THEN ' DATE'
+        ,LISTAGG(anlt_alias||CASE WHEN data_type = 'Р§РёСЃР»Рѕ' THEN ' NUMBER'
+                      WHEN data_type = 'Р”Р°С‚Р°' THEN ' DATE'
                  ELSE ' VARCHAR2(4000)' END||';'||anlt_alias_descr
                  ,',') WITHIN GROUP (ORDER BY anlt_alias) AS anlt_alias_descr
     INTO vFields,vCreateFields,vAnltCodes
@@ -5001,7 +5001,7 @@ BEGIN
       GROUP BY a.anlt_alias,a.data_type
     );
 
-  /*********************** Формирование и выполнение CreateDDL *****************************/
+  /*********************** Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ Рё РІС‹РїРѕР»РЅРµРЅРёРµ CreateDDL *****************************/
 
   dbms_lob.createtemporary(vCreateDDL,FALSE);
 
@@ -5009,8 +5009,8 @@ BEGIN
   'BEGIN'||CHR(10);
   dbms_lob.writeappend(vCreateDDL,LENGTH(vBuff),vBuff);
 
-  -- Формирование добавления вновь появившихся ключевых колонок. Если ошибка, то таблица не существует.
-  -- Оборачиваем блок добавления EXCEPTION'ом на такой случай
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РґРѕР±Р°РІР»РµРЅРёСЏ РІРЅРѕРІСЊ РїРѕСЏРІРёРІС€РёС…СЃСЏ РєР»СЋС‡РµРІС‹С… РєРѕР»РѕРЅРѕРє. Р•СЃР»Рё РѕС€РёР±РєР°, С‚Рѕ С‚Р°Р±Р»РёС†Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.
+  -- РћР±РѕСЂР°С‡РёРІР°РµРј Р±Р»РѕРє РґРѕР±Р°РІР»РµРЅРёСЏ EXCEPTION'РѕРј РЅР° С‚Р°РєРѕР№ СЃР»СѓС‡Р°Р№
   FOR alt IN (
    SELECT '  BEGIN'||CHR(10)||
           '    EXECUTE IMMEDIATE ''ALTER TABLE '||LOWER(vOwner)||'.fct_'||inGroupID||' ADD '||SUBSTR(b.str,1,INSTR(b.str,';',1,1)-1)||''';'||CHR(10)||
@@ -5027,7 +5027,7 @@ BEGIN
     dbms_lob.writeappend(vCreateDDL,LENGTH(vBuff),vBuff);
   END LOOP;
 
-  -- Создание таблицы
+  -- РЎРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
   vBuff :=
   '  EXECUTE IMMEDIATE'||CHR(10)||
   '  ''CREATE TABLE '||LOWER(vOwner)||'.fct_'||inGroupID||CHR(10)||
@@ -5061,14 +5061,14 @@ BEGIN
   vBuff := '  )) NOLOGGING''; '||CHR(10)||CHR(10);
   dbms_lob.writeappend(vCreateDDL,LENGTH(vBuff),vBuff);
 
-  -- Добавление комментариев на колонки
+  -- Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РЅР° РєРѕР»РѕРЅРєРё
   vBuff :=
-  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.as_of_date IS ''''Отчетная дата'''' '';'||CHR(10)||
-  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.obj_gid IS ''''ИД объекта (зависит от сущности, например на договорах CONTRACT_GID и т.д.)'''' '';'||CHR(10)||
-  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.source_system_id IS ''''ИД системы - источника'''' '';'||CHR(10)||
-  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.sign_name IS ''''Наименование показателя'''' '';'||CHR(10)||
-  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.sgn_alias IS ''''Альяс показателя'''' '';'||CHR(10)||
-  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.sign_val IS ''''Значение показателя'''' '';'||CHR(10);
+  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.as_of_date IS ''''РћС‚С‡РµС‚РЅР°СЏ РґР°С‚Р°'''' '';'||CHR(10)||
+  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.obj_gid IS ''''РР” РѕР±СЉРµРєС‚Р° (Р·Р°РІРёСЃРёС‚ РѕС‚ СЃСѓС‰РЅРѕСЃС‚Рё, РЅР°РїСЂРёРјРµСЂ РЅР° РґРѕРіРѕРІРѕСЂР°С… CONTRACT_GID Рё С‚.Рґ.)'''' '';'||CHR(10)||
+  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.source_system_id IS ''''РР” СЃРёСЃС‚РµРјС‹ - РёСЃС‚РѕС‡РЅРёРєР°'''' '';'||CHR(10)||
+  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.sign_name IS ''''РќР°РёРјРµРЅРѕРІР°РЅРёРµ РїРѕРєР°Р·Р°С‚РµР»СЏ'''' '';'||CHR(10)||
+  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.sgn_alias IS ''''РђР»СЊСЏСЃ РїРѕРєР°Р·Р°С‚РµР»СЏ'''' '';'||CHR(10)||
+  '  EXECUTE IMMEDIATE ''COMMENT ON COLUMN '||LOWER(vOwner)||'.fct_'||inGroupID||'.sign_val IS ''''Р—РЅР°С‡РµРЅРёРµ РїРѕРєР°Р·Р°С‚РµР»СЏ'''' '';'||CHR(10);
   dbms_lob.writeappend(vCreateDDL,LENGTH(vBuff),vBuff);
 
   FOR idx IN (
@@ -5091,11 +5091,11 @@ BEGIN
     dbms_lob.writeappend(vCreateDDL,LENGTH(vBuff),vBuff);
   END LOOP;
 
-  -- Добавление комментария на таблицу
+  -- Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ РЅР° С‚Р°Р±Р»РёС†Сѓ
   vBuff := '  EXECUTE IMMEDIATE ''COMMENT ON TABLE '||LOWER(vOwner)||'.fct_'||inGroupID||' IS '''''||vGroupNAme||''''' '';'||CHR(10);
   dbms_lob.writeappend(vCreateDDL,LENGTH(vBuff),vBuff);
 
-  -- Логирование и обработка ошибок
+  -- Р›РѕРіРёСЂРѕРІР°РЅРёРµ Рё РѕР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
   vBuff :=
   '  :1 := ''SUCCESSFULLY :: Table "'||LOWER(vOwner)||'.fct_'||inGroupID||'" created'';'||CHR(10)||
   'EXCEPTION WHEN OTHERS THEN'||CHR(10)||
@@ -5110,7 +5110,7 @@ BEGIN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct',vResBuff);
   END IF;
 
-  /*********************** Формирование и выполнение AddPartDDL *****************************/
+  /*********************** Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ Рё РІС‹РїРѕР»РЅРµРЅРёРµ AddPartDDL *****************************/
   dbms_lob.createtemporary(vAddPartDDL,FALSE);
 
   vBuff :=
@@ -5150,7 +5150,7 @@ BEGIN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct',vResBuff);
   END IF;
 
-  /*********************** Формирование и выполнение AddSubPartDDL *****************************/
+  /*********************** Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ Рё РІС‹РїРѕР»РЅРµРЅРёРµ AddSubPartDDL *****************************/
 
   dbms_lob.createtemporary(vAddSubPartDDL,FALSE);
 
@@ -5194,10 +5194,10 @@ BEGIN
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct',vResBuff);
 
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - окончание подготовки таблицы. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РїРѕРґРіРѕС‚РѕРІРєРё С‚Р°Р±Р»РёС†С‹. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct',vMes);
 EXCEPTION WHEN OTHERS THEN
-  pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct','ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||' :: '||SQLERRM);
+  pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarPrepareFct','ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||' :: '||SQLERRM);
 END StarPrepareFct;
 
 /*PROCEDURE StarFctOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER)
@@ -5206,7 +5206,7 @@ END StarPrepareFct;
     vBegTime DATE := SYSDATE;
     vEndTime DATE;
     vMes VARCHAR2(4000);
-    -- список наименований полей через запятую (для использования при построении динамического SQL)
+    -- СЃРїРёСЃРѕРє РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ (РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ SQL)
     vOtherFields VARCHAR2(4000);
     vAnltFieldsPref VARCHAR2(4000);
     vAnltFields VARCHAR2(4000);
@@ -5215,10 +5215,10 @@ END StarPrepareFct;
     vDML CLOB;
 
     vBuff VARCHAR2(32700);
-    vHistTable VARCHAR2(256);    -- наименование таблицы хранения периодами
-    vFctTable VARCHAR2(256);     -- наименование таблицы хранения по датам
-    vGroupName VARCHAR2(4000);   -- наименование группы показателей
-    vEntityName VARCHAR2(4000);  -- нименование сущности
+    vHistTable VARCHAR2(256);    -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ РїРµСЂРёРѕРґР°РјРё
+    vFctTable VARCHAR2(256);     -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ РїРѕ РґР°С‚Р°Рј
+    vGroupName VARCHAR2(4000);   -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹ РїРѕРєР°Р·Р°С‚РµР»РµР№
+    vEntityName VARCHAR2(4000);  -- РЅРёРјРµРЅРѕРІР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё
     vRowCou INTEGER := 0;
     vAnltCou INTEGER := 0;
     vAlsCou INTEGER := 0;
@@ -5226,7 +5226,7 @@ END StarPrepareFct;
 BEGIN
   vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarFctOnDate" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDate',vMes);
-  -- Сохранение наименований сущности и её таблиц хранения в переменные
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ СЃСѓС‰РЅРѕСЃС‚Рё Рё РµС‘ С‚Р°Р±Р»РёС† С…СЂР°РЅРµРЅРёСЏ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ
   BEGIN
     SELECT vOwner||'.'||fct_table_name AS FctTable
           ,vOwner||'.'||hist_table_name AS HistTable
@@ -5235,24 +5235,24 @@ BEGIN
       FROM tb_entity
       WHERE ID = inEntityID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание сущности ID = '||inEntityID||' не найдено в таблице '||vOwner||'.tb_entity');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё ID = '||inEntityID||' РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_entity');
   END;
 
-  -- Сохранение наименования группы в переменную
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ
   BEGIN
     SELECT group_name
       INTO vGroupName
       FROM tb_signs_group
       WHERE group_id = inGroupID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание группы ID = '||inGroupID||' не найдено в таблице '||vOwner||'.tb_signs_group');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹ ID = '||inGroupID||' РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_signs_group');
   END;
 
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.RRRR')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - вставка данных -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.RRRR')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - РІСЃС‚Р°РІРєР° РґР°РЅРЅС‹С… -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDate',vMes);
 
-  -- Формирование строковых переменных со списком полей через запятую
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРѕРІС‹С… РїРµСЂРµРјРµРЅРЅС‹С… СЃРѕ СЃРїРёСЃРєРѕРј РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
   FOR idx IN (
     SELECT p.sign_name
           ,p.data_type
@@ -5269,7 +5269,7 @@ BEGIN
   END LOOP;
   vOtherFields := SUBSTR(vOtherFields,3,LENGTH(vOtherFields) - 2);
 
-  -- Формирование строк с полями и джойнов для аналитик
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРє СЃ РїРѕР»СЏРјРё Рё РґР¶РѕР№РЅРѕРІ РґР»СЏ Р°РЅР°Р»РёС‚РёРє
   SELECT LISTAGG(anlt_alias||'.sign_val'||CASE WHEN suka_flg IS NULL THEN '||''#!#''||'||anlt_alias||'.source_system_id' END||' AS '||anlt_alias,',') WITHIN GROUP (ORDER BY anlt_alias) AS FieldsPref
         ,LISTAGG(anlt_alias,',') WITHIN GROUP (ORDER BY anlt_alias) AS Fields
         ,LISTAGG(' LEFT JOIN '||anlt_alias||CHR(10)||
@@ -5279,7 +5279,7 @@ BEGIN
                 ) WITHIN GROUP (ORDER BY anlt_alias) AS joins
     INTO vAnltFieldsPref,vAnltFields,vAnltJoins
     FROM (
-      SELECT DISTINCT a.anlt_alias,CASE WHEN EXISTS(SELECT NULL FROM tb_signs_anlt_spec WHERE anlt_id = a.id) THEN 'СУKA' END AS suka_flg
+      SELECT DISTINCT a.anlt_alias,CASE WHEN EXISTS(SELECT NULL FROM tb_signs_anlt_spec WHERE anlt_id = a.id) THEN 'РЎРЈKA' END AS suka_flg
         FROM tb_signs_2_group s2g
              INNER JOIN tb_signs_pool p
                ON p.sign_name = s2g.sign_name
@@ -5310,7 +5310,7 @@ BEGIN
   'WITH'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
 
-  -- Формирование подзапросов для аналитик
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РїРѕРґР·Р°РїСЂРѕСЃРѕРІ РґР»СЏ Р°РЅР°Р»РёС‚РёРє
   FOR als IN (
     SELECT a.anlt_alias
       FROM tb_signs_2_group s2g
@@ -5386,7 +5386,7 @@ BEGIN
     dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
     vAlsCou := vAlsCou + 1;
   END LOOP;
-  -- Окончание формирования подзапросов для аналитик
+  -- РћРєРѕРЅС‡Р°РЅРёРµ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РїРѕРґР·Р°РїСЂРѕСЃРѕРІ РґР»СЏ Р°РЅР°Р»РёС‚РёРє
 
   vBuff :=
   ',fct AS ('||CHR(10)||
@@ -5405,13 +5405,13 @@ BEGIN
   '    AND fct.as_of_date = to_date('''||to_char(inDate,'DD.MM.YYYY')||''',''DD.MM.YYYY''))'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
 
-  -- Подзапрос альясов не ключевых показателей
+  -- РџРѕРґР·Р°РїСЂРѕСЃ Р°Р»СЊСЏСЃРѕРІ РЅРµ РєР»СЋС‡РµРІС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№
   vBuff :=
   ',als AS ('||CHR(10)||
   '   SELECT \*+ no_index(s2g) *\ s2g.sign_name,NVL(s2g.sgn_alias,s2g.sign_name) AS sgn_alias FROM tb_signs_2_group s2g WHERE s2g.group_id = '||inGroupID||' AND s2g.sign_name IN ('||vOtherFields||')'||CHR(10)||
   ')'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
-  -- Окончание подзапроса альясов не ключевых показателей
+  -- РћРєРѕРЅС‡Р°РЅРёРµ РїРѕРґР·Р°РїСЂРѕСЃР° Р°Р»СЊСЏСЃРѕРІ РЅРµ РєР»СЋС‡РµРІС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№
 
   vBuff :=
   'SELECT fct.as_of_date,fct.obj_gid,fct.source_system_id,fct.sign_name,als.sgn_alias AS sign_name,fct.sign_val,'||vAnltFieldsPref||CHR(10)||
@@ -5429,10 +5429,10 @@ BEGIN
   --dbms_output.put_line(vDML);
 
   vEndTime := SYSDATE;
-  vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - '||vRowCou||' rows inserted into table '||lower(vOwner)||'.fct_'||inGroupID||' in '||get_ti_as_hms(vEndTime - vTIBegin);
+  vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - '||vRowCou||' rows inserted into table '||lower(vOwner)||'.fct_'||inGroupID||' in '||get_ti_as_hms(vEndTime - vTIBegin);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDate',vMes);
 
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - окончание вставки данных. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С…. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDate',vMes);
 
   vEndTime := SYSDATE;
@@ -5453,7 +5453,7 @@ PROCEDURE StarFctOnDateSign(inDate IN DATE,inGroupID IN NUMBER,inSign IN VARCHAR
     vBegTime DATE := SYSDATE;
     vEndTime DATE;
     vMes VARCHAR2(4000);
-    -- список наименований полей через запятую (для использования при построении динамического SQL)
+    -- СЃРїРёСЃРѕРє РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ (РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ SQL)
     vAnltFieldsPref VARCHAR2(4000);
     vAnltFields VARCHAR2(4000);
     vAnltJoins VARCHAR2(4000);
@@ -5462,9 +5462,9 @@ PROCEDURE StarFctOnDateSign(inDate IN DATE,inGroupID IN NUMBER,inSign IN VARCHAR
     vDML CLOB;
 
     vBuff VARCHAR2(32700);
-    vHistTable VARCHAR2(256);    -- наименование таблицы хранения периодами
-    vFctTable VARCHAR2(256);     -- наименование таблицы хранения по датам
-    vGroupName VARCHAR2(4000);   -- наименование группы показателей
+    vHistTable VARCHAR2(256);    -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ РїРµСЂРёРѕРґР°РјРё
+    vFctTable VARCHAR2(256);     -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ РїРѕ РґР°С‚Р°Рј
+    vGroupName VARCHAR2(4000);   -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹ РїРѕРєР°Р·Р°С‚РµР»РµР№
     vRowCou INTEGER := 0;
     vAnltCou INTEGER := 0;
     vAlsCou INTEGER := 0;
@@ -5472,7 +5472,7 @@ PROCEDURE StarFctOnDateSign(inDate IN DATE,inGroupID IN NUMBER,inSign IN VARCHAR
 BEGIN
   vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarFctOnDateSign" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDateSign',vMes);
-  -- Сохранение наименований сущности и её таблиц хранения в переменные
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ СЃСѓС‰РЅРѕСЃС‚Рё Рё РµС‘ С‚Р°Р±Р»РёС† С…СЂР°РЅРµРЅРёСЏ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ
   BEGIN
     SELECT vOwner||'.'||e.fct_table_name AS FctTable
           ,vOwner||'.'||e.hist_table_name AS HistTable
@@ -5483,24 +5483,24 @@ BEGIN
              ON e.id = s.entity_id
       WHERE s.sign_name = inSign;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание показателя или сущности не найдено в таблицах "'||vOwner||'.tb_signs_pool; '||vOwner||'.tb_entity"');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ РїРѕРєР°Р·Р°С‚РµР»СЏ РёР»Рё СЃСѓС‰РЅРѕСЃС‚Рё РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Р°С… "'||vOwner||'.tb_signs_pool; '||vOwner||'.tb_entity"');
   END;
 
-  -- Сохранение наименования группы в переменную
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ
   BEGIN
     SELECT group_name
       INTO vGroupName
       FROM tb_signs_group
       WHERE group_id = inGroupID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание группы ID = '||inGroupID||' не найдено в таблице '||vOwner||'.tb_signs_group');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹ ID = '||inGroupID||' РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_signs_group');
   END;
 
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.RRRR')||'" - Группа: "'||vGroupName||'" - Показатель: "'||UPPER(inSign)||'" - вставка данных -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.RRRR')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РџРѕРєР°Р·Р°С‚РµР»СЊ: "'||UPPER(inSign)||'" - РІСЃС‚Р°РІРєР° РґР°РЅРЅС‹С… -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDateSign',vMes);
 
-  -- Формирование строк с полями и джойнов для аналитик
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРє СЃ РїРѕР»СЏРјРё Рё РґР¶РѕР№РЅРѕРІ РґР»СЏ Р°РЅР°Р»РёС‚РёРє
   SELECT LISTAGG(anlt_alias||'.sign_val'||CASE WHEN suka_flg IS NULL THEN '||''#!#''||'||anlt_alias||'.source_system_id' END||' AS '||anlt_alias,',') WITHIN GROUP (ORDER BY anlt_alias) AS FieldsPref
         ,LISTAGG(anlt_alias,',') WITHIN GROUP (ORDER BY anlt_alias) AS Fields
         ,LISTAGG(' LEFT JOIN '||anlt_alias||CHR(10)||
@@ -5510,7 +5510,7 @@ BEGIN
                 ) WITHIN GROUP (ORDER BY anlt_alias) AS joins
     INTO vAnltFieldsPref,vAnltFields,vAnltJoins
     FROM (
-      SELECT DISTINCT a.anlt_alias,CASE WHEN EXISTS(SELECT NULL FROM tb_signs_anlt_spec WHERE anlt_id = a.id) THEN 'СУKA' END AS suka_flg
+      SELECT DISTINCT a.anlt_alias,CASE WHEN EXISTS(SELECT NULL FROM tb_signs_anlt_spec WHERE anlt_id = a.id) THEN 'РЎРЈKA' END AS suka_flg
         FROM tb_signs_2_group s2g
              INNER JOIN tb_signs_pool p
                ON p.sign_name = s2g.sign_name
@@ -5542,7 +5542,7 @@ BEGIN
   'WITH'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
 
-  -- Формирование подзапросов для аналитик
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РїРѕРґР·Р°РїСЂРѕСЃРѕРІ РґР»СЏ Р°РЅР°Р»РёС‚РёРє
   FOR als IN (
     SELECT a.anlt_alias
       FROM tb_signs_2_group s2g
@@ -5619,7 +5619,7 @@ BEGIN
     dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
     vAlsCou := vAlsCou + 1;
   END LOOP;
-  -- Окончание формирования подзапросов для аналитик
+  -- РћРєРѕРЅС‡Р°РЅРёРµ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РїРѕРґР·Р°РїСЂРѕСЃРѕРІ РґР»СЏ Р°РЅР°Р»РёС‚РёРє
 
   vBuff :=
   ',fct AS ('||CHR(10)||
@@ -5637,13 +5637,13 @@ BEGIN
   '    AND fct.as_of_date = to_date('''||to_char(inDate,'DD.MM.YYYY')||''',''DD.MM.YYYY''))'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
 
-  -- Подзапрос альясов не ключевых показателей
+  -- РџРѕРґР·Р°РїСЂРѕСЃ Р°Р»СЊСЏСЃРѕРІ РЅРµ РєР»СЋС‡РµРІС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№
   vBuff :=
   ',als AS ('||CHR(10)||
   '   SELECT /*+ no_index(s2g) */ s2g.sign_name,NVL(s2g.sgn_alias,s2g.sign_name) AS sgn_alias FROM tb_signs_2_group s2g WHERE s2g.group_id = '||inGroupID||' AND s2g.sign_name = '''||UPPER(inSign)||''''||CHR(10)||
   ')'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
-  -- Окончание подзапроса альясов не ключевых показателей
+  -- РћРєРѕРЅС‡Р°РЅРёРµ РїРѕРґР·Р°РїСЂРѕСЃР° Р°Р»СЊСЏСЃРѕРІ РЅРµ РєР»СЋС‡РµРІС‹С… РїРѕРєР°Р·Р°С‚РµР»РµР№
 
   vBuff :=
   'SELECT fct.as_of_date,fct.obj_gid,fct.source_system_id,fct.sign_name,als.sgn_alias AS sign_name,fct.sign_val,'||vAnltFieldsPref||CHR(10)||
@@ -5661,10 +5661,10 @@ BEGIN
   --dbms_output.put_line(vDML);
 
   vEndTime := SYSDATE;
-  vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Показатель: "'||inSign||'" - '||vRowCou||' rows inserted into table '||lower(vOwner)||'.fct_'||inGroupID||' in '||get_ti_as_hms(vEndTime - vTIBegin);
+  vMes := 'SUCCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РџРѕРєР°Р·Р°С‚РµР»СЊ: "'||inSign||'" - '||vRowCou||' rows inserted into table '||lower(vOwner)||'.fct_'||inGroupID||' in '||get_ti_as_hms(vEndTime - vTIBegin);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDateSign',vMes);
 
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Показатель: "'||inSign||'" - окончание вставки данных. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РџРѕРєР°Р·Р°С‚РµР»СЊ: "'||inSign||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С…. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFctOnDateSign',vMes);
 
   vEndTime := SYSDATE;
@@ -5687,8 +5687,8 @@ PROCEDURE StarAggrOnDate(inDate IN DATE,inAggrID IN NUMBER)
     vAggrSQL CLOB;
     vBuff VARCHAR2(32700);
     vCols VARCHAR2(4000);
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
     --
     vMes VARCHAR2(4000);
     vBegTime DATE := SYSDATE;
@@ -5723,11 +5723,11 @@ BEGIN
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrOnDate',vMes);
 EXCEPTION 
   WHEN NO_DATA_FOUND THEN
-    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'"  - Описание агрегата "ID = '||inAggrID||'" не найдено в таблице "'||lower(vOwner)||'.tb_signs_aggrs"';
+    vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'"  - РћРїРёСЃР°РЅРёРµ Р°РіСЂРµРіР°С‚Р° "ID = '||inAggrID||'" РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_aggrs"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrOnDate',vMes);
   WHEN OTHERS THEN
     vEndTime := SYSDATE;
-    vMes := 'ERROR :: Агрегат "ID = '||inAggrID||'" :: '||SQLERRM;
+    vMes := 'ERROR :: РђРіСЂРµРіР°С‚ "ID = '||inAggrID||'" :: '||SQLERRM;
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrOnDate',vMes);
     
     vMes := 'FINISH :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarAggrOnDate" finished in '||get_ti_as_hms(vEndTime - vBegTime)||' with errors';
@@ -5741,7 +5741,7 @@ PROCEDURE StarDimOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER)
     vBegTime DATE := SYSDATE;
     vEndTime DATE;
     vMes VARCHAR2(4000);
-    -- список наименований полей через запятую (для использования при построении динамического SQL)
+    -- СЃРїРёСЃРѕРє РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ (РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ SQL)
     vKeyFieldsForIns VARCHAR2(32700);
     vKeyFieldsForSel VARCHAR2(32700);
     vKeyFields VARCHAR2(32700);
@@ -5751,18 +5751,18 @@ PROCEDURE StarDimOnDate(inDate IN DATE,inGroupID IN NUMBER,inEntityID IN NUMBER)
     vRestrictSQL CLOB;
 
     vBuff VARCHAR2(32700);
-    vHistTable VARCHAR2(256);    -- наименование таблицы хранения периодами
-    vFctTable VARCHAR2(256);     -- наименование таблицы хранения по датам
+    vHistTable VARCHAR2(256);    -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ РїРµСЂРёРѕРґР°РјРё
+    vFctTable VARCHAR2(256);     -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С…СЂР°РЅРµРЅРёСЏ РїРѕ РґР°С‚Р°Рј
     vFctView VARCHAR2(256);
-    vStarDimTable VARCHAR2(256) := vOwner||'.dim_'||inGroupID||'#'||inEntityID; -- наименование таблицы фактов в звезде
-    vGroupName VARCHAR2(4000);   -- наименование группы показателей
-    vEntityName VARCHAR2(4000);  -- нименование сущности
+    vStarDimTable VARCHAR2(256) := vOwner||'.dim_'||inGroupID||'#'||inEntityID; -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ С„Р°РєС‚РѕРІ РІ Р·РІРµР·РґРµ
+    vGroupName VARCHAR2(4000);   -- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹ РїРѕРєР°Р·Р°С‚РµР»РµР№
+    vEntityName VARCHAR2(4000);  -- РЅРёРјРµРЅРѕРІР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё
     vTabCou INTEGER := 0;
     vRowCou INTEGER := 0;
 BEGIN
   vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarDimOnDate" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarDimOnDate',vMes);
-  -- Сохранение наименований сущности и её таблиц хранения в переменные
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ СЃСѓС‰РЅРѕСЃС‚Рё Рё РµС‘ С‚Р°Р±Р»РёС† С…СЂР°РЅРµРЅРёСЏ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ
   BEGIN
     SELECT vOwner||'.'||fct_table_name AS FctTable
           ,vOwner||'.'||hist_table_name AS HistTable
@@ -5772,21 +5772,21 @@ BEGIN
       FROM tb_entity
       WHERE ID = inEntityID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание сущности ID = '||inEntityID||' не найдено в таблице '||vOwner||'.tb_entity');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё ID = '||inEntityID||' РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_entity');
   END;
 
-  -- Сохранение наименования группы в переменную
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ
   BEGIN
     SELECT group_name
       INTO vGroupName
       FROM tb_signs_group
       WHERE group_id = inGroupID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание группы ID = '||inGroupID||' не найдено в таблице '||vOwner||'.tb_signs_group');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹ ID = '||inGroupID||' РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_signs_group');
   END;
 
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - вставка данных -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - РІСЃС‚Р°РІРєР° РґР°РЅРЅС‹С… -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarDimOnDate',vMes);
 
   vKeyFieldsForIns := NULL;
@@ -5794,7 +5794,7 @@ BEGIN
   vKeyFields := NULL;
   vKeyFieldsWithAlias := NULL;
 
-  -- Формирование строковых переменных со списком полей через запятую
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРѕРІС‹С… РїРµСЂРµРјРµРЅРЅС‹С… СЃРѕ СЃРїРёСЃРєРѕРј РїРѕР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
   FOR idx IN (
     SELECT p.sign_name
       FROM tb_signs_2_group s2g
@@ -5836,7 +5836,7 @@ BEGIN
   'INSERT INTO '||vStarDimTable||'(as_of_date,obj_sid'||CHR(10)||','||vKeyFieldsForIns||')'||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
 
-  -- Формирование блока ограничения (WITH...) для запроса вставки данных
+  -- Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ Р±Р»РѕРєР° РѕРіСЂР°РЅРёС‡РµРЅРёСЏ (WITH...) РґР»СЏ Р·Р°РїСЂРѕСЃР° РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С…
   vBuff :=
   'WITH '||CHR(10)||'  fct_keys AS ('||CHR(10);
   dbms_lob.writeappend(vDML,LENGTH(vBuff),vBuff);
@@ -5887,7 +5887,7 @@ BEGIN
   dbms_lob.writeappend(vRestrictSQL,LENGTH(vBuff),vBuff);
 
   vBuff :=
-  'SELECT /* не использовать parallel(2) */ to_date('''||to_char(inDate,'DD.MM.YYYY')||''',''DD.MM.YYYY'') AS as_of_date,obj_gid||''#!#''||source_system_id as obj_sid'||CHR(10)||','||vKeyFieldsForSel||' FROM ('||CHR(10)||
+  'SELECT /* РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ parallel(2) */ to_date('''||to_char(inDate,'DD.MM.YYYY')||''',''DD.MM.YYYY'') AS as_of_date,obj_gid||''#!#''||source_system_id as obj_sid'||CHR(10)||','||vKeyFieldsForSel||' FROM ('||CHR(10)||
   '      SELECT /*+ no_index(s) */ s.obj_gid,s.source_system_id,s.sign_name,s.sign_val'||CHR(10)||
   '        FROM '||vHistTable||' s'||CHR(10)||
   '             INNER JOIN fct_keys ON fct_keys.obj_sid = s.obj_gid||''#!#''||s.source_system_id'||CHR(10)||
@@ -5914,10 +5914,10 @@ BEGIN
   --dbms_output.put_line(vDML);
 
   vEndTime := SYSDATE;
-  vMes := 'SUCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - '||vRowCou||' rows inserted into table '||vStarDimTable||' in '||get_ti_as_hms(vEndTime - vTIBegin);
+  vMes := 'SUCESSFULLY :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - '||vRowCou||' rows inserted into table '||vStarDimTable||' in '||get_ti_as_hms(vEndTime - vTIBegin);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarDimOnDate',vMes);
 
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Сущность: "'||vEntityName||'" - окончание вставки данных. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РЎСѓС‰РЅРѕСЃС‚СЊ: "'||vEntityName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С…. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarDimOnDate',vMes);
 
   vEndTime := SYSDATE;
@@ -5950,17 +5950,17 @@ PROCEDURE StarAnltOnDate(inDate IN DATE,inGroupID IN NUMBER,inAnltAlias IN VARCH
 BEGIN
   vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarAnltOnDate" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAnltOnDate',vMes);
-  -- Сохранение наименования группы в переменную
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РіСЂСѓРїРїС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ
   BEGIN
     SELECT group_name
       INTO vGroupName
       FROM tb_signs_group
       WHERE group_id = inGroupID;
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание группы ID = '||inGroupID||' не найдено в таблице '||vOwner||'.tb_signs_group');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹ ID = '||inGroupID||' РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_signs_group');
   END;
   
-  -- Сохранение наименования аналитики в переменную
+  -- РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ Р°РЅР°Р»РёС‚РёРєРё РІ РїРµСЂРµРјРµРЅРЅСѓСЋ
   BEGIN
     SELECT LISTAGG(a.anlt_code,',') WITHIN GROUP (ORDER BY a.id) AS AnltCode
               ,LISTAGG(a.id,',') WITHIN GROUP (ORDER BY a.id) AS AnltSpecID
@@ -5975,11 +5975,11 @@ BEGIN
                                 CONNECT BY PRIOR g.group_id = g.parent_group_id
                                 START WITH g.group_id = inGroupID);
   EXCEPTION WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20000,'Описание аналитиики ANLT_ALIAS = '||inAnltAlias||' за дату "'||to_char(inDate,'DD.MM.YYYY')||'" не найдено в таблице '||vOwner||'.tb_signs_anlt');
+    RAISE_APPLICATION_ERROR(-20000,'РћРїРёСЃР°РЅРёРµ Р°РЅР°Р»РёС‚РёРёРєРё ANLT_ALIAS = '||inAnltAlias||' Р·Р° РґР°С‚Сѓ "'||to_char(inDate,'DD.MM.YYYY')||'" РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ '||vOwner||'.tb_signs_anlt');
   END;
 
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||vAnltName||'" - начало вставки данных -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||vAnltName||'" - РЅР°С‡Р°Р»Рѕ РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С… -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAnltOnDate',vMes);
 
   vSQL := 'SELECT anlt_spec_val AS id,parent_val AS parent_id,anlt_spec_name AS name,anlt_spec_val AS val
@@ -6012,7 +6012,7 @@ BEGIN
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAnltOnDate',vMes);
 
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Группа: "'||vGroupName||'" - Аналитика: "'||vAnltName||'" - окончание вставки данных. Время выполнения: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
+  vMes := 'CONTINUE :: ------------ "'||to_char(inDate,'DD.MM.YYYY')||'" - Р“СЂСѓРїРїР°: "'||vGroupName||'" - РђРЅР°Р»РёС‚РёРєР°: "'||vAnltName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РІСЃС‚Р°РІРєРё РґР°РЅРЅС‹С…. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ: '||get_ti_as_hms(vEndTime - vTIBegin)||' -----------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAnltOnDate',vMes);
 
   vEndTime := SYSDATE;
@@ -6196,7 +6196,7 @@ BEGIN
     load_new(vBuff,vJobName);
   --dbms_output.put_line(vBuff);
   ELSE
-    vMes := 'INFORMATION :: У группы "'||vGroupName||'" отсутствуют агрегаты. Пересчет не требуется';
+    vMes := 'INFORMATION :: РЈ РіСЂСѓРїРїС‹ "'||vGroupName||'" РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ Р°РіСЂРµРіР°С‚С‹. РџРµСЂРµСЃС‡РµС‚ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrsLoadData',vMes);
   END IF;
 
@@ -6214,9 +6214,9 @@ END StarAggrsLoadData;
 
 PROCEDURE StarExpand(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inMask VARCHAR2 DEFAULT '00',inDaemonId NUMBER DEFAULT NULL,inParallelJobs NUMBER DEFAULT 30)
   /************************************
-   Описание маски (0 - не выполнять, 1 - выполнять):
-   1-й символ - предварительный пересчет всех показателей по кубу
-   2-й символ - предварительный пересчет всех аналитик по кубу
+   РћРїРёСЃР°РЅРёРµ РјР°СЃРєРё (0 - РЅРµ РІС‹РїРѕР»РЅСЏС‚СЊ, 1 - РІС‹РїРѕР»РЅСЏС‚СЊ):
+   1-Р№ СЃРёРјРІРѕР» - РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїРµСЂРµСЃС‡РµС‚ РІСЃРµС… РїРѕРєР°Р·Р°С‚РµР»РµР№ РїРѕ РєСѓР±Сѓ
+   2-Р№ СЃРёРјРІРѕР» - РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїРµСЂРµСЃС‡РµС‚ РІСЃРµС… Р°РЅР°Р»РёС‚РёРє РїРѕ РєСѓР±Сѓ
   ************************************/
   IS
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
@@ -6232,7 +6232,7 @@ PROCEDURE StarExpand(inBegDate IN DATE,inEndDate IN DATE,inGroupID IN NUMBER,inM
     --
     vDoSign BOOLEAN := SUBSTR(inMask,1,1) = '1';
     vDoAnlt BOOLEAN := SUBSTR(inMask,2,1) = '1';
-    -- для централизованного логирования
+    -- РґР»СЏ С†РµРЅС‚СЂР°Р»РёР·РѕРІР°РЅРЅРѕРіРѕ Р»РѕРіРёСЂРѕРІР°РЅРёСЏ
     logOPTP NUMBER;
     logOPNM VARCHAR2(256);
     logCOMMENT VARCHAR2(4000);
@@ -6247,9 +6247,9 @@ BEGIN
   
   SELECT group_id INTO vFctGroupID FROM tb_signs_group WHERE parent_group_id = inGroupID;
   SELECT group_name INTO vGroupName FROM tb_signs_group WHERE group_id = inGroupID;
-  -- Если осуществлен автоматический запуск в рамках общего пула расчетов, делаем централизованное логирование
+  -- Р•СЃР»Рё РѕСЃСѓС‰РµСЃС‚РІР»РµРЅ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ Р·Р°РїСѓСЃРє РІ СЂР°РјРєР°С… РѕР±С‰РµРіРѕ РїСѓР»Р° СЂР°СЃС‡РµС‚РѕРІ, РґРµР»Р°РµРј С†РµРЅС‚СЂР°Р»РёР·РѕРІР°РЅРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    -- Получаем ИД типовой операции и заодно наименование группы, а так же ИД группы измерений и ИД группы фактов
+    -- РџРѕР»СѓС‡Р°РµРј РР” С‚РёРїРѕРІРѕР№ РѕРїРµСЂР°С†РёРё Рё Р·Р°РѕРґРЅРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹, Р° С‚Р°Рє Р¶Рµ РР” РіСЂСѓРїРїС‹ РёР·РјРµСЂРµРЅРёР№ Рё РР” РіСЂСѓРїРїС‹ С„Р°РєС‚РѕРІ
     BEGIN
       SELECT NAME
             ,'DashBoard '||NAME||' (group_id = '||inGroupID||')' AS g_id
@@ -6260,13 +6260,13 @@ BEGIN
       logOPTP := LG_PKG.CreateTypeOper(logOPNM,logCOMMENT);
     EXCEPTION WHEN OTHERS THEN
       logErr := SQLERRM;
-      SELECT to_number(SUBSTR(logErr,INSTR(logErr,' OPTP = ') + 8,INSTR(logErr,' c именем ') - INSTR(logErr,'OPTP = ') - 7)) INTO logOPTP FROM dual;
+      SELECT to_number(SUBSTR(logErr,INSTR(logErr,' OPTP = ') + 8,INSTR(logErr,' c РёРјРµРЅРµРј ') - INSTR(logErr,'OPTP = ') - 7)) INTO logOPTP FROM dual;
     END;
-    -- Создаем новое логирование
+    -- РЎРѕР·РґР°РµРј РЅРѕРІРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
     vMes := 'BEGIN OF LOGGING :: OPTP = '||logOPTP;
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarExpand',vMes);
     
-    l_opid := LG_PKG.StartOper(logOPTP,sysdate); -- Генерируем запись об операции
+    l_opid := LG_PKG.StartOper(logOPTP,sysdate); -- Р“РµРЅРµСЂРёСЂСѓРµРј Р·Р°РїРёСЃСЊ РѕР± РѕРїРµСЂР°С†РёРё
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D'); 
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D'); 
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N');
@@ -6276,12 +6276,12 @@ BEGIN
     LG_PKG.setparam(l_opid,'inGroupName',vGroupName,'S');
   END IF;
   
-  -- Если требуется предварительный пересчет показателей
+  -- Р•СЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїРµСЂРµСЃС‡РµС‚ РїРѕРєР°Р·Р°С‚РµР»РµР№
   IF vDoSign THEN
-    -- если авторасчет - центральное логирование
+    -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
     IF autocalc THEN
-      -- фаза "пересчет показателей"
-      l_stid := LG_PKG.RegPhase(l_opid,'ПРЕДВАРИТЕЛЬНЫЙ ПЕРЕСЧЕТ ПОКАЗАТЕЛЕЙ');
+      -- С„Р°Р·Р° "РїРµСЂРµСЃС‡РµС‚ РїРѕРєР°Р·Р°С‚РµР»РµР№"
+      l_stid := LG_PKG.RegPhase(l_opid,'РџР Р•Р”Р’РђР РРўР•Р›Р¬РќР«Р™ РџР•Р Р•РЎР§Р•Рў РџРћРљРђР—РђРўР•Р›Р•Р™');
       LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
       LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
       LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6292,17 +6292,17 @@ BEGIN
     CalcSignsByStar(inBegDate,inEndDate,inGroupID,REPLACE(vJobName,'EXPANDJOB','SIGNSBYSTARJOB'));
     
     IF autocalc THEN
-      LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 01.ПРЕДВАРИТЕЛЬНЫЙ ПЕРЕСЧЕТ ПОКАЗАТЕЛЕЙ :: OPID = ' ||l_opid);
+      LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 01.РџР Р•Р”Р’РђР РРўР•Р›Р¬РќР«Р™ РџР•Р Р•РЎР§Р•Рў РџРћРљРђР—РђРўР•Р›Р•Р™ :: OPID = ' ||l_opid);
       LG_PKG.ENDPHASE(l_stid);
     END IF;
   END IF;
 
-  -- Если требуется предварительный пересчет аналитик
+  -- Р•СЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїРµСЂРµСЃС‡РµС‚ Р°РЅР°Р»РёС‚РёРє
   IF vDoAnlt THEN
-    -- если авторасчет - центральное логирование
+    -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
     IF autocalc THEN
-      -- фаза "пересчет аналитик"
-      l_stid := LG_PKG.RegPhase(l_opid,'ПРЕДВАРИТЕЛЬНЫЙ ПЕРЕСЧЕТ АНАЛИТИК');
+      -- С„Р°Р·Р° "РїРµСЂРµСЃС‡РµС‚ Р°РЅР°Р»РёС‚РёРє"
+      l_stid := LG_PKG.RegPhase(l_opid,'РџР Р•Р”Р’РђР РРўР•Р›Р¬РќР«Р™ РџР•Р Р•РЎР§Р•Рў РђРќРђР›РРўРРљ');
       LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
       LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
       LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6313,15 +6313,15 @@ BEGIN
     CalcAnltByStar(inBegDate,inEndDate,inGroupID,REPLACE(vJobName,'EXPANDJOB','ANLTBYSTARJOB'),inParallelJobs);
     
     IF autocalc THEN
-      LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 02.ПРЕДВАРИТЕЛЬНЫЙ ПЕРЕСЧЕТ АНАЛИТИК :: OPID = ' ||l_opid);
+      LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 02.РџР Р•Р”Р’РђР РРўР•Р›Р¬РќР«Р™ РџР•Р Р•РЎР§Р•Рў РђРќРђР›РРўРРљ :: OPID = ' ||l_opid);
       LG_PKG.ENDPHASE(l_stid);
     END IF;
   END IF;
 
-  -- Подготовка
-  -- если авторасчет - центральное логирование
+  -- РџРѕРґРіРѕС‚РѕРІРєР°
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'ПОДГОТОВКА ТАБЛИЦ ЗВЕЗДЫ');
+    l_stid := LG_PKG.RegPhase(l_opid,'РџРћР”Р“РћРўРћР’РљРђ РўРђР‘Р›РР¦ Р—Р’Р•Р—Р”Р«');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6331,14 +6331,14 @@ BEGIN
   StarPrepareAggrs(inBegDate,inEndDate,inGroupID);
   
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 03.ПОДГОТОВКА ТАБЛИЦ ЗВЕЗДЫ :: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 03.РџРћР”Р“РћРўРћР’РљРђ РўРђР‘Р›РР¦ Р—Р’Р•Р—Р”Р« :: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
 
-  -- Очистка
-  -- если авторасчет - центральное логирование
+  -- РћС‡РёСЃС‚РєР°
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'ОЧИСТКА ЗВЕЗДЫ');
+    l_stid := LG_PKG.RegPhase(l_opid,'РћР§РРЎРўРљРђ Р—Р’Р•Р—Р”Р«');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6347,11 +6347,11 @@ BEGIN
   StarClear(inBegDate,inEndDate,inGroupID);
 
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 04.ОЧИСТКА ЗВЕЗДЫ :: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 04.РћР§РРЎРўРљРђ Р—Р’Р•Р—Р”Р« :: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
 
-  -- Загрузка детального слоя звезды
+  -- Р—Р°РіСЂСѓР·РєР° РґРµС‚Р°Р»СЊРЅРѕРіРѕ СЃР»РѕСЏ Р·РІРµР·РґС‹
   vBuff :=
     q'[WITH
       dt AS (
@@ -6394,7 +6394,7 @@ BEGIN
             ,params
             ,skip
         FROM (
-       -- Факты и ПИДАРЫ (ПИДАР - Простое Измерение Для Агрегирования Результатов)
+       -- Р¤Р°РєС‚С‹ Рё РџРР”РђР Р« (РџРР”РђР  - РџСЂРѕСЃС‚РѕРµ РР·РјРµСЂРµРЅРёРµ Р”Р»СЏ РђРіСЂРµРіРёСЂРѕРІР°РЅРёСЏ Р РµР·СѓР»СЊС‚Р°С‚РѕРІ)
       SELECT DISTINCT
              /*to_char(dt.as_of_date,'DD.MM.YYYY')||'#]'||LOWER(vOwner)||q'[.'||a.StarPart||'_'||a.id||'#'||CASE WHEN a.StarPart = 'fct' THEN a.sign_name ELSE to_char(a.head_entity_id) END AS ID
             ,*/NULL AS parent_id
@@ -6402,7 +6402,7 @@ BEGIN
             ,to_char(dt.as_of_date,'DD.MM.YYYY')||'#!#'||a.id||'#!#'||CASE WHEN a.StarPart = 'fct' THEN a.sign_name ELSE to_char(a.head_entity_id) END AS params
             ,0 AS skip
         FROM dt CROSS JOIN a
-      -- СУКИ (СУКА - Сквозная Унифицированная Комплексная Аналитика)
+      -- РЎРЈРљР (РЎРЈРљРђ - РЎРєРІРѕР·РЅР°СЏ РЈРЅРёС„РёС†РёСЂРѕРІР°РЅРЅР°СЏ РљРѕРјРїР»РµРєСЃРЅР°СЏ РђРЅР°Р»РёС‚РёРєР°)
       UNION ALL
       SELECT DISTINCT
              /*to_char(b.as_of_date,'DD.MM.YYYY')||'#]'||LOWER(vOwner)||q'[.anltline_]'||inGroupID||q'[#'||b.anlt_alias AS ID
@@ -6412,9 +6412,9 @@ BEGIN
             ,0 AS skip
         FROM b)]';
 
-  -- если авторасчет - центральное логирование
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'ЗАГРУЗКА ДАННЫХ ЗВЕЗДЫ');
+    l_stid := LG_PKG.RegPhase(l_opid,'Р—РђР“Р РЈР—РљРђ Р”РђРќРќР«РҐ Р—Р’Р•Р—Р”Р«');
     LG_PKG.setparam(l_opid,'vBuff','CLOB','S',l_stid);
     LG_PKG.setparam(l_opid,'vJobName',vJobName,'S',l_stid);
     LG_PKG.setparam(l_opid,'inDaemonId',inDaemonId,'N'); 
@@ -6423,14 +6423,14 @@ BEGIN
   load_new(vBuff,vJobName);
   
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 05.ЗАГРУЗКА ДАННЫХ ЗВЕЗДЫ :: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 05.Р—РђР“Р РЈР—РљРђ Р”РђРќРќР«РҐ Р—Р’Р•Р—Р”Р« :: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
 
-  -- Сжатие данных звезды
-  -- если авторасчет - центральное логирование
+  -- РЎР¶Р°С‚РёРµ РґР°РЅРЅС‹С… Р·РІРµР·РґС‹
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'СЖАТИЕ ДАННЫХ ЗВЕЗДЫ');
+    l_stid := LG_PKG.RegPhase(l_opid,'РЎР–РђРўРР• Р”РђРќРќР«РҐ Р—Р’Р•Р—Р”Р«');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6439,14 +6439,14 @@ BEGIN
   StarCompress(inBegDate,inEndDate,inGroupID);
 
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 06.СЖАТИЕ ДАННЫХ ЗВЕЗДЫ:: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 06.РЎР–РђРўРР• Р”РђРќРќР«РҐ Р—Р’Р•Р—Р”Р«:: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
   
-  -- Сбор статистики по таблицам звезды
-  -- если авторасчет - центральное логирование
+  -- РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С‚Р°Р±Р»РёС†Р°Рј Р·РІРµР·РґС‹
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'СБОР СТАТИСТИКИ ПО ТАБЛИЦАМ ЗВЕЗДЫ');
+    l_stid := LG_PKG.RegPhase(l_opid,'РЎР‘РћР  РЎРўРђРўРРЎРўРРљР РџРћ РўРђР‘Р›РР¦РђРњ Р—Р’Р•Р—Р”Р«');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6455,14 +6455,14 @@ BEGIN
   StarGatherStats(inBegDate,inEndDate,inGroupID);
 
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 07.СБОР СТАТИСТИКИ ПО ТАБЛИЦАМ ЗВЕЗДЫ:: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 07.РЎР‘РћР  РЎРўРђРўРРЎРўРРљР РџРћ РўРђР‘Р›РР¦РђРњ Р—Р’Р•Р—Р”Р«:: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
 
-  -- Загрузка предагрегатов
-  -- если авторасчет - центральное логирование
+  -- Р—Р°РіСЂСѓР·РєР° РїСЂРµРґР°РіСЂРµРіР°С‚РѕРІ
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'ЗАГРУЗКА ПРЕДАГРЕГАТОВ');
+    l_stid := LG_PKG.RegPhase(l_opid,'Р—РђР“Р РЈР—РљРђ РџР Р•Р”РђР“Р Р•Р“РђРўРћР’');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6471,14 +6471,14 @@ BEGIN
   StarAggrsLoadData(inBegDate,inEndDate,inGroupID);
   
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 08. ЗАГРУЗКА ПРЕДАГРЕГАТОВ :: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 08. Р—РђР“Р РЈР—РљРђ РџР Р•Р”РђР“Р Р•Р“РђРўРћР’ :: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
   
-  -- Сжатие предагрегатов
-  -- если авторасчет - центральное логирование
+  -- РЎР¶Р°С‚РёРµ РїСЂРµРґР°РіСЂРµРіР°С‚РѕРІ
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'СЖАТИЕ ПРЕДАГРЕГАТОВ');
+    l_stid := LG_PKG.RegPhase(l_opid,'РЎР–РђРўРР• РџР Р•Р”РђР“Р Р•Р“РђРўРћР’');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6487,15 +6487,15 @@ BEGIN
   StarAggrsCompress(inBegDate,inEndDate,inGroupID);
   
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 09.СЖАТИЕ ПРЕДАГРЕГАТОВ :: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 09.РЎР–РђРўРР• РџР Р•Р”РђР“Р Р•Р“РђРўРћР’ :: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
   END IF;
 
 
-  -- Сбор статистики по таблицам - предагрегатам
-  -- если авторасчет - центральное логирование
+  -- РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ С‚Р°Р±Р»РёС†Р°Рј - РїСЂРµРґР°РіСЂРµРіР°С‚Р°Рј
+  -- РµСЃР»Рё Р°РІС‚РѕСЂР°СЃС‡РµС‚ - С†РµРЅС‚СЂР°Р»СЊРЅРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
   IF autocalc THEN
-    l_stid := LG_PKG.RegPhase(l_opid,'СБОР СТАТИСТИКИ ПО ТАБЛИЦАМ - ПРЕДАГРЕГАТАМ');
+    l_stid := LG_PKG.RegPhase(l_opid,'РЎР‘РћР  РЎРўРђРўРРЎРўРРљР РџРћ РўРђР‘Р›РР¦РђРњ - РџР Р•Р”РђР“Р Р•Р“РђРўРђРњ');
     LG_PKG.setparam(l_opid,'inBegDate',inBegDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inEndDate',inEndDate,'D',l_stid);
     LG_PKG.setparam(l_opid,'inGroupID',inGroupID,'N',l_stid);
@@ -6505,7 +6505,7 @@ BEGIN
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarFixEmptyComments',StarFixEmptyComments(inGroupID));
   
   IF autocalc THEN
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 10.СБОР СТАТИСТИКИ ПО ТАБЛИЦАМ - ПРЕДАГРЕГАТАМ :: OPID = ' ||l_opid);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 10.РЎР‘РћР  РЎРўРђРўРРЎРўРРљР РџРћ РўРђР‘Р›РР¦РђРњ - РџР Р•Р”РђР“Р Р•Р“РђРўРђРњ :: OPID = ' ||l_opid);
     LG_PKG.ENDPHASE(l_stid);
 
     LG_PKG.EndOper(l_opid);
@@ -6657,7 +6657,7 @@ BEGIN
     load_new(vBuff,vJobName);
   --dbms_output.put_line(vBuff);
   ELSE
-    vMes := 'INFORMATION :: У группы "'||vGroupName||'" отсутствуют агрегаты. Сжатие не требуется';
+    vMes := 'INFORMATION :: РЈ РіСЂСѓРїРїС‹ "'||vGroupName||'" РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ Р°РіСЂРµРіР°С‚С‹. РЎР¶Р°С‚РёРµ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrsCompress',vMes);
   END IF;
 
@@ -6790,7 +6790,7 @@ BEGIN
     load_new(vBuff,vJobName);
   --dbms_output.put_line(vBuff);
   ELSE
-    vMes := 'INFORMATION :: У группы "'||vGroupName||'" отсутствуют агрегаты. Сбор статистики не требуется';
+    vMes := 'INFORMATION :: РЈ РіСЂСѓРїРїС‹ "'||vGroupName||'" РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ Р°РіСЂРµРіР°С‚С‹. РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrsGatherStats',vMes);
   END IF;
 
@@ -6852,7 +6852,7 @@ BEGIN
   IF vCou > 0
     THEN load_new(vBuff,vJobName);
          --dbms_output.put_line(vDDL);
-    ELSE pr_log_write(lower(vOwner)||'.pkg_Etl_signs.StarDropOldParts','INFORMATION :: "'||to_char(inDate,'DD.MM.RRRR')||'" - Для звезды с номером группы '||inGroupID||' не обнаружено сегментов старше периода хранения');
+    ELSE pr_log_write(lower(vOwner)||'.pkg_Etl_signs.StarDropOldParts','INFORMATION :: "'||to_char(inDate,'DD.MM.RRRR')||'" - Р”Р»СЏ Р·РІРµР·РґС‹ СЃ РЅРѕРјРµСЂРѕРј РіСЂСѓРїРїС‹ '||inGroupID||' РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ СЃРµРіРјРµРЅС‚РѕРІ СЃС‚Р°СЂС€Рµ РїРµСЂРёРѕРґР° С…СЂР°РЅРµРЅРёСЏ');
   END IF;
 
   vEndTime := SYSDATE;
@@ -6904,7 +6904,7 @@ BEGIN
   CLOSE vCur;
 
   vEndTime := SYSDATE;
-  vMes := 'SUCCESSFULLY :: Группа: ИД = '||inGroupID||' :: '||vCou||' comments added in '||get_ti_as_hms(vEndTime - vBegTime);
+  vMes := 'SUCCESSFULLY :: Р“СЂСѓРїРїР°: РР” = '||inGroupID||' :: '||vCou||' comments added in '||get_ti_as_hms(vEndTime - vBegTime);
   RETURN(vMes);
 EXCEPTION WHEN OTHERS THEN
   vMes := 'ERROR :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarFixEmptyComments" :: '||SQLERRM;
@@ -6935,7 +6935,7 @@ BEGIN
          WHERE table_name = '}'||idx.table_name||'''';
 
     --dbms_output.put_line(vSQL);
-    vBuff := SQLasHTML(vSQL,'COLUMN_NAME#!#COL_TYPES#!#COMMENTS','Наименование колонки:#!#Тип данных:#!#Описание колонки:','<br/><br/>',NULL,UPPER(vOwner)||'.'||idx.table_name||'<br/>'||idx.table_comment);
+    vBuff := SQLasHTML(vSQL,'COLUMN_NAME#!#COL_TYPES#!#COMMENTS','РќР°РёРјРµРЅРѕРІР°РЅРёРµ РєРѕР»РѕРЅРєРё:#!#РўРёРї РґР°РЅРЅС‹С…:#!#РћРїРёСЃР°РЅРёРµ РєРѕР»РѕРЅРєРё:','<br/><br/>',NULL,UPPER(vOwner)||'.'||idx.table_name||'<br/>'||idx.table_comment);
     
     dbms_lob.writeappend(vCLOB,LENGTH(vBuff),vBuff);
   END LOOP;
@@ -6996,7 +6996,7 @@ BEGIN
 
 EXCEPTION
   WHEN errNotFound THEN
-    vMes := 'ERROR :: "'||vAggrName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarAggrRecalcOnDate" :: Описание агрегата не найдено в таблице "'||lower(vOwner)||'.tb_signs_aggrs"';
+    vMes := 'ERROR :: "'||vAggrName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.StarAggrRecalcOnDate" :: РћРїРёСЃР°РЅРёРµ Р°РіСЂРµРіР°С‚Р° РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_aggrs"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.StarAggrRecalcOnDate',vMes);
 
     vEndTime := SYSDATE;
@@ -7034,7 +7034,7 @@ BEGIN
   vMes := 'START :: "'||inTableName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.HistTableService" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.HistTableService',vMes);
 
-  -- Если необходим сбор статистики
+  -- Р•СЃР»Рё РЅРµРѕР±С…РѕРґРёРј СЃР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё
   IF vGatherStats THEN
     vTIBegin := SYSDATE;
     vJobName := UPPER(vOwner)||'.SERVICEGATHERSTATSJOB_'||tb_signs_job_id_seq.nextval;
@@ -7072,13 +7072,13 @@ BEGIN
 
   END IF;
 
-  -- Если необходимо сжатие
+  -- Р•СЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ СЃР¶Р°С‚РёРµ
   IF vCompress THEN
     vTIBegin := SYSDATE;
     vJobName := UPPER(vOwner)||'.SERVICECOMPRESSJOB_'||tb_signs_job_id_seq.nextval;
-    -- После сжатия необходимо обязательное перестроение индексов,
-    -- т.к. они становятся UNUSABLE
-    -- Устанавливаем соответствующий флаг принудительно
+    -- РџРѕСЃР»Рµ СЃР¶Р°С‚РёСЏ РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРµ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ,
+    -- С‚.Рє. РѕРЅРё СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ UNUSABLE
+    -- РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ С„Р»Р°Рі РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ
     vRebuildIdx := TRUE;
 
     dbms_lob.createtemporary(vDDL,FALSE);
@@ -7121,7 +7121,7 @@ BEGIN
 
   END IF;
   
-  -- Если необходимо перестроение индексов
+  -- Р•СЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ
   IF vRebuildIdx THEN
     vTIBegin := SYSDATE;
     dbms_lob.createtemporary(vIDX,FALSE);
@@ -7215,7 +7215,7 @@ SELECT ID
     vMes VARCHAR2(32700);
     vBegTime DATE := SYSDATE;
     vEndTime DATE;
-    -- для централизованного логирования
+    -- РґР»СЏ С†РµРЅС‚СЂР°Р»РёР·РѕРІР°РЅРЅРѕРіРѕ Р»РѕРіРёСЂРѕРІР°РЅРёСЏ
     logOPTP NUMBER;
     logOPNM VARCHAR2(256);
     logCOMMENT VARCHAR2(4000);
@@ -7227,7 +7227,7 @@ BEGIN
   vMes := 'START :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.ServiceTables" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ServiceTables',vMes);
 
-  -- Проверка необходимости сервиса
+  -- РџСЂРѕРІРµСЂРєР° РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё СЃРµСЂРІРёСЃР°
   WITH
     e AS (
       SELECT UPPER(hist_table_name) AS tbl_name FROM tb_entity GROUP BY hist_table_name
@@ -7239,10 +7239,10 @@ BEGIN
           AND a.partition_name != 'EMPTY_SIGN'
           AND TRUNC(SYSDATE,'DD') - TRUNC(a.last_analyzed,'DD') > inAgeDays;
     
-  -- Если необходим сервис
+  -- Р•СЃР»Рё РЅРµРѕР±С…РѕРґРёРј СЃРµСЂРІРёСЃ
   IF vCou > 0 THEN
     IF autocalc THEN
-      -- Получаем ИД типовой операции. Если типовая операция логирования отсутствует - создаем
+      -- РџРѕР»СѓС‡Р°РµРј РР” С‚РёРїРѕРІРѕР№ РѕРїРµСЂР°С†РёРё. Р•СЃР»Рё С‚РёРїРѕРІР°СЏ РѕРїРµСЂР°С†РёСЏ Р»РѕРіРёСЂРѕРІР°РЅРёСЏ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ - СЃРѕР·РґР°РµРј
       BEGIN
         SELECT NAME
               ,NAME
@@ -7252,16 +7252,16 @@ BEGIN
         logOPTP := LG_PKG.CreateTypeOper(logOPNM,logCOMMENT);
       EXCEPTION WHEN OTHERS THEN
         logErr := SQLERRM;
-        SELECT to_number(SUBSTR(logErr,INSTR(logErr,' OPTP = ') + 8,INSTR(logErr,' c именем ') - INSTR(logErr,'OPTP = ') - 7)) INTO logOPTP FROM dual;
+        SELECT to_number(SUBSTR(logErr,INSTR(logErr,' OPTP = ') + 8,INSTR(logErr,' c РёРјРµРЅРµРј ') - INSTR(logErr,'OPTP = ') - 7)) INTO logOPTP FROM dual;
       END;
-      -- Создаем новое логирование
+      -- РЎРѕР·РґР°РµРј РЅРѕРІРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
       vMes := 'BEGIN OF LOGGING :: OPTP = '||logOPTP;
       pr_log_write(lower(vOwner)||'.pkg_etl_signs.ServiceTables',vMes);
       
-      l_opid := LG_PKG.StartOper(logOPTP,sysdate); -- Генерируем запись об операции
+      l_opid := LG_PKG.StartOper(logOPTP,sysdate); -- Р“РµРЅРµСЂРёСЂСѓРµРј Р·Р°РїРёСЃСЊ РѕР± РѕРїРµСЂР°С†РёРё
       LG_PKG.setparam(l_opid,'inAgeDays',inAgeDays,'N');
       LG_PKG.setparam(l_opid,'inDaemonId',inDaemonId,'N');
-      l_stid := LG_PKG.RegPhase(l_opid,'СЕРВИСНОЕ ОБСЛУЖИВАНИЕ ТАБЛИЦ');
+      l_stid := LG_PKG.RegPhase(l_opid,'РЎР•Р Р’РРЎРќРћР• РћР‘РЎР›РЈР–РР’РђРќРР• РўРђР‘Р›РР¦');
     END IF;  
     
     vJobName := UPPER(vOwner)||'.ALLHISTTABSERVICEJOB_'||tb_signs_job_id_seq.nextval;
@@ -7270,7 +7270,7 @@ BEGIN
     --dbms_lock.sleep(3);
 
     IF autocalc THEN
-      LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: СЕРВИСНОЕ ОБСЛУЖИВАНИЕ ТАБЛИЦ :: OPID = ' ||l_opid);
+      LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: РЎР•Р Р’РРЎРќРћР• РћР‘РЎР›РЈР–РР’РђРќРР• РўРђР‘Р›РР¦ :: OPID = ' ||l_opid);
       LG_PKG.ENDPHASE(l_stid);
       
       LG_PKG.EndOper(l_opid);
@@ -7280,7 +7280,7 @@ BEGIN
     END IF;
 
   ELSE
-    vMes := 'SUCCESSFULLY :: Обслуживание производилось недавно. Новое обслуживание пока не требуется ::';
+    vMes := 'SUCCESSFULLY :: РћР±СЃР»СѓР¶РёРІР°РЅРёРµ РїСЂРѕРёР·РІРѕРґРёР»РѕСЃСЊ РЅРµРґР°РІРЅРѕ. РќРѕРІРѕРµ РѕР±СЃР»СѓР¶РёРІР°РЅРёРµ РїРѕРєР° РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ ::';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ServiceTables',vMes);
   END IF;
 
@@ -7313,7 +7313,7 @@ BEGIN
 
   SELECT val INTO vVal FROM tb_variable_registry WHERE NAME = inVarName;
 
-  IF vType = 'Простая' THEN
+  IF vType = 'РџСЂРѕСЃС‚Р°СЏ' THEN
     RETURN vVal;
   ELSE
     EXECUTE IMMEDIATE vVal USING OUT vRes;
@@ -7321,7 +7321,7 @@ BEGIN
   END IF;
 EXCEPTION
   WHEN errNotExists THEN
-    RETURN 'Переменная не найдена';
+    RETURN 'РџРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РЅР°Р№РґРµРЅР°';
   WHEN OTHERS THEN
   RETURN SQLERRM;
 END;
@@ -7338,11 +7338,11 @@ FUNCTION call_hist(inTable IN VARCHAR2, inID IN VARCHAR2,inAction VARCHAR2) RETU
   vRes VARCHAR2(4000);
 BEGIN
   IF NOT(UPPER(inAction) IN ('ON','OFF')) THEN
-    RAISE_APPLICATION_ERROR(-20000,'Неизвестное значение параметра inAction.'||CHR(10)||'Возможные значения параметра inAction: ON - включить; OFF - отключить');
+    RAISE_APPLICATION_ERROR(-20000,'РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° inAction.'||CHR(10)||'Р’РѕР·РјРѕР¶РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР° inAction: ON - РІРєР»СЋС‡РёС‚СЊ; OFF - РѕС‚РєР»СЋС‡РёС‚СЊ');
   END IF;
 
   IF NOT CanHaveHistory(inTable) AND UPPER(inAction) = 'ON' THEN
-    RAISE_APPLICATION_ERROR(-20001,'История не может быть включена для таблиц хранения, а так же для фактов и измерений куба');
+    RAISE_APPLICATION_ERROR(-20001,'РСЃС‚РѕСЂРёСЏ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРєР»СЋС‡РµРЅР° РґР»СЏ С‚Р°Р±Р»РёС† С…СЂР°РЅРµРЅРёСЏ, Р° С‚Р°Рє Р¶Рµ РґР»СЏ С„Р°РєС‚РѕРІ Рё РёР·РјРµСЂРµРЅРёР№ РєСѓР±Р°');
   END IF;
 
   IF UPPER(inAction) = 'ON' THEN
@@ -7403,7 +7403,7 @@ BEGIN
       NULL;
     END;
     EXECUTE IMMEDIATE 'GRANT SELECT,INSERT ON tb_signs_history TO '||SUBSTR(inTable,1,INSTR(inTable,'.',1,1) - 1);
-    vRes := 'SUCCESSFULLY :: История по таблице "'||inTable||'" успешно включена';
+    vRes := 'SUCCESSFULLY :: РСЃС‚РѕСЂРёСЏ РїРѕ С‚Р°Р±Р»РёС†Рµ "'||inTable||'" СѓСЃРїРµС€РЅРѕ РІРєР»СЋС‡РµРЅР°';
   ELSE
     vStr := 'DROP TRIGGER '||SUBSTR(inTable,1,24)||'_h_trg';
     EXECUTE IMMEDIATE vStr;
@@ -7412,11 +7412,11 @@ BEGIN
     EXCEPTION WHEN OTHERS THEN
       NULL;
     END;
-    vRes := 'SUCCESSFULLY :: История по таблице "'||inTable||'" успешно отключена';
+    vRes := 'SUCCESSFULLY :: РСЃС‚РѕСЂРёСЏ РїРѕ С‚Р°Р±Р»РёС†Рµ "'||inTable||'" СѓСЃРїРµС€РЅРѕ РѕС‚РєР»СЋС‡РµРЅР°';
   END IF;
   RETURN vRes;
 EXCEPTION WHEN OTHERS THEN
-  RETURN 'ERROR :: Не удалось включить/отключить историю по таблице "'||inTable||'" :: '||SQLERRM||CHR(10)||'---------------------'||CHR(10)||vStr;
+  RETURN 'ERROR :: РќРµ СѓРґР°Р»РѕСЃСЊ РІРєР»СЋС‡РёС‚СЊ/РѕС‚РєР»СЋС‡РёС‚СЊ РёСЃС‚РѕСЂРёСЋ РїРѕ С‚Р°Р±Р»РёС†Рµ "'||inTable||'" :: '||SQLERRM||CHR(10)||'---------------------'||CHR(10)||vStr;
 END call_hist;
 
 FUNCTION CanHaveHistory(inTable IN VARCHAR2) RETURN BOOLEAN
@@ -7507,7 +7507,7 @@ BEGIN
   inDate := vDate;
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.LastFlag','INFORMATION :: Флаг с указанными параметрами не найден в таблице "'||LOWER(vOwner)||'.tb_flags_pool"');
+    pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.LastFlag','INFORMATION :: Р¤Р»Р°Рі СЃ СѓРєР°Р·Р°РЅРЅС‹РјРё РїР°СЂР°РјРµС‚СЂР°РјРё РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ "'||LOWER(vOwner)||'.tb_flags_pool"');
     inDate := NULL;
   WHEN OTHERS THEN
     inDate := NULL;
@@ -7672,9 +7672,9 @@ BEGIN
   'BEGIN'||CHR(10);
   --dbms_lob.writeappend(vEntDML,LENGTH(vBuff),vBuff);
     
-  -- Cкрипт для импорта сущностей
+  -- CРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° СЃСѓС‰РЅРѕСЃС‚РµР№
   IF getImpEntity THEN
-    -- Сохраняем ИД всех сущностей, участвующих в звезде в строковую переменную через разделитель
+    -- РЎРѕС…СЂР°РЅСЏРµРј РР” РІСЃРµС… СЃСѓС‰РЅРѕСЃС‚РµР№, СѓС‡Р°СЃС‚РІСѓСЋС‰РёС… РІ Р·РІРµР·РґРµ РІ СЃС‚СЂРѕРєРѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ С‡РµСЂРµР· СЂР°Р·РґРµР»РёС‚РµР»СЊ
     SELECT LISTAGG(entity_id,'#!#') WITHIN GROUP (ORDER BY entity_id)
       INTO vIds
       FROM (
@@ -7700,7 +7700,7 @@ BEGIN
                                                      CONNECT BY PRIOR group_id = parent_group_id
                                                      START WITH group_id = inGroupID))  
       );
-    vBuff := '/***** Сущности *****/'||CHR(10);
+    vBuff := '/***** РЎСѓС‰РЅРѕСЃС‚Рё *****/'||CHR(10);
     dbms_lob.writeappend(vEntDML,LENGTH(vBuff),vBuff);
     
     FOR idx IN (
@@ -7746,10 +7746,10 @@ BEGIN
     dbms_lob.writeappend(vEntDML,LENGTH(vBuff),vBuff);
   END IF;
 
-  -- Скрипт для импорта групп
+  -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° РіСЂСѓРїРї
   IF getImpGroups THEN
     dbms_lob.createtemporary(vGrpDML,FALSE);
-    vBuff := '/***** Группы *****/'||CHR(10);
+    vBuff := '/***** Р“СЂСѓРїРїС‹ *****/'||CHR(10);
     dbms_lob.writeappend(vGrpDML,LENGTH(vBuff),vBuff);
     FOR idx IN (
       SELECT g.group_name
@@ -7787,10 +7787,10 @@ BEGIN
     dbms_lob.writeappend(vGrpDML,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- Скрипт для импорта предагрегатов
+  -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° РїСЂРµРґР°РіСЂРµРіР°С‚РѕРІ
   IF getImpAggr THEN
     dbms_lob.createtemporary(vAggrDML,FALSE);
-    vBuff := '/***** Предагрегаты *****/'||CHR(10);
+    vBuff := '/***** РџСЂРµРґР°РіСЂРµРіР°С‚С‹ *****/'||CHR(10);
     --dbms_output.put_line(vBuff);
     dbms_lob.writeappend(vAggrDML,LENGTH(vBuff),vBuff);
     
@@ -7892,10 +7892,10 @@ BEGIN
     dbms_lob.writeappend(vAggrDML,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- Скрипт для импорта показателей
+  -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° РїРѕРєР°Р·Р°С‚РµР»РµР№
   IF getImpSigns THEN
     dbms_lob.createtemporary(vSgnDML,FALSE);
-    vBuff := '/***** Показатели *****/'||CHR(10);
+    vBuff := '/***** РџРѕРєР°Р·Р°С‚РµР»Рё *****/'||CHR(10);
     --dbms_output.put_line(vBuff);
     dbms_lob.writeappend(vSgnDML,LENGTH(vBuff),vBuff);
     
@@ -7921,8 +7921,8 @@ BEGIN
             
       SELECT p.sign_name
                   ,p.sign_descr
-                  ,1 AS archive_flg -- !!!Импортированные показатели не должны включаться автоматом в ежедневный автоматический расчет!!!!
-                                    -- !!!Архивный флаг должен отключаться ОСОЗНАННО разработчиком при помощи рук и головы!!!
+                  ,1 AS archive_flg -- !!!РРјРїРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ РїРѕРєР°Р·Р°С‚РµР»Рё РЅРµ РґРѕР»Р¶РЅС‹ РІРєР»СЋС‡Р°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РѕРј РІ РµР¶РµРґРЅРµРІРЅС‹Р№ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ СЂР°СЃС‡РµС‚!!!!
+                                    -- !!!РђСЂС…РёРІРЅС‹Р№ С„Р»Р°Рі РґРѕР»Р¶РµРЅ РѕС‚РєР»СЋС‡Р°С‚СЊСЃСЏ РћРЎРћР—РќРђРќРќРћ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРј РїСЂРё РїРѕРјРѕС‰Рё СЂСѓРє Рё РіРѕР»РѕРІС‹!!!
                   ,p.data_type
                   ,p.hist_flg
                   ,p.sign_sql
@@ -7938,8 +7938,8 @@ BEGIN
 
       /*SELECT p.sign_name
             ,p.sign_descr
-            ,1 AS archive_flg -- !!!Импортированные показатели не должны включаться автоматом в ежедневный автоматический расчет!!!!
-                              -- !!!Архивный флаг должен отключаться ОСОЗНАННО разработчиком при помощи рук и головы!!!
+            ,1 AS archive_flg -- !!!РРјРїРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ РїРѕРєР°Р·Р°С‚РµР»Рё РЅРµ РґРѕР»Р¶РЅС‹ РІРєР»СЋС‡Р°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РѕРј РІ РµР¶РµРґРЅРµРІРЅС‹Р№ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ СЂР°СЃС‡РµС‚!!!!
+                              -- !!!РђСЂС…РёРІРЅС‹Р№ С„Р»Р°Рі РґРѕР»Р¶РµРЅ РѕС‚РєР»СЋС‡Р°С‚СЊСЃСЏ РћРЎРћР—РќРђРќРќРћ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРј РїСЂРё РїРѕРјРѕС‰Рё СЂСѓРє Рё РіРѕР»РѕРІС‹!!!
             ,p.data_type
             ,p.hist_flg
             ,p.sign_sql
@@ -8000,10 +8000,10 @@ BEGIN
     dbms_lob.writeappend(vSgnDML,LENGTH(vBuff),vBuff);
   END IF;
 
-  -- Скрипт для импорта аналитик
+  -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° Р°РЅР°Р»РёС‚РёРє
   IF getImpAnlt THEN
     dbms_lob.createtemporary(vAnltDML,FALSE);
-    vBuff := '/***** Аналитики *****/'||CHR(10);
+    vBuff := '/***** РђРЅР°Р»РёС‚РёРєРё *****/'||CHR(10);
     --dbms_output.put_line(vBuff);
     dbms_lob.writeappend(vAnltDML,LENGTH(vBuff),vBuff);
     
@@ -8102,13 +8102,13 @@ BEGIN
     dbms_lob.writeappend(vAnltDML,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- Скрипт для импорта привязок показателей к группам
+  -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° РїСЂРёРІСЏР·РѕРє РїРѕРєР°Р·Р°С‚РµР»РµР№ Рє РіСЂСѓРїРїР°Рј
   IF getImpSgn2Grp THEN
     dbms_lob.createtemporary(vSgn2GrpDML,FALSE);
-    vBuff := '/***** Привязка показателей к группам *****/'||CHR(10);
+    vBuff := '/***** РџСЂРёРІСЏР·РєР° РїРѕРєР°Р·Р°С‚РµР»РµР№ Рє РіСЂСѓРїРїР°Рј *****/'||CHR(10);
     dbms_lob.writeappend(vSgn2GrpDML,LENGTH(vBuff),vBuff);
     
-    -- Новые привязки
+    -- РќРѕРІС‹Рµ РїСЂРёРІСЏР·РєРё
     FOR idx IN (
       SELECT s2g.sign_name
             ,s2g.sgn_alias
@@ -8142,7 +8142,7 @@ BEGIN
       dbms_lob.writeappend(vSgn2GrpDML,LENGTH(vBuff),vBuff);
     END LOOP;
 
-    -- Удалим все неактивные привязки к группам
+    -- РЈРґР°Р»РёРј РІСЃРµ РЅРµР°РєС‚РёРІРЅС‹Рµ РїСЂРёРІСЏР·РєРё Рє РіСЂСѓРїРїР°Рј
     FOR grp IN (
       SELECT group_name
         FROM tb_signs_group
@@ -8165,14 +8165,14 @@ BEGIN
     dbms_lob.writeappend(vSgn2GrpDML,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- Скрипт для импорта привязок аналитик к группам
+  -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° РїСЂРёРІСЏР·РѕРє Р°РЅР°Р»РёС‚РёРє Рє РіСЂСѓРїРїР°Рј
   IF getImpAnlt2Grp THEN
     dbms_lob.createtemporary(vAnlt2GrpDML,FALSE);
-    vBuff := '/***** Привязка аналитик к группам *****/'||CHR(10);
+    vBuff := '/***** РџСЂРёРІСЏР·РєР° Р°РЅР°Р»РёС‚РёРє Рє РіСЂСѓРїРїР°Рј *****/'||CHR(10);
     --dbms_output.put_line(vBuff);
     dbms_lob.writeappend(vAnlt2GrpDML,LENGTH(vBuff),vBuff);
     
-    -- Новые привязки
+    -- РќРѕРІС‹Рµ РїСЂРёРІСЏР·РєРё
     FOR idx IN (
       SELECT a2g.anlt_code
             ,1 AS active_flg
@@ -8200,7 +8200,7 @@ BEGIN
       dbms_lob.writeappend(vAnlt2GrpDML,LENGTH(vBuff),vBuff);
     END LOOP;
 
-    -- Удалим все неактивные привязки к группам
+    -- РЈРґР°Р»РёРј РІСЃРµ РЅРµР°РєС‚РёРІРЅС‹Рµ РїСЂРёРІСЏР·РєРё Рє РіСЂСѓРїРїР°Рј
     FOR grp IN (
       SELECT group_name
         FROM tb_signs_group
@@ -8223,10 +8223,10 @@ BEGIN
     dbms_lob.writeappend(vAnlt2GrpDML,LENGTH(vBuff),vBuff);
   END IF;
   
- -- Скрипт для импорта привязок показателей к аналитикам
+ -- РЎРєСЂРёРїС‚ РґР»СЏ РёРјРїРѕСЂС‚Р° РїСЂРёРІСЏР·РѕРє РїРѕРєР°Р·Р°С‚РµР»РµР№ Рє Р°РЅР°Р»РёС‚РёРєР°Рј
   IF GetImpSgn2Anlt THEN
     dbms_lob.createtemporary(vSgn2AnltDML,FALSE);
-    vBuff := '/***** Привязка показателей к аналитикам *****/'||CHR(10);
+    vBuff := '/***** РџСЂРёРІСЏР·РєР° РїРѕРєР°Р·Р°С‚РµР»РµР№ Рє Р°РЅР°Р»РёС‚РёРєР°Рј *****/'||CHR(10);
     dbms_lob.writeappend(vSgn2AnltDML,LENGTH(vBuff),vBuff);
     
     FOR idx IN (
@@ -8323,7 +8323,7 @@ BEGIN
   vMes := 'START :: "'||vAnltName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate',vMes);
 
-  vAnltName := 'Иерархическое измерение: "'||UPPER(vOwner)||'.ANLTLINE_'||inGroupID||'#'||vAnltAlias||'"';
+  vAnltName := 'РРµСЂР°СЂС…РёС‡РµСЃРєРѕРµ РёР·РјРµСЂРµРЅРёРµ: "'||UPPER(vOwner)||'.ANLTLINE_'||inGroupID||'#'||vAnltAlias||'"';
   StarPrepareAnlt(inDate,inGroupID,inAnltCode);
   vAnltTableName := UPPER(vOwner)||'.ANLTLINE_'||inGroupID||'#'||vAnltAlias;
   
@@ -8355,7 +8355,7 @@ BEGIN
   '  :1 := vStmt;'||CHR(10)||
   'EXCEPTION WHEN OTHERS THEN'||CHR(10)||
   '  :1 := NULL;'||CHR(10)||
-  '  '||LOWER(vOwner)||'.pkg_etl_signs.pr_log_write('''||LOWER(vOwner)||'.pkg_etl_signs.ReplAggrOnDate'',''ERROR :: Не удалось сформировать DML для вставки :: ''||SQLERRM);'||CHR(10)||
+  '  '||LOWER(vOwner)||'.pkg_etl_signs.pr_log_write('''||LOWER(vOwner)||'.pkg_etl_signs.ReplAggrOnDate'',''ERROR :: РќРµ СѓРґР°Р»РѕСЃСЊ СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ DML РґР»СЏ РІСЃС‚Р°РІРєРё :: ''||SQLERRM);'||CHR(10)||
   'END;';
   
   EXECUTE IMMEDIATE vBuff USING OUT vStmt;
@@ -8382,14 +8382,14 @@ BEGIN
 
 EXCEPTION
   WHEN errGroupNotFound THEN
-    vMes := 'ERROR :: "'||vGroupName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate" :: Описание группы не найдено в таблице "'||lower(vOwner)||'.tb_signs_group"';
+    vMes := 'ERROR :: "'||vGroupName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate" :: РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹ РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_group"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate',vMes);
 
     vEndTime := SYSDATE;
     vMes := 'FINISH :: "'||vGroupName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate" finished with errors in '||get_ti_as_hms(vEndTime - vBegTime);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate',vMes);
   WHEN errAnltNotFound THEN
-    vMes := 'ERROR :: "'||vAnltName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate" :: Описание аналитики не найдено в таблице "'||lower(vOwner)||'.tb_signs_anlt"';
+    vMes := 'ERROR :: "'||vAnltName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate" :: РћРїРёСЃР°РЅРёРµ Р°РЅР°Р»РёС‚РёРєРё РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_anlt"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplAnltOnDate',vMes);
 
     vEndTime := SYSDATE;
@@ -8441,7 +8441,7 @@ BEGIN
   vMes := 'START :: "'||vDimName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate',vMes);
 
-  vDimName := 'Измерение: Группа - "'||vDimName||'"; Сущность - "'||vEntName||'"';
+  vDimName := 'РР·РјРµСЂРµРЅРёРµ: Р“СЂСѓРїРїР° - "'||vDimName||'"; РЎСѓС‰РЅРѕСЃС‚СЊ - "'||vEntName||'"';
   StarPrepareDim(inDate,inGroupID,inEntityID);
   vDimTableName := UPPER(vOwner)||'.DIM_'||inGroupID||'#'||inEntityID;
   
@@ -8482,7 +8482,7 @@ BEGIN
   '  :1 := vStmt;'||CHR(10)||
   'EXCEPTION WHEN OTHERS THEN'||CHR(10)||
   '  :1 := NULL;'||CHR(10)||
-  '  '||LOWER(vOwner)||'.pkg_etl_signs.pr_log_write('''||LOWER(vOwner)||'.pkg_etl_signs.ReplAggrOnDate'',''ERROR :: Не удалось сформировать DML для вставки :: ''||SQLERRM);'||CHR(10)||
+  '  '||LOWER(vOwner)||'.pkg_etl_signs.pr_log_write('''||LOWER(vOwner)||'.pkg_etl_signs.ReplAggrOnDate'',''ERROR :: РќРµ СѓРґР°Р»РѕСЃСЊ СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ DML РґР»СЏ РІСЃС‚Р°РІРєРё :: ''||SQLERRM);'||CHR(10)||
   'END;';
   
   EXECUTE IMMEDIATE vBuff USING OUT vStmt;
@@ -8509,14 +8509,14 @@ BEGIN
 
 EXCEPTION
   WHEN errDimNotFound THEN
-    vMes := 'ERROR :: "'||vDimName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate" :: Описание группы не найдено в таблице "'||lower(vOwner)||'.tb_signs_group"';
+    vMes := 'ERROR :: "'||vDimName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate" :: РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹ РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_group"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate',vMes);
 
     vEndTime := SYSDATE;
     vMes := 'FINISH :: "'||vDimName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate" finished with errors in '||get_ti_as_hms(vEndTime - vBegTime);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate',vMes);
   WHEN errEntNotFound THEN
-    vMes := 'ERROR :: "'||vEntName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate" :: Описание сущности не найдено в таблице "'||lower(vOwner)||'.tb_entity"';
+    vMes := 'ERROR :: "'||vEntName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate" :: РћРїРёСЃР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_entity"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplDimOnDate',vMes);
 
     vEndTime := SYSDATE;
@@ -8608,7 +8608,7 @@ BEGIN
   '  :1 := vStmt;'||CHR(10)||
   'EXCEPTION WHEN OTHERS THEN'||CHR(10)||
   '  :1 := NULL;'||CHR(10)||
-  '  '||LOWER(vOwner)||'.pkg_etl_signs.pr_log_write('''||LOWER(vOwner)||'.pkg_etl_signs.ReplAggrOnDate'',''ERROR :: Не удалось сформировать DML для вставки :: ''||SQLERRM);'||CHR(10)||
+  '  '||LOWER(vOwner)||'.pkg_etl_signs.pr_log_write('''||LOWER(vOwner)||'.pkg_etl_signs.ReplAggrOnDate'',''ERROR :: РќРµ СѓРґР°Р»РѕСЃСЊ СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ DML РґР»СЏ РІСЃС‚Р°РІРєРё :: ''||SQLERRM);'||CHR(10)||
   'END;';
   
   EXECUTE IMMEDIATE vBuff USING OUT vStmt;
@@ -8633,7 +8633,7 @@ BEGIN
 
 EXCEPTION
   WHEN errNotFound THEN
-    vMes := 'ERROR :: "'||vAggrName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAggrOnDate" :: Описание агрегата не найдено в таблице "'||lower(vOwner)||'.tb_signs_aggrs"';
+    vMes := 'ERROR :: "'||vAggrName||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplAggrOnDate" :: РћРїРёСЃР°РЅРёРµ Р°РіСЂРµРіР°С‚Р° РЅРµ РЅР°Р№РґРµРЅРѕ РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_signs_aggrs"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplAggrOnDate',vMes);
 
     vEndTime := SYSDATE;
@@ -8676,7 +8676,7 @@ BEGIN
     load_new(vBuff,vJobName);
   --dbms_output.put_line(vBuff);
   ELSE
-    vMes := 'INFORMATION :: У группы "'||vGroupName||'" отсутствуют агрегаты. Пересчет не требуется';
+    vMes := 'INFORMATION :: РЈ РіСЂСѓРїРїС‹ "'||vGroupName||'" РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ Р°РіСЂРµРіР°С‚С‹. РџРµСЂРµСЃС‡РµС‚ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplAggrsOnDate',vMes);
   END IF;
 
@@ -8706,7 +8706,7 @@ PROCEDURE ReplStarDataOld(inDate IN DATE,inGroupID IN NUMBER,inGroupIdOld IN NUM
     vBegTime DATE := SYSDATE;
     vEndTime DATE;
 BEGIN
-  vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'; Группа = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" started.';
+  vMes := 'START :: "'||to_char(inDate,'DD.MM.YYYY')||'; Р“СЂСѓРїРїР° = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplStarData',vMes);
   
   SELECT group_id INTO vFctGroupID FROM tb_signs_group WHERE parent_group_id = inGroupID;
@@ -8793,21 +8793,21 @@ BEGIN
   --dbms_output.put_line(vCompress);
 
   vEndTime := SYSDATE;
-  vMes := 'FINISH :: "'||to_char(inDate,'DD.MM.YYYY')||'; Группа = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" finished successfully in '||get_ti_as_hms(vEndTime - vBegTime);
+  vMes := 'FINISH :: "'||to_char(inDate,'DD.MM.YYYY')||'; Р“СЂСѓРїРїР° = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" finished successfully in '||get_ti_as_hms(vEndTime - vBegTime);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplStarData',vMes);
 
 EXCEPTION WHEN OTHERS THEN
-  vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'; Группа = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" :: '||SQLERRM;
+  vMes := 'ERROR :: "'||to_char(inDate,'DD.MM.YYYY')||'; Р“СЂСѓРїРїР° = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" :: '||SQLERRM;
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplStarData',vMes);
   
   vEndTime := SYSDATE;
-  vMes := 'FINISH :: "'||to_char(inDate,'DD.MM.YYYY')||'; Группа = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" finished with errors in '||get_ti_as_hms(vEndTime - vBegTime);
+  vMes := 'FINISH :: "'||to_char(inDate,'DD.MM.YYYY')||'; Р“СЂСѓРїРїР° = '||inGroupID||'" - Procedure "'||lower(vOwner)||'.pkg_etl_signs.ReplStarData" finished with errors in '||get_ti_as_hms(vEndTime - vBegTime);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.ReplStarData',vMes);
 END ReplStarDataOld;
 
 PROCEDURE ReplStart(inOPTP IN NUMBER,inDBLink IN VARCHAR2,inOPID NUMBER DEFAULT NULL)
   IS
-    -- 1412 OPNM = 'REPLICA :: РЕПЛИКА ДАННЫХ ЗВЕЗДЫ "Клиентская аналитика"'    COMM = 'DWHLegator "Клиентская аналитика" реплика данных звезды после автоматического расчета'
+    -- 1412 OPNM = 'REPLICA :: Р Р•РџР›РРљРђ Р”РђРќРќР«РҐ Р—Р’Р•Р—Р”Р« "РљР»РёРµРЅС‚СЃРєР°СЏ Р°РЅР°Р»РёС‚РёРєР°"'    COMM = 'DWHLegator "РљР»РёРµРЅС‚СЃРєР°СЏ Р°РЅР°Р»РёС‚РёРєР°" СЂРµРїР»РёРєР° РґР°РЅРЅС‹С… Р·РІРµР·РґС‹ РїРѕСЃР»Рµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРіРѕ СЂР°СЃС‡РµС‚Р°'
     vOwner VARCHAR2(30) := GetVarValue('vOwner');
     vCLOB CLOB;
     vBuff VARCHAR2(32700);
@@ -8895,8 +8895,8 @@ BEGIN
     EXECUTE IMMEDIATE vBuff USING OUT vOPID,OUT vDate,OUT vGroupID,OUT vFctGroupID,OUT vGroupName;
     LG_PKG.setparam(l_opid,'vOPID',to_char(vOPID),'N');
   
-  -- Фазы
-  l_stid := iskra.lg_pkg.RegPhase(l_opid,'01.ПОДГОТОВКА МЕТАДАННЫХ');
+  -- Р¤Р°Р·С‹
+  l_stid := iskra.lg_pkg.RegPhase(l_opid,'01.РџРћР”Р“РћРўРћР’РљРђ РњР•РўРђР”РђРќРќР«РҐ');
   vBuff :=
   q'{DECLARE
        cur SYS_REFCURSOR;
@@ -8909,28 +8909,28 @@ BEGIN
     vCLOB := gather_clob(cur);
     
     EXECUTE IMMEDIATE vCLOB;
-    --dbms_output.put_line('!!!ПОДГОТОВКА ЦЕЛЕВЫХ ТАБЛИЦ!!!'||CHR(10)||'----------');
+    --dbms_output.put_line('!!!РџРћР”Р“РћРўРћР’РљРђ Р¦Р•Р›Р•Р’Р«РҐ РўРђР‘Р›РР¦!!!'||CHR(10)||'----------');
     
     CLOSE cur;   
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 01.ПОДГОТОВКА МЕТАДАННЫХ :: OPID = ' ||vOPID);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 01.РџРћР”Р“РћРўРћР’РљРђ РњР•РўРђР”РђРќРќР«РҐ :: OPID = ' ||vOPID);
     LG_PKG.ENDPHASE(l_stid);
   EXCEPTION WHEN OTHERS THEN
     CLOSE cur;
-    LG_PKG.AddLog(l_stid,'E','ERROR :: 01.ПОДГОТОВКА МЕТАДАННЫХ :: OPID = ' ||vOPID||' :: '||SQLERRM);
+    LG_PKG.AddLog(l_stid,'E','ERROR :: 01.РџРћР”Р“РћРўРћР’РљРђ РњР•РўРђР”РђРќРќР«РҐ :: OPID = ' ||vOPID||' :: '||SQLERRM);
     LG_PKG.ENDPHASE(l_stid);
   END;  
 
-  l_stid := iskra.lg_pkg.RegPhase(l_opid,'02.РЕПЛИКАЦИЯ ДАННЫХ');
-  -- Получим ИД группы на целевом сервере
+  l_stid := iskra.lg_pkg.RegPhase(l_opid,'02.Р Р•РџР›РРљРђР¦РРЇ Р”РђРќРќР«РҐ');
+  -- РџРѕР»СѓС‡РёРј РР” РіСЂСѓРїРїС‹ РЅР° С†РµР»РµРІРѕРј СЃРµСЂРІРµСЂРµ
   vGroupIdNew := GetGroupIdByName(vGroupName);
   BEGIN
     ReplStarDataOld(vDate,vGroupIdNew,vGroupID,vFctGroupID,inDBLink);
-    --dbms_output.put_line(CHR(10)||'!!!РЕПЛИКАЦИЯ ДАННЫХ!!!'||CHR(10)||'----------');
+    --dbms_output.put_line(CHR(10)||'!!!Р Р•РџР›РРљРђР¦РРЇ Р”РђРќРќР«РҐ!!!'||CHR(10)||'----------');
     
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 02.РЕПЛИКАЦИЯ ДАННЫХ :: OPID = ' ||vOPID);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 02.Р Р•РџР›РРљРђР¦РРЇ Р”РђРќРќР«РҐ :: OPID = ' ||vOPID);
     LG_PKG.ENDPHASE(l_stid);
   EXCEPTION WHEN OTHERS THEN
-    LG_PKG.AddLog(l_stid,'E','ERROR :: 02.РЕПЛИКАЦИЯ ДАННЫХ :: OPID = ' ||vOPID||' :: '||SQLERRM);
+    LG_PKG.AddLog(l_stid,'E','ERROR :: 02.Р Р•РџР›РРљРђР¦РРЇ Р”РђРќРќР«РҐ :: OPID = ' ||vOPID||' :: '||SQLERRM);
     LG_PKG.ENDPHASE(l_stid);
   END;
   
@@ -9029,8 +9029,8 @@ BEGIN
     EXECUTE IMMEDIATE vBuff USING OUT vOPID,OUT vDate,OUT vGroupID,OUT vFctGroupID,OUT vGroupName;
     LG_PKG.setparam(l_opid,'vOPID',to_char(vOPID),'N');
   
-  -- Фазы
-  l_stid := iskra.lg_pkg.RegPhase(l_opid,'01.ПОДГОТОВКА МЕТАДАННЫХ');
+  -- Р¤Р°Р·С‹
+  l_stid := iskra.lg_pkg.RegPhase(l_opid,'01.РџРћР”Р“РћРўРћР’РљРђ РњР•РўРђР”РђРќРќР«РҐ');
   vBuff :=
   q'{DECLARE
        cur SYS_REFCURSOR;
@@ -9043,29 +9043,29 @@ BEGIN
     vCLOB := gather_clob(cur);
     
     EXECUTE IMMEDIATE vCLOB;
-    --dbms_output.put_line('!!!ПОДГОТОВКА ЦЕЛЕВЫХ ТАБЛИЦ!!!'||CHR(10)||'----------');
+    --dbms_output.put_line('!!!РџРћР”Р“РћРўРћР’РљРђ Р¦Р•Р›Р•Р’Р«РҐ РўРђР‘Р›РР¦!!!'||CHR(10)||'----------');
     
     CLOSE cur;   
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 01.ПОДГОТОВКА МЕТАДАННЫХ :: OPID = ' ||vOPID);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 01.РџРћР”Р“РћРўРћР’РљРђ РњР•РўРђР”РђРќРќР«РҐ :: OPID = ' ||vOPID);
     LG_PKG.ENDPHASE(l_stid);
   EXCEPTION WHEN OTHERS THEN
     CLOSE cur;
-    LG_PKG.AddLog(l_stid,'E','ERROR :: 01.ПОДГОТОВКА МЕТАДАННЫХ :: OPID = ' ||vOPID||' :: '||SQLERRM);
+    LG_PKG.AddLog(l_stid,'E','ERROR :: 01.РџРћР”Р“РћРўРћР’РљРђ РњР•РўРђР”РђРќРќР«РҐ :: OPID = ' ||vOPID||' :: '||SQLERRM);
     LG_PKG.ENDPHASE(l_stid);
   END;  
 
-  l_stid := iskra.lg_pkg.RegPhase(l_opid,'02.РЕПЛИКАЦИЯ АГРЕГАТОВ');
-  -- Получим ИД группы на целевом сервере
+  l_stid := iskra.lg_pkg.RegPhase(l_opid,'02.Р Р•РџР›РРљРђР¦РРЇ РђР“Р Р•Р“РђРўРћР’');
+  -- РџРѕР»СѓС‡РёРј РР” РіСЂСѓРїРїС‹ РЅР° С†РµР»РµРІРѕРј СЃРµСЂРІРµСЂРµ
   vGroupIdNew := GetGroupIdByName(vGroupName);
   BEGIN
     --ReplStarDataOld(vDate,vGroupIdNew,vGroupID,vFctGroupID,inDBLink);
     ReplAggrsOnDate(vDate,vGroupIdNew,vGroupID,inDBLink);
-    dbms_output.put_line(CHR(10)||'!!!РЕПЛИКАЦИЯ АГРЕГАТОВ!!!'||CHR(10)||'----------');
+    dbms_output.put_line(CHR(10)||'!!!Р Р•РџР›РРљРђР¦РРЇ РђР“Р Р•Р“РђРўРћР’!!!'||CHR(10)||'----------');
     
-    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 02.РЕПЛИКАЦИЯ АГРЕГАТОВ :: OPID = ' ||vOPID);
+    LG_PKG.AddLog(l_stid,'I','SUCCESSFULLY :: 02.Р Р•РџР›РРљРђР¦РРЇ РђР“Р Р•Р“РђРўРћР’ :: OPID = ' ||vOPID);
     LG_PKG.ENDPHASE(l_stid);
   EXCEPTION WHEN OTHERS THEN
-    LG_PKG.AddLog(l_stid,'E','ERROR :: 02.РЕПЛИКАЦИЯ АГРЕГАТОВ :: OPID = ' ||vOPID||' :: '||SQLERRM);
+    LG_PKG.AddLog(l_stid,'E','ERROR :: 02.Р Р•РџР›РРљРђР¦РРЇ РђР“Р Р•Р“РђРўРћР’ :: OPID = ' ||vOPID||' :: '||SQLERRM);
     LG_PKG.ENDPHASE(l_stid);
   END;
   
@@ -9173,16 +9173,16 @@ BEGIN
 
   IF vCondResult = '1' THEN
     BEGIN    
-      logOPTP := LG_PKG.CreateTypeOper(vName,'Демон репликации витрины');
+      logOPTP := LG_PKG.CreateTypeOper(vName,'Р”РµРјРѕРЅ СЂРµРїР»РёРєР°С†РёРё РІРёС‚СЂРёРЅС‹');
     EXCEPTION WHEN OTHERS THEN
       logErr := SQLERRM;
       SELECT TRIM(REGEXP_SUBSTR(logErr,' \d+ ')) INTO logOPTP FROM dual;
     END;
-  -- Создаем новое логирование
+  -- РЎРѕР·РґР°РµРј РЅРѕРІРѕРµ Р»РѕРіРёСЂРѕРІР°РЅРёРµ
     vMes := 'BEGIN OF LOGGING :: OPTP = '||logOPTP;
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ExecuteDaemon',vMes);
       
-    l_opid := LG_PKG.StartOper(logOPTP,sysdate); -- Генерируем запись об операции
+    l_opid := LG_PKG.StartOper(logOPTP,sysdate); -- Р“РµРЅРµСЂРёСЂСѓРµРј Р·Р°РїРёСЃСЊ РѕР± РѕРїРµСЂР°С†РёРё
     IF vExecPArams IS NOT NULL THEN
       BEGIN
         FOR idx IN (
@@ -9213,7 +9213,7 @@ BEGIN
   END IF;
 EXCEPTION 
   WHEN errNotFound THEN
-    vMes := 'ERROR :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.ExecuteDaemon" :: Демон с ид/наименованием '||inIdentifier||' не найден в таблице "'||LOWER(vOwner)||'.tb_signs_daemons"';
+    vMes := 'ERROR :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.ExecuteDaemon" :: Р”РµРјРѕРЅ СЃ РёРґ/РЅР°РёРјРµРЅРѕРІР°РЅРёРµРј '||inIdentifier||' РЅРµ РЅР°Р№РґРµРЅ РІ С‚Р°Р±Р»РёС†Рµ "'||LOWER(vOwner)||'.tb_signs_daemons"';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.ExecuteDaemon',vMes);
     vEndTime := SYSDATE;
     vMes := 'FINISH :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.ExecuteDaemon" finished with errors in '||get_ti_as_hms(vEndTime - vBegTime);
@@ -9252,7 +9252,7 @@ BEGIN
                               job_class           => 'DEFAULT_JOB_CLASS',
                               enabled             => true,
                               auto_drop           => TRUE,
-                              comments            => 'DWHLegator - головной джоб для запуска демонов');
+                              comments            => 'DWHLegator - РіРѕР»РѕРІРЅРѕР№ РґР¶РѕР± РґР»СЏ Р·Р°РїСѓСЃРєР° РґРµРјРѕРЅРѕРІ');
   --dbms_output.put_line(vAct);
 END DaemonsRun;
 
@@ -9274,7 +9274,7 @@ BEGIN
   vMes := 'START :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSPrepareTable" started.';
   pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSPrepareTable',vMes);
   
-  -- Сохраняем в переменную ИД модели
+  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅСѓСЋ РР” РјРѕРґРµР»Рё
   SELECT ID
         ,CASE UPPER(inTableType) WHEN 'MD' THEN 'mdl' WHEN 'FIT' THEN 'fit' WHEN 'PRD' THEN 'prd' END 
     INTO vMID,vTableType 
@@ -9315,7 +9315,7 @@ BEGIN
     vMes := 'SUCCESSFULLLY :: Table "'||LOWER(vOwner)||'.ptb_ds_'||vTableType||'_'||vMID||'" created in '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSPrepareTable',vMes);      
   EXCEPTION WHEN OTHERS THEN
-    vMes := 'INFORMATION :: Создание таблицы "'||LOWER(vOwner)||'.ptb_ds_'||vTableType||'_'||vMID||'" не требуется';
+    vMes := 'INFORMATION :: РЎРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ "'||LOWER(vOwner)||'.ptb_ds_'||vTableType||'_'||vMID||'" РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ';
     pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSPrepareTable',vMes);      
 
     FOR idx IN (
@@ -9370,7 +9370,7 @@ BEGIN
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
     vEndTime := SYSDATE;
-    vMes := 'ERROR :: Модель с именем "'||vMName||'" не найдена в таблице "'||LOWER(vOwner)||'.tb_ds_mdl"';
+    vMes := 'ERROR :: РњРѕРґРµР»СЊ СЃ РёРјРµРЅРµРј "'||vMName||'" РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||LOWER(vOwner)||'.tb_ds_mdl"';
     pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSPrepareTable',vMes);
 
     vMes := 'FINISH :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSPrepareTable" finished in '||get_ti_as_hms(vEndTime - vBegTime)||' with errors';
@@ -9389,11 +9389,11 @@ FUNCTION DSGetFtr(inDate IN DATE,inModelName IN VARCHAR2,inFtrName IN VARCHAR2) 
     vPrc NUMBER;
     vSQL CLOB;
     rec TRec;
-    cur INTEGER;       -- хранит идентификатор (ID) курсора
-    ret INTEGER;       -- хранит возвращаемое по вызову значение
+    cur INTEGER;       -- С…СЂР°РЅРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ (ID) РєСѓСЂСЃРѕСЂР°
+    ret INTEGER;       -- С…СЂР°РЅРёС‚ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ РїРѕ РІС‹Р·РѕРІСѓ Р·РЅР°С‡РµРЅРёРµ
     vOwner VARCHAR2(4000) := GetVarValue('vOwner');
 BEGIN
-  -- Сохраняем в переменные Наименование фичи, SQL фичи и Процент валидационной выборки модели
+  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅС‹Рµ РќР°РёРјРµРЅРѕРІР°РЅРёРµ С„РёС‡Рё, SQL С„РёС‡Рё Рё РџСЂРѕС†РµРЅС‚ РІР°Р»РёРґР°С†РёРѕРЅРЅРѕР№ РІС‹Р±РѕСЂРєРё РјРѕРґРµР»Рё
   SELECT f.ftr_sql,m.valid_prc
     INTO vSQL,vPrc
     FROM tb_ds_mdl m
@@ -9425,7 +9425,7 @@ BEGIN
   dbms_sql.close_cursor(cur);
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSGetFtr','ERROR :: "'||UPPER(inFtrName)||'"  - Фича не найдена в таблице "'||lower(vOwner)||'.tb_ds_ftrs"');
+    pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSGetFtr','ERROR :: "'||UPPER(inFtrName)||'"  - Р¤РёС‡Р° РЅРµ РЅР°Р№РґРµРЅР° РІ С‚Р°Р±Р»РёС†Рµ "'||lower(vOwner)||'.tb_ds_ftrs"');
   WHEN OTHERS THEN
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSGetFtr','ERROR :: "'||UPPER(inFtrName)||'"  - '||SQLERRM||CHR(10)||'----------'||CHR(10)||vSQL);
 END DSGetFtr;
@@ -9513,7 +9513,7 @@ BEGIN
   vMes := 'START :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSFtrOnDate" started.';
   pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSFtrOnDate',vMes);
   
-  -- Сохраняем в переменные ИД,Наименование и Процент валидационной выборки модели
+  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅС‹Рµ РР”,РќР°РёРјРµРЅРѕРІР°РЅРёРµ Рё РџСЂРѕС†РµРЅС‚ РІР°Р»РёРґР°С†РёРѕРЅРЅРѕР№ РІС‹Р±РѕСЂРєРё РјРѕРґРµР»Рё
   SELECT m.id--,m.model_name
     INTO vMID--,vTableType
     FROM tb_ds_mdl m
@@ -9546,7 +9546,7 @@ BEGIN
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
     vEndTime := SYSDATE;
-    vMes := 'ERROR :: Совокупность Модель: "'||vMName||'" - Фича: "'||UPPER(inFtrName)||'" не найдена в справочниках';
+    vMes := 'ERROR :: РЎРѕРІРѕРєСѓРїРЅРѕСЃС‚СЊ РњРѕРґРµР»СЊ: "'||vMName||'" - Р¤РёС‡Р°: "'||UPPER(inFtrName)||'" РЅРµ РЅР°Р№РґРµРЅР° РІ СЃРїСЂР°РІРѕС‡РЅРёРєР°С…';
     pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSFtrOnDate',vMes);
 
     vMes := 'FINISH :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSFtrOnDate" finished in '||get_ti_as_hms(vEndTime - vBegTime)||' with errors';
@@ -9580,7 +9580,7 @@ BEGIN
   vMes := 'START :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrOnDate" started.';
   pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrOnDate',vMes);
   
-  -- Сохраняем в переменные ИД модели
+  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅС‹Рµ РР” РјРѕРґРµР»Рё
   SELECT m.id,ds_algo INTO vMID,vDSAlgo FROM tb_ds_mdl m WHERE m.model_name = inModelName;
 
   IF vDSAlgo = 'CLASS_TE' THEN
@@ -9635,7 +9635,7 @@ BEGIN
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
     vEndTime := SYSDATE;
-    vMes := 'ERROR :: Совокупность Модель: ид = "'||vMID||'" - Фича: "'||UPPER(inFtrName)||'" не найдена в справочниках';
+    vMes := 'ERROR :: РЎРѕРІРѕРєСѓРїРЅРѕСЃС‚СЊ РњРѕРґРµР»СЊ: РёРґ = "'||vMID||'" - Р¤РёС‡Р°: "'||UPPER(inFtrName)||'" РЅРµ РЅР°Р№РґРµРЅР° РІ СЃРїСЂР°РІРѕС‡РЅРёРєР°С…';
     pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrOnDate',vMes);
 
     vMes := 'FINISH :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrOnDate" finished in '||get_ti_as_hms(vEndTime - vBegTime)||' with errors';
@@ -9664,7 +9664,7 @@ BEGIN
   vMes := 'START :: Procedure "'||lower(vOwner)||'.pkg_etl_signs.DSCompressTable" started.';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSCompressTable',vMes);
 
-  -- Сохраняем в переменную ИД модели
+  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅСѓСЋ РР” РјРѕРґРµР»Рё
   SELECT ID
         ,CASE UPPER(inTableType) WHEN 'MD' THEN 'mdl' WHEN 'FIT' THEN 'fit' WHEN 'PRD' THEN 'prd' END 
     INTO vMID,vTableType 
@@ -9715,7 +9715,7 @@ BEGIN
   vMes := 'START :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrSetWeight" started.';
   pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrSetWeight',vMes);
   
-  -- Сохраняем в переменные ИД модели
+  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅС‹Рµ РР” РјРѕРґРµР»Рё
   SELECT m.id/*,m.model_name*/,f.ftr_name,t.ftr_name,f.id
     INTO vMID--,vTableType
         ,vFtrName,vTrgName,vFtrID
@@ -9778,7 +9778,7 @@ BEGIN
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
     vEndTime := SYSDATE;
-    vMes := 'ERROR :: Совокупность Модель: ид = "'||vMID||'" - Фича: "'||UPPER(inFtrName)||'" не найдена в справочниках';
+    vMes := 'ERROR :: РЎРѕРІРѕРєСѓРїРЅРѕСЃС‚СЊ РњРѕРґРµР»СЊ: РёРґ = "'||vMID||'" - Р¤РёС‡Р°: "'||UPPER(inFtrName)||'" РЅРµ РЅР°Р№РґРµРЅР° РІ СЃРїСЂР°РІРѕС‡РЅРёРєР°С…';
     pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrSetWeight',vMes);
 
     vMes := 'FINISH :: Procedure "'||LOWER(vOwner)||'.pkg_etl_signs.DSFitFtrSetWeight" finished in '||get_ti_as_hms(vEndTime - vBegTime)||' with errors';
@@ -9854,9 +9854,9 @@ BEGIN
 
   SELECT id,ds_algo INTO vMID,vDSAlgo FROM tb_ds_mdl WHERE model_name = inModelName;
 
-  -- Обучение
+  -- РћР±СѓС‡РµРЅРёРµ
   vTIBegin := SYSDATE;
-  vMes := 'CONTINUE :: ------- "'||inModelName||'" - обучение --------';
+  vMes := 'CONTINUE :: ------- "'||inModelName||'" - РѕР±СѓС‡РµРЅРёРµ --------';
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSFitOnDate',vMes);
 
   DSPrepareTable(inModelName,inDate,'FIT');
@@ -9876,13 +9876,13 @@ BEGIN
   DSCompressTable(inModelName,inDate,'FIT');
   
   vEndTime := SYSDATE;
-  vMes := 'CONTINUE :: ------- "'||inModelName||'" - окончание обучения. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+  vMes := 'CONTINUE :: ------- "'||inModelName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ РѕР±СѓС‡РµРЅРёСЏ. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
   pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSFitOnDate',vMes);
 
   IF vDSAlgo = 'CLASS_TE' THEN
-    -- Установка весов фичей
+    -- РЈСЃС‚Р°РЅРѕРІРєР° РІРµСЃРѕРІ С„РёС‡РµР№
     vTIBegin := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||inModelName||'" - установка весов фичей --------';
+    vMes := 'CONTINUE :: ------- "'||inModelName||'" - СѓСЃС‚Р°РЅРѕРІРєР° РІРµСЃРѕРІ С„РёС‡РµР№ --------';
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSFitOnDate',vMes);
     
     vBuff :=
@@ -9898,7 +9898,7 @@ BEGIN
     load_new(vBuff,UPPER(vOwner)||'.LOADDSFITWEIGHTSJOB_'||tb_signs_job_id_seq.nextval);
     
     vEndTime := SYSDATE;
-    vMes := 'CONTINUE :: ------- "'||inModelName||'" - окончание установки весов фичей. Время выполнения - '||get_ti_as_hms(vEndTime - vTIBegin);
+    vMes := 'CONTINUE :: ------- "'||inModelName||'" - РѕРєРѕРЅС‡Р°РЅРёРµ СѓСЃС‚Р°РЅРѕРІРєРё РІРµСЃРѕРІ С„РёС‡РµР№. Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ - '||get_ti_as_hms(vEndTime - vTIBegin);
     pr_log_write(lower(vOwner)||'.pkg_etl_signs.DSFitOnDate',vMes);
   END IF;
   
@@ -9938,7 +9938,7 @@ END DSRegrGetData;
 FUNCTION DSRegrGetAvg(inSQL IN VARCHAR2,inDeep IN INTEGER,inIter IN INTEGER DEFAULT 2) RETURN TTabRegrData PIPELINED
   IS
     vOwner VARCHAR2(256) := GetVarValue('vOwner');
-  --количество значений (глубина) в каждую сторону, но не более 10 при вычислении скользящего среднего
+  --РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°С‡РµРЅРёР№ (РіР»СѓР±РёРЅР°) РІ РєР°Р¶РґСѓСЋ СЃС‚РѕСЂРѕРЅСѓ, РЅРѕ РЅРµ Р±РѕР»РµРµ 10 РїСЂРё РІС‹С‡РёСЃР»РµРЅРёРё СЃРєРѕР»СЊР·СЏС‰РµРіРѕ СЃСЂРµРґРЅРµРіРѕ
     rec TRecRegrData;
     cur INTEGER;       
     ret INTEGER;
@@ -10079,7 +10079,7 @@ FUNCTION RegistryCreateObjDDL(inTableName IN VARCHAR2
                              ,inOwner VARCHAR2 DEFAULT NULL
                              ,inTableSpaceName VARCHAR2 DEFAULT NULL
                              ) RETURN CLOB
-  --inCreatingPart: 0 - создание таблиц,последовательностей,первичных ключей,индексов,триггеров; 1 - создание внешних ключей
+  --inCreatingPart: 0 - СЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†,РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚РµР№,РїРµСЂРІРёС‡РЅС‹С… РєР»СЋС‡РµР№,РёРЅРґРµРєСЃРѕРІ,С‚СЂРёРіРіРµСЂРѕРІ; 1 - СЃРѕР·РґР°РЅРёРµ РІРЅРµС€РЅРёС… РєР»СЋС‡РµР№
   IS
     vOwner VARCHAR2(256) := CASE WHEN inOwner IS NULL THEN GetVarValue('vOwner') ELSE inOwner END;
     vCLOB CLOB;
@@ -10093,7 +10093,7 @@ FUNCTION RegistryCreateObjDDL(inTableName IN VARCHAR2
     vFirst INTEGER := 0;
 BEGIN
   dbms_lob.createtemporary(vCLOB,FALSE);
-  -- последовательности
+  -- РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
   IF vSeq THEN
     vBuff := 'BEGIN'||CHR(10)||'  NULL;';
     FOR idx IN (
@@ -10120,7 +10120,7 @@ BEGIN
     dbms_lob.writeappend(vCLOB,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- таблицы
+  -- С‚Р°Р±Р»РёС†С‹
   IF vTbl THEN
     vBuff := 'BEGIN'||CHR(10)||'  NULL;';
     vBuff := vBuff||CHR(10)||'EXECUTE IMMEDIATE q''{CREATE TABLE '||UPPER(inTableName)||' (';
@@ -10146,7 +10146,7 @@ BEGIN
     dbms_lob.writeappend(vCLOB,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- триггеры
+  -- С‚СЂРёРіРіРµСЂС‹
   IF vTrg THEN
     FOR idx IN (
       SELECT REPLACE(REPLACE(trg_plsql,UPPER(GetVarValue('vOwner'))||'.',UPPER(vOwner)||'.'),LOWER(GetVarValue('vOwner'))||'.',LOWER(vOwner)||'.') AS trg_plsql
@@ -10160,7 +10160,7 @@ BEGIN
     END LOOP;
   END IF;
   
-  -- первичные ключи и индексы    
+  -- РїРµСЂРІРёС‡РЅС‹Рµ РєР»СЋС‡Рё Рё РёРЅРґРµРєСЃС‹    
   IF vPK THEN
     vBuff := 'BEGIN'||CHR(10)||'  NULL;';
     FOR idx IN (
@@ -10194,7 +10194,7 @@ BEGIN
     dbms_lob.writeappend(vCLOB,LENGTH(vBuff),vBuff);
   END IF;
   
-  -- внешние ключи и индексы
+  -- РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё Рё РёРЅРґРµРєСЃС‹
   IF vFK THEN 
     vBuff := 'BEGIN'||CHR(10)||'  NULL;';
     FOR idx IN (
@@ -10229,7 +10229,7 @@ BEGIN
   END IF; 
   RETURN vCLOB;
 EXCEPTION WHEN OTHERS THEN
-  vBuff := 'ERROR :: Ошибка при создании таблицы '||UPPER(inTableName)||' :: '||SQLERRM||' :: '||vBuff;
+  vBuff := 'ERROR :: РћС€РёР±РєР° РїСЂРё СЃРѕР·РґР°РЅРёРё С‚Р°Р±Р»РёС†С‹ '||UPPER(inTableName)||' :: '||SQLERRM||' :: '||vBuff;
   pr_log_write(LOWER(vOwner)||'.pkg_etl_signs.RegistryCreateObjSQL',vBuff);
   RETURN NULL;
 END RegistryCreateObjDDL;
@@ -10254,7 +10254,7 @@ BEGIN
   vSQL := 'SELECT table_name,table_comment FROM tb_tables_registry';
   IF inExtFilter IS NOT NULL THEN vSQL := vSQL||CHR(10)||'WHERE '||inExtFilter; END IF;
 
-  -- создаем последовательности
+  -- СЃРѕР·РґР°РµРј РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
   BEGIN
     OPEN vCur FOR vSQL;
     LOOP
@@ -10268,7 +10268,7 @@ BEGIN
     RAISE errCreateSeq;
   END;
   
-  -- создаем таблицы
+  -- СЃРѕР·РґР°РµРј С‚Р°Р±Р»РёС†С‹
   BEGIN
     OPEN vCur FOR vSQL;
     LOOP
@@ -10282,7 +10282,7 @@ BEGIN
     RAISE errCreateTbl;
   END;
 
-  -- создаем триггеры
+  -- СЃРѕР·РґР°РµРј С‚СЂРёРіРіРµСЂС‹
   BEGIN
     OPEN vCur FOR vSQL;
     LOOP
@@ -10296,7 +10296,7 @@ BEGIN
     RAISE errCreateTrg;
   END;
 
-  -- создаем первичные ключи и индексы
+  -- СЃРѕР·РґР°РµРј РїРµСЂРІРёС‡РЅС‹Рµ РєР»СЋС‡Рё Рё РёРЅРґРµРєСЃС‹
   BEGIN
     OPEN vCur FOR vSQL;
     LOOP
@@ -10310,7 +10310,7 @@ BEGIN
     RAISE errCreatePK;
   END;
 
-  -- создаем внешние ключи и индексы
+  -- СЃРѕР·РґР°РµРј РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё Рё РёРЅРґРµРєСЃС‹
   BEGIN
     OPEN vCur FOR vSQL;
     LOOP
@@ -10327,22 +10327,22 @@ BEGIN
   RETURN vCLOB;
 EXCEPTION
   WHEN errCreateSeq THEN 
-    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateSeq :: Таблица: '||vTableName||' :: '||SQLERRM);
+    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateSeq :: РўР°Р±Р»РёС†Р°: '||vTableName||' :: '||SQLERRM);
     RETURN NULL;
   WHEN errCreateTbl THEN 
-    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateTbl :: Таблица: '||vTableName||' :: '||SQLERRM);
+    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateTbl :: РўР°Р±Р»РёС†Р°: '||vTableName||' :: '||SQLERRM);
     RETURN NULL;
   WHEN errCreateTrg THEN 
-    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateTrg :: Таблица: '||vTableName||' :: '||SQLERRM);
+    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateTrg :: РўР°Р±Р»РёС†Р°: '||vTableName||' :: '||SQLERRM);
     RETURN NULL;
   WHEN errCreatePK THEN 
-    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreatePK :: Таблица: '||vTableName||' :: '||SQLERRM);
+    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreatePK :: РўР°Р±Р»РёС†Р°: '||vTableName||' :: '||SQLERRM);
     RETURN NULL;
   WHEN errCreateFK THEN 
-    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateFK :: Таблица: '||vTableName||' :: '||SQLERRM);
+    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR errCreateFK :: РўР°Р±Р»РёС†Р°: '||vTableName||' :: '||SQLERRM);
     RETURN NULL;
   WHEN OTHERS THEN
-    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR OTHERS :: Таблица: '||vTableName||' :: '||SQLERRM);
+    pr_log_write(vOldOwner||'.pkg_etl_signs.RegistryGetDDLScript','ERROR OTHERS :: РўР°Р±Р»РёС†Р°: '||vTableName||' :: '||SQLERRM);
     RETURN NULL;
 END RegistryGetDDLScript;
 
@@ -10370,8 +10370,8 @@ FUNCTION RegistryGetDMLScript(inOwner IN VARCHAR2,inExtFilter IN VARCHAR2 DEFAUL
   errSqlIsNull EXCEPTION;
 BEGIN
   dbms_lob.createtemporary(vOut,FALSE);
-  -- Отключаем триггеры
-  vBuff := '/* Отключение триггеров */'||CHR(10);
+  -- РћС‚РєР»СЋС‡Р°РµРј С‚СЂРёРіРіРµСЂС‹
+  vBuff := '/* РћС‚РєР»СЋС‡РµРЅРёРµ С‚СЂРёРіРіРµСЂРѕРІ */'||CHR(10);
   dbms_lob.writeappend(vOut,LENGTH(vBuff),vBuff);
   
   vSQL := q'{SELECT trg_name FROM (SELECT t.soft_type,t.table_name,REPLACE(REPLACE(trg.trg_name,'}'||UPPER(vOwner)||q'{.','}'||UPPER(inOwner)||q'{.'),'}'||LOWER(vOwner)||q'{.','}'||LOWER(inOwner)||q'{.') AS trg_name
@@ -10391,8 +10391,8 @@ BEGIN
   END IF;
   CLOSE vCur;
 
-  -- Отключаем внешние ключи
-  vBuff := '/* Отключение внешних ключей */'||CHR(10);
+  -- РћС‚РєР»СЋС‡Р°РµРј РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё
+  vBuff := '/* РћС‚РєР»СЋС‡РµРЅРёРµ РІРЅРµС€РЅРёС… РєР»СЋС‡РµР№ */'||CHR(10);
   dbms_lob.writeappend(vOut,LENGTH(vBuff),vBuff);
 
   vSQL := q'{SELECT key_name,table_name FROM (SELECT t.soft_type,tk.key_name,REPLACE(REPLACE(t.table_name,'}'||UPPER(vOwner)||q'{.','}'||UPPER(inOwner)||q'{.'),'}'||LOWER(vOwner)||q'{.','}'||LOWER(inOwner)||q'{.') AS table_name
@@ -10412,8 +10412,8 @@ BEGIN
   END IF;
   CLOSE vCur;
   
-  -- Заполняем таблицы с метаданными
-  vBuff := '/* Вставка метаданных */'||CHR(10);
+  -- Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†С‹ СЃ РјРµС‚Р°РґР°РЅРЅС‹РјРё
+  vBuff := '/* Р’СЃС‚Р°РІРєР° РјРµС‚Р°РґР°РЅРЅС‹С… */'||CHR(10);
   dbms_lob.writeappend(vOut,LENGTH(vBuff),vBuff);
   
   vSQL := q'{SELECT table_name,table_name_old FROM (SELECT t.soft_type,REPLACE(REPLACE(t.table_name,'}'||UPPER(vOwner)||q'{.','}'||UPPER(inOwner)||q'{.'),'}'||LOWER(vOwner)||q'{.','}'||LOWER(inOwner)||q'{.') AS table_name
@@ -10470,8 +10470,8 @@ BEGIN
   END IF;
   CLOSE vCur;
 
-  -- Включаем триггеры
-  vBuff := '/* Включение триггеров */'||CHR(10);
+  -- Р’РєР»СЋС‡Р°РµРј С‚СЂРёРіРіРµСЂС‹
+  vBuff := '/* Р’РєР»СЋС‡РµРЅРёРµ С‚СЂРёРіРіРµСЂРѕРІ */'||CHR(10);
   dbms_lob.writeappend(vOut,LENGTH(vBuff),vBuff);
   vSQL := q'{SELECT trg_name FROM (SELECT t.soft_type,t.table_name,REPLACE(REPLACE(trg.trg_name,'}'||UPPER(vOwner)||q'{.','}'||UPPER(inOwner)||q'{.'),'}'||LOWER(vOwner)||q'{.','}'||LOWER(inOwner)||q'{.') AS trg_name
       FROM tb_trg_registry trg
@@ -10490,8 +10490,8 @@ BEGIN
   END IF;
   CLOSE vCur;
   
-  -- Включаем внешние ключи
-  vBuff := '/* Включение внешних ключей */'||CHR(10);
+  -- Р’РєР»СЋС‡Р°РµРј РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё
+  vBuff := '/* Р’РєР»СЋС‡РµРЅРёРµ РІРЅРµС€РЅРёС… РєР»СЋС‡РµР№ */'||CHR(10);
   dbms_lob.writeappend(vOut,LENGTH(vBuff),vBuff);
 
   vSQL := q'{SELECT key_name,table_name FROM (SELECT t.soft_type,tk.key_name,REPLACE(REPLACE(t.table_name,'}'||UPPER(vOwner)||q'{.','}'||UPPER(inOwner)||q'{.'),'}'||LOWER(vOwner)||q'{.','}'||LOWER(inOwner)||q'{.') AS table_name
@@ -10511,8 +10511,8 @@ BEGIN
   END IF;
   CLOSE vCur;
 
-  -- Устанавливаем новые значения последовательностей для ИД
-  vBuff := '/* Установка новых значений последовательностей для ИД */'||CHR(10);
+  -- РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РЅРѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚РµР№ РґР»СЏ РР”
+  vBuff := '/* РЈСЃС‚Р°РЅРѕРІРєР° РЅРѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚РµР№ РґР»СЏ РР” */'||CHR(10);
   dbms_lob.writeappend(vOut,LENGTH(vBuff),vBuff);
 
   vSQL := q'{SELECT field_name,table_name,seq_name FROM (SELECT t.soft_type,f.field_name
