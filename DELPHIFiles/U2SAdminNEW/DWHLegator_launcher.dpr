@@ -55,7 +55,7 @@ begin
     if FindedNewVers then begin
       VersionProccessing(Ses,VersID);
     end;
-    WinExec(Pchar(ExtractFilePath(Application.ExeName) + 'DWHLegator.exe'),SW_ShowNormal);
+    WinExec(PAnsiChar(Pchar(ExtractFilePath(Application.ExeName) + 'DWHLegator.exe')),SW_ShowNormal);
   finally
     Ses.Free;
     ConDlg.Free;

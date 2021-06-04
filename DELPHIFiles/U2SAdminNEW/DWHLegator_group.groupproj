@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{46A23DA3-A692-401B-9450-0AA0D565F13C}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="DWHLegator_launcher.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="DWHLegator.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="DWHLegator_launcher">
+			<MSBuild Projects="DWHLegator_launcher.dproj"/>
+		</Target>
+		<Target Name="DWHLegator_launcher:Clean">
+			<MSBuild Targets="Clean" Projects="DWHLegator_launcher.dproj"/>
+		</Target>
+		<Target Name="DWHLegator_launcher:Make">
+			<MSBuild Targets="Make" Projects="DWHLegator_launcher.dproj"/>
+		</Target>
+		<Target Name="DWHLegator">
+			<MSBuild Projects="DWHLegator.dproj"/>
+		</Target>
+		<Target Name="DWHLegator:Clean">
+			<MSBuild Targets="Clean" Projects="DWHLegator.dproj"/>
+		</Target>
+		<Target Name="DWHLegator:Make">
+			<MSBuild Targets="Make" Projects="DWHLegator.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="DWHLegator_launcher;DWHLegator"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="DWHLegator_launcher:Clean;DWHLegator:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="DWHLegator_launcher:Make;DWHLegator:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>
